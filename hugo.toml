@@ -1,0 +1,17 @@
+baseURL = "https://ericyawilhit.netlify.app"
+languageCode = "fr"
+title = "Eric Yawilhit"
+theme = "PaperMod"
+
+[params]
+  author = "Eric Yawilhit"
+  description = "J'apprends, je construis, je documente — PKI pour l'Afrique"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+
+[menu]
+  [[menu.main]]
+    name = "Articles"
+    url = "/posts/"
+    weight = 1

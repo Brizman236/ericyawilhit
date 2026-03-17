@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>PKI on Eric Yawilhit</title>
+    <link>https://ericyawilhit.netlify.app/tags/pki/</link>
+    <description>Recent content in PKI on Eric Yawilhit</description>
+    <generator>Hugo</generator>
+    <language>fr</language>
+    <lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://ericyawilhit.netlify.app/tags/pki/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>La Déclaration de Cotonou a oublié quelque chose...</title>
+      <link>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</link>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</guid>
+      <description>Les ministres africains ont signé la Déclaration de Cotonou avec des ambitions numériques immenses. Mais une infrastructure fondamentale a été oubliée : la PKI.</description>
+    </item>
+  </channel>
+</rss>

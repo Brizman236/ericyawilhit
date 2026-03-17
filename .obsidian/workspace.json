@@ -1,0 +1,200 @@
+{
+  "main": {
+    "id": "6c64f8e07f707932",
+    "type": "split",
+    "children": [
+      {
+        "id": "d45260a3367f61ba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8ebb33b6b70a8304",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/posts/declaration-cotonou.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "declaration-cotonou"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b9a7480190a3b893",
+    "type": "split",
+    "children": [
+      {
+        "id": "8eb8f89f3eba8a52",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8dcd43d2ab66bd34",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorateur de fichiers"
+            }
+          },
+          {
+            "id": "b150df5c34a732e6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Rechercher"
+            }
+          },
+          {
+            "id": "33fd0a6a1929d4b2",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Signets"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "6379ea46b5afe907",
+    "type": "split",
+    "children": [
+      {
+        "id": "f8db77a30daca7da",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "95c3a942130ff3e4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "content/posts/declaration-cotonou.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Rétrolien pour declaration-cotonou"
+            }
+          },
+          {
+            "id": "6f10eb466c169c60",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "content/posts/declaration-cotonou.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Liens sortants de declaration-cotonou"
+            }
+          },
+          {
+            "id": "bde5839d2352a221",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Mots-clés"
+            }
+          },
+          {
+            "id": "dd5b106c72fa9f03",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Toutes les propriétés"
+            }
+          },
+          {
+            "id": "0e1c5e842f4ac1f5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "content/posts/declaration-cotonou.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Plan de declaration-cotonou"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer une nouvelle toile": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false,
+      "bases:Créer une nouvelle base": false
+    }
+  },
+  "active": "8ebb33b6b70a8304",
+  "lastOpenFiles": [
+    "public/posts/declaration-cotonou/index.html",
+    "public/posts/declaration-cotonou",
+    "public/tags/souveraineté-numérique/page/1/index.html",
+    "public/tags/souveraineté-numérique/page/1",
+    "public/tags/souveraineté-numérique/page",
+    "public/tags/souveraineté-numérique/index.xml",
+    "public/tags/souveraineté-numérique/index.html",
+    "public/tags/souveraineté-numérique",
+    "public/tags/pki/page/1/index.html",
+    "public/tags/pki/page/1",
+    "public/tags/pki/page"
+  ]
+}
