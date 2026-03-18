@@ -11,14 +11,12 @@
             "id": "8ebb33b6b70a8304",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "content/posts/declaration-cotonou.md",
-                "mode": "preview",
-                "source": true
+                "file": "themes/PaperMod/images/tn.png"
               },
-              "icon": "lucide-file",
-              "title": "declaration-cotonou"
+              "icon": "lucide-image",
+              "title": "tn"
             }
           }
         ]
@@ -74,8 +72,7 @@
               "title": "Signets"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -184,8 +181,14 @@
       "bases:Créer une nouvelle base": false
     }
   },
-  "active": "8ebb33b6b70a8304",
+  "active": "8dcd43d2ab66bd34",
   "lastOpenFiles": [
+    "themes/PaperMod/images/tn.png",
+    "themes/PaperMod/images/screenshot.png",
+    "static/images/declaration-cotonou.png",
+    "content/posts/declaration-cotonou.md",
+    "public/images/declaration-cotonou.png",
+    "public/images/declaration-cotonou 1.png",
     "static/Non confirmé 994657.crdownload",
     "netlify.toml",
     "public/posts/declaration-cotonou/index.html",
@@ -195,7 +198,6 @@
     "public/tags/souveraineté-numérique/page",
     "public/tags/souveraineté-numérique/index.xml",
     "public/tags/souveraineté-numérique/index.html",
-    "public/tags/souveraineté-numérique",
-    "public/tags/pki/page/1/index.html"
+    "public/tags/souveraineté-numérique"
   ]
 }

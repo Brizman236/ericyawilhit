@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>fr</language>
     <lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Afrique</title>
-      <link>https://ericyawilhit.netlify.app/tags/afrique/</link>
+      <link>http://localhost:1313/tags/afrique/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/tags/afrique/</guid>
+      <guid>http://localhost:1313/tags/afrique/</guid>
       <description></description>
     </item>
     <item>
       <title>PKI</title>
-      <link>https://ericyawilhit.netlify.app/tags/pki/</link>
+      <link>http://localhost:1313/tags/pki/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/tags/pki/</guid>
+      <guid>http://localhost:1313/tags/pki/</guid>
       <description></description>
     </item>
     <item>
       <title>Souveraineté-Numérique</title>
-      <link>https://ericyawilhit.netlify.app/tags/souverainet%C3%A9-num%C3%A9rique/</link>
+      <link>http://localhost:1313/tags/souverainet%C3%A9-num%C3%A9rique/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/tags/souverainet%C3%A9-num%C3%A9rique/</guid>
+      <guid>http://localhost:1313/tags/souverainet%C3%A9-num%C3%A9rique/</guid>
       <description></description>
     </item>
   </channel>
