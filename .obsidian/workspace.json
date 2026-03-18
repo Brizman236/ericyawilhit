@@ -14,8 +14,8 @@
               "type": "markdown",
               "state": {
                 "file": "content/posts/declaration-cotonou.md",
-                "mode": "source",
-                "source": false
+                "mode": "preview",
+                "source": true
               },
               "icon": "lucide-file",
               "title": "declaration-cotonou"
@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:Souveraineté Numérique",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,7 +74,8 @@
               "title": "Signets"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -183,7 +184,7 @@
       "bases:Créer une nouvelle base": false
     }
   },
-  "active": "8ebb33b6b70a8304",
+  "active": "b150df5c34a732e6",
   "lastOpenFiles": [
     "netlify.toml",
     "public/posts/declaration-cotonou/index.html",
