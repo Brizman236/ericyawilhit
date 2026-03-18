@@ -11,12 +11,14 @@
             "id": "8ebb33b6b70a8304",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "themes/PaperMod/images/tn.png"
+                "file": "content/posts/declaration-cotonou.md",
+                "mode": "source",
+                "source": true
               },
-              "icon": "lucide-image",
-              "title": "tn"
+              "icon": "lucide-file",
+              "title": "declaration-cotonou"
             }
           }
         ]
@@ -181,8 +183,9 @@
       "bases:Créer une nouvelle base": false
     }
   },
-  "active": "8dcd43d2ab66bd34",
+  "active": "8ebb33b6b70a8304",
   "lastOpenFiles": [
+    "public/declaration-cotonou.png",
     "public/images/declaration-cotonou.png",
     "static/images/declaration-cotonou.png",
     "static/images/Non confirmé 582726.crdownload",

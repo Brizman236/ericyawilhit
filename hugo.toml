@@ -9,6 +9,7 @@ theme = "PaperMod"
   ShowReadingTime = true
   ShowShareButtons = true
   ShowPostNavLinks = true
+  images = ["images/declaration-cotonou.png"]
 
 [menu]
   [[menu.main]]

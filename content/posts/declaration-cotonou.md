@@ -10,6 +10,7 @@ description: "Les ministres africains ont signé la Déclaration de Cotonou avec
 cover:
   image: images/declaration-cotonou.png
   alt: Construire un marché numérique africain sans PKI c'est construire une ville sans loi
+  relative: true
 ---
 ## Autorité Vs Anarchie
 
