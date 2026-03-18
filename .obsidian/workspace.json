@@ -185,6 +185,14 @@
   },
   "active": "8ebb33b6b70a8304",
   "lastOpenFiles": [
+    "public/assets/css/stylesheet.3b624eada39c47b46d9df425c22c967f35e11d92f9587811d286ce563110eca1.css",
+    "assets/css/extended/custom.css",
+    "assets/css/extended",
+    "assets/css",
+    "layouts/partials/extend_head.html",
+    "layouts/partials",
+    "public/fonts",
+    "static/fonts",
     "public/declaration-cotonou.png",
     "public/images/declaration-cotonou.png",
     "static/images/declaration-cotonou.png",
@@ -194,13 +202,6 @@
     "content/posts/declaration-cotonou.md",
     "public/images/declaration-cotonou 1.png",
     "static/Non confirmé 994657.crdownload",
-    "netlify.toml",
-    "public/posts/declaration-cotonou/index.html",
-    "public/posts/declaration-cotonou",
-    "public/tags/souveraineté-numérique/page/1/index.html",
-    "public/tags/souveraineté-numérique/page/1",
-    "public/tags/souveraineté-numérique/page",
-    "public/tags/souveraineté-numérique/index.xml",
-    "public/tags/souveraineté-numérique/index.html"
+    "netlify.toml"
   ]
 }
