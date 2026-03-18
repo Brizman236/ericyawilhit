@@ -38,7 +38,7 @@ Sans autorité, l'anarchie s'installe.
 
 Sur internet, plusieurs entités ou systèmes sont interconnectés, s'échangent des informations, des ressources. La question que l'on peut être amené à se poser est de savoir comment est-ce que ces entités ou systèmes parviennent à se faire confiance. Existe-t-il une certaine entité tierce reconnue par tous les systèmes pour certifier leur identité ?
 
-Un ministre effectue une transaction entre deux banques dans deux pays africains différents. Pas d'autorité d'autorité de confiance commune entre ces deux systèmes.
+Un ministre effectue une transaction entre deux banques dans deux pays africains différents. Pas d'autorité de confiance commune entre ces deux systèmes.
 
 Les deux systèmes ne pouvant pas se faire confiance du fait de cette absence d'autorité, il serait possible que le ministre fasse une transaction vers un acteur malveillant, la banque ne pouvant pas s'assurer de l'identité du destinataire.
 
@@ -59,8 +59,6 @@ Ces objectifs ambitieux reposent sur quelque chose qui n'a pas été mentionnée
 Cette confiance ne s'établit pas spontanément entre les systèmes, elle repose sur une infrastructure précise: la **PKI**.
 
 La seule chose qui pourrait rendre toutes les actions prévues possibles, n'a pas été mentionnée une seule fois.
-
-La question qui se pose ici, c'est pourquoi sans **PKI** rien ne marcherait.
 
 ---
 
