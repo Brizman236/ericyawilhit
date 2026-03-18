@@ -184,8 +184,9 @@
       "bases:Créer une nouvelle base": false
     }
   },
-  "active": "b150df5c34a732e6",
+  "active": "8ebb33b6b70a8304",
   "lastOpenFiles": [
+    "static/Non confirmé 994657.crdownload",
     "netlify.toml",
     "public/posts/declaration-cotonou/index.html",
     "public/posts/declaration-cotonou",
@@ -195,7 +196,6 @@
     "public/tags/souveraineté-numérique/index.xml",
     "public/tags/souveraineté-numérique/index.html",
     "public/tags/souveraineté-numérique",
-    "public/tags/pki/page/1/index.html",
-    "public/tags/pki/page/1"
+    "public/tags/pki/page/1/index.html"
   ]
 }
