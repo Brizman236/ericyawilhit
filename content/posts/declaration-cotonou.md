@@ -8,7 +8,7 @@ tags:
   - Souveraineté-Numérique
 description: "Les ministres africains ont signé la Déclaration de Cotonou avec des ambitions numériques immenses. Mais une infrastructure fondamentale a été oubliée : la PKI."
 cover:
-  image: images/declaration-cotonou.png
+  image: /images/declaration-cotonou.png
   alt: Construire un marché numérique africain sans PKI c'est construire une ville sans loi
   relative: true
 ---
