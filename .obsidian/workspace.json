@@ -185,6 +185,8 @@
   },
   "active": "8ebb33b6b70a8304",
   "lastOpenFiles": [
+    "public/images/avatar.jpeg",
+    "static/images/avatar.jpeg",
     "public/assets/css/stylesheet.3b624eada39c47b46d9df425c22c967f35e11d92f9587811d286ce563110eca1.css",
     "assets/css/extended/custom.css",
     "assets/css/extended",
@@ -201,7 +203,6 @@
     "themes/PaperMod/images/screenshot.png",
     "content/posts/declaration-cotonou.md",
     "public/images/declaration-cotonou 1.png",
-    "static/Non confirmé 994657.crdownload",
-    "netlify.toml"
+    "static/Non confirmé 994657.crdownload"
   ]
 }

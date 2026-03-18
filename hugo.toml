@@ -11,8 +11,27 @@ theme = "PaperMod"
   ShowPostNavLinks = true
   images = ["images/declaration-cotonou.png"]
 
+[params.profileMode]
+  enabled = true
+  title = "Eric Yawilhit"
+  subtitle = "J'apprends, je construis, je documente — PKI pour l'Afrique."
+  imageUrl = "/images/avatar.jpeg"
+  imageTitle = "Eric Yawilhit"
+
+[params.homeInfoParams]
+  Title = "Eric Yawilhit"
+  Content = "J'apprends, je construis, je documente — PKI pour l'Afrique."
+
 [menu]
   [[menu.main]]
     name = "Articles"
     url = "/posts/"
     weight = 1
+
+[[params.socialIcons]]
+  name = "linkedin"
+  url = "https://www.linkedin.com/in/eric-yawilhit"
+
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/Brizman236"
