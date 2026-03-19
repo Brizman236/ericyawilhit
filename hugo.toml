@@ -41,7 +41,3 @@ theme = "PaperMod"
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/Brizman236"
-
-[[params.socialIcons]]
-  name = "gmail"
-  url = "ericyawilhit37@gmail.com"
