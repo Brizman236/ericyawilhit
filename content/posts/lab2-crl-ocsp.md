@@ -1,5 +1,5 @@
 ---
-title: "Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI"
+title: "Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL"
 date: 2026-03-19
 draft: false
 tags:
@@ -8,10 +8,10 @@ tags:
   - CRL
   - OCSP
   - Lab
-description: "Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache."
+description: Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.
 cover:
-  image: "/images/lab2-cover.png"
-  alt: "Lab 2 — CRL et OCSP"
+  image: /images/lab2-cover.png
+  alt: Lab 2 — CRL et OCSP
   relative: false
 ---
 ## Contexte & Objectifs
