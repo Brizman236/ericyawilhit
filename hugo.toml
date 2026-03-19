@@ -12,21 +12,7 @@ theme = "PaperMod"
   images = ["images/Eric Yawilhit.png"]
   ShowToc = true
   ShowCodeCopyButtons = true
-  comment = true 
-  system = "giscus"
-
-[[param.giscus]]
-  repo = "Brizman236/ericyawilhit"
-  repoId = "R_kgDORpa0mw"
-  category = "Announcements"
-  categoryID = "DIC_kwDORpa0m84C4wiQ"
-  mapping = "pathname"
-  strict = "0"
-  reactionsEnabled = "1"
-  emitMetadata = "0"
-  inputPosition = "top"
-  theme = "preferred_color_scheme"
-  lang = "fr"
+  comments = true
 
 [params.profileMode]
   enabled = true

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI | Eric Yawilhit</title>
+<meta name="keywords" content="PKI, OpenSSL, CRL, OCSP, Lab">
+<meta name="description" content="Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.">
+<meta name="author" content="Eric Yawilhit">
+<link rel="canonical" href="http://localhost:1313/posts/lab2-crl-ocsp/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f10626f0fe256b15760a674c343bcb0a21f59aa3afb8b3d1dba2fc6bfc0b90ad.css" integrity="sha256-8QYm8P4laxV2CmdMNDvLCiH1mqOvuLPR26L8a/wLkK0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lab2-crl-ocsp/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Articles">
+                    <span>Articles</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="À propos">
+                    <span>À propos</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI
+    </h1>
+    <div class="post-description">
+      Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.
+    </div>
+    <div class="post-meta"><span title='2026-03-19 00:00:00 +0000 UTC'>March 19, 2026</span>&nbsp;·&nbsp;<span>10 min</span>&nbsp;·&nbsp;<span>Eric Yawilhit</span>
+
+</div>
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:1313/images/lab2-cover.png" alt="Lab 2 — CRL et OCSP">
+        
+</figure><div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table des matières</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#contexte--objectifs" aria-label="Contexte &amp; Objectifs">Contexte &amp; Objectifs</a></li>
+                <li>
+                    <a href="#topologie" aria-label="Topologie">Topologie</a></li>
+                <li>
+                    <a href="#configuration-r%c3%a9seau" aria-label="Configuration Réseau">Configuration Réseau</a></li>
+                <li>
+                    <a href="#phase-1--reconstruction-de-la-pki" aria-label="PHASE 1 : Reconstruction de la PKI">PHASE 1 : Reconstruction de la PKI</a><ul>
+                        
+                <li>
+                    <a href="#phase-11--cr%c3%a9ation-du-root-ca" aria-label="Phase 1.1 : Création du Root CA">Phase 1.1 : Création du Root CA</a></li>
+                <li>
+                    <a href="#phase-12--cr%c3%a9ation-de-lintermediate-ca" aria-label="Phase 1.2 : Création de l&rsquo;Intermediate CA">Phase 1.2 : Création de l&rsquo;Intermediate CA</a></li>
+                <li>
+                    <a href="#phase-13--r%c3%a9%c3%a9mission-du-certificat-du-serveur-web" aria-label="Phase 1.3 : Réémission du certificat du serveur WEB">Phase 1.3 : Réémission du certificat du serveur WEB</a></li></ul>
+                </li>
+                <li>
+                    <a href="#phase-2--crl--ocsp" aria-label="PHASE 2 : CRL &amp; OCSP">PHASE 2 : CRL &amp; OCSP</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#configuration-du-serveur-web" aria-label="Configuration du serveur web">Configuration du serveur web</a></li>
+                <li>
+                    <a href="#g%c3%a9n%c3%a9ration-du-crl-sur-le-subca" aria-label="Génération du CRL sur le SubCA">Génération du CRL sur le SubCA</a></li>
+                <li>
+                    <a href="#configuration-du-ocsp-responder" aria-label="Configuration du OCSP Responder">Configuration du OCSP Responder</a></li>
+                <li>
+                    <a href="#test-de-r%c3%a9vocation" aria-label="Test de révocation">Test de révocation</a></li>
+                <li>
+                    <a href="#pki-publique--pki-priv%c3%a9e" aria-label="PKI publique &amp; PKI privée">PKI publique &amp; PKI privée</a>
+                </li>
+            </ul>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="contexte--objectifs">Contexte &amp; Objectifs<a hidden class="anchor" aria-hidden="true" href="#contexte--objectifs">#</a></h2>
+<p>Dans le <a href="https://github.com/Brizman236/Home-Labs/blob/main/PKI%20TLS%20Lab/Documentation.md">Lab 1</a>,  j&rsquo;ai configuré une architecture PKI complète comportant une <strong>Root CA</strong>, un <strong>Intermediate CA</strong> et un Seveur WEB utilisant du <strong>HTTPS</strong>. La chaîne de confiance a été validée avec succès depuis un client Windows.</p>
+<p>Cependant cette infrastructure présente une <strong>lacune critique</strong> : <strong>absence d&rsquo;un mécanisme de révocation de certificat</strong>. Dans l&rsquo;état actuel du Lab, si la clé privée du serveur WEB vient à être compromise avant la date d&rsquo;expiration, le client fera toujours confiance au certificat si celui-ci n&rsquo;a pas encore atteint sa date d&rsquo;expiration. Cela conduira à une attaque de <strong>Man In The Middle</strong>. Non seulement le risque se présente du côté de la clé privée du serveur WEB, mais aussi du côté de celle de l&rsquo;<strong>Intermediate CA</strong>. De ce fait un mécanisme de <strong>révocation</strong> doit être implémenté pour réduire le risque.</p>
+<p>Ce second lab vient combler cette lacune en introduisant les deux mécanismes standards de révocation des certificats :</p>
+<ul>
+<li><strong>CRL (Certificate Revocation List)</strong> — une liste noire publiée périodiquement par une CA, listant les certificats révoqués</li>
+<li><strong>OCSP (Online Certificate Status Protocol)</strong> — un service de vérification en temps réel permettant de connaître instantanément le statut d&rsquo;un certificat</li>
+</ul>
+<p>L&rsquo;implémentation de ces mécanismes nécessite également une refonte de l&rsquo;architecture PKI existante. En effet, le Lab 1 utilisait la commande <code>openssl x509</code> pour signer les certificats — une approche manuelle qui ne tient aucun registre des certificats émis. La révocation exige l&rsquo;utilisation de <code>openssl ca</code>, qui maintient un fichier <code>index.txt</code> servant de base de données des certificats et permettant leur révocation.</p>
+<p>Ce lab a donc pour objectifs de :</p>
+<ul>
+<li>Reconstruire la PKI avec <code>openssl ca</code> pour disposer d&rsquo;un registre complet</li>
+<li>Configurer le <strong>CDP (CRL Distribution Point)</strong> dans les certificats</li>
+<li>Déployer et tester la <strong>CRL</strong></li>
+<li>Déployer et tester l&rsquo;<strong>OCSP Responder</strong></li>
+<li>Valider la révocation en temps réel depuis le client Windows</li>
+</ul>
+<hr>
+<h2 id="topologie">Topologie<a hidden class="anchor" aria-hidden="true" href="#topologie">#</a></h2>
+<p><img alt="Topologie Lab 2" loading="lazy" src="/images/topologie-lab2-crl-ocsp.png"></p>
+<hr>
+<h2 id="configuration-réseau">Configuration Réseau<a hidden class="anchor" aria-hidden="true" href="#configuration-réseau">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: center">Machines</th>
+          <th style="text-align: center">Hostname</th>
+          <th style="text-align: center">IP</th>
+          <th style="text-align: center">Nom de domaine</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Root CA</td>
+          <td style="text-align: center">RootCA</td>
+          <td style="text-align: center">192.168.122.20</td>
+          <td style="text-align: center">rootca1.cyber.lab</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Intermediate CA</td>
+          <td style="text-align: center">SubCA</td>
+          <td style="text-align: center">192.168.122.40</td>
+          <td style="text-align: center">subca1.cyber.lab</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Serveur Web</td>
+          <td style="text-align: center">web</td>
+          <td style="text-align: center">192.168.122.30</td>
+          <td style="text-align: center"><a href="https://www.cyber.lab">www.cyber.lab</a> crl.cyber.lab</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Client Windows</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">DHCP</td>
+          <td style="text-align: center">-</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="phase-1--reconstruction-de-la-pki">PHASE 1 : Reconstruction de la PKI<a hidden class="anchor" aria-hidden="true" href="#phase-1--reconstruction-de-la-pki">#</a></h2>
+<h3 id="phase-11--création-du-root-ca">Phase 1.1 : Création du Root CA<a hidden class="anchor" aria-hidden="true" href="#phase-11--création-du-root-ca">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Structure des dossiers</span>
+</span></span><span style="display:flex;"><span>mkdir -p ~/pki/root/<span style="color:#f92672">{</span>private,certs,crl,csr,newcerts<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Protéger le dossier de la clé privée</span>
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">700</span> ~/pki/root/private
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Registre des certificats émis </span>
+</span></span><span style="display:flex;"><span>touch ~/pki/root/index.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Numéro de série — commence à 01 </span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; ~/pki/root/serial 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Numéro de CRL </span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; ~/pki/root/crlnumber
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Création du fichier de configuration</span>
+</span></span><span style="display:flex;"><span>nano pki/root/root.cnf
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[ ca ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_ca</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA_default</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ CA_default ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dir</span>               <span style="color:#f92672">=</span> <span style="color:#e6db74">/root/pki/root</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certs</span>             <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/certs</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl_dir</span>           <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">new_certs_dir</span>     <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/newcerts</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">database</span>          <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/index.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">serial</span>            <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/serial</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlnumber</span>         <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crlnumber</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">private_key</span>       <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/private/root.key</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certificate</span>       <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/certs/root.crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl</span>               <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crl/root.crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_days</span>      <span style="color:#f92672">=</span> <span style="color:#e6db74">3650</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_crl_days</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">30</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">policy</span>            <span style="color:#f92672">=</span> <span style="color:#e6db74">policy_strict</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ policy_strict ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">countryName</span>             <span style="color:#f92672">=</span> <span style="color:#e6db74">match</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stateOrProvinceName</span>     <span style="color:#f92672">=</span> <span style="color:#e6db74">match</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">organizationName</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">match</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">commonName</span>              <span style="color:#f92672">=</span> <span style="color:#e6db74">supplied</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ req ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_bits</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">prompt</span>              <span style="color:#f92672">=</span> <span style="color:#e6db74">no</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>          <span style="color:#f92672">=</span> <span style="color:#e6db74">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">distinguished_name</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">dn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ dn ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">C</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">SN</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ST</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Senegal</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">O</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">Cyber Lab</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">CN</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Lab Root CA</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ v3_root_ca ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, CA:true</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, keyCertSign, cRLSign</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">keyid:always, issuer</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ v3_intermediate_ca ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, CA:true, pathlen:0</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, keyCertSign, cRLSign</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlDistributionPoints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">URI:http://crl.cyber.lab/crl/root.crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityInfoAccess</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OCSP;URI:http://crl.cyber.lab/ocsp/root</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ ocsp ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA:FALSE</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, digitalSignature</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">extendedKeyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OCSPSigning</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash</span>
+</span></span></code></pre></div><p>Le fichier <code>.cnf</code> d&rsquo;une <strong>CA</strong> est sa politique d&rsquo;émission, il définit tous les types de certificats qu&rsquo;elle est autorisée à produire. Dans notre cas ici, le fichier <code>.cnf</code> définit les extensions pour les certificats du RootCA (<code>v3_root_ca</code>) et du SubCA (<code>v3_intermediate_ca</code>).</p>
+<ul>
+<li><code>crlDistributionPoints</code>  spécifie l&rsquo;endpoint duquel l&rsquo;on peut récupérer le CRL de même que le <code>authorityInfoAccess</code> pour le OSCP</li>
+<li>le <code>keyUsage</code>  <code>cRLSign</code> spécifie que la clé privée de cette autorité peut signer des CRL</li>
+</ul>
+<p>Avec le fichier de configuration nous allons maintenant générer la Root CA :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Clé privée PEM pass : JG/IpvS3gxqzKg5J</span>
+</span></span><span style="display:flex;"><span>openssl genrsa -aes256 -out ~/pki/root/private/root.key <span style="color:#ae81ff">4096</span>
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">400</span> ~/pki/root/private/root.key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Certificat auto-signé</span>
+</span></span><span style="display:flex;"><span>openssl req -config ~/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -key ~/pki/root/private/root.key <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -new -x509 -days <span style="color:#ae81ff">7300</span> -sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions v3_root_ca <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/pki/root/certs/root.crt
+</span></span></code></pre></div><hr>
+<h3 id="phase-12--création-de-lintermediate-ca">Phase 1.2 : Création de l&rsquo;Intermediate CA<a hidden class="anchor" aria-hidden="true" href="#phase-12--création-de-lintermediate-ca">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Structure de dossier</span>
+</span></span><span style="display:flex;"><span>mkdir -p ~/pki/intermediate/<span style="color:#f92672">{</span>private,certs,crl,csr,newcerts<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">700</span> ~/pki/intermediate/private
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>touch ~/pki/intermediate/index.txt
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; ~/pki/intermediate/serial
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; ~/pki/intermediate/crlnumber
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Création du fichier de configuration</span>
+</span></span><span style="display:flex;"><span>nano ~/pki/intermediate/intermediate.cnf
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[ ca ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_ca</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA_default</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ CA_default ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dir</span>               <span style="color:#f92672">=</span> <span style="color:#e6db74">/root/pki/intermediate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certs</span>             <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/certs</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl_dir</span>           <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">new_certs_dir</span>     <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/newcerts</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">database</span>          <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/index.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">serial</span>            <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/serial</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlnumber</span>         <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crlnumber</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">private_key</span>       <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/private/intermediate.key</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certificate</span>       <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/certs/intermediate.crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl</span>               <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crl/intermediate.crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_days</span>      <span style="color:#f92672">=</span> <span style="color:#e6db74">365</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_crl_days</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">7</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">policy</span>            <span style="color:#f92672">=</span> <span style="color:#e6db74">policy_loose</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ policy_loose ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">countryName</span>             <span style="color:#f92672">=</span> <span style="color:#e6db74">optional</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stateOrProvinceName</span>     <span style="color:#f92672">=</span> <span style="color:#e6db74">optional</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">organizationName</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">optional</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">commonName</span>              <span style="color:#f92672">=</span> <span style="color:#e6db74">supplied</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ req ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_bits</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">prompt</span>              <span style="color:#f92672">=</span> <span style="color:#e6db74">no</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>          <span style="color:#f92672">=</span> <span style="color:#e6db74">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">distinguished_name</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">dn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ dn ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">C</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">SN</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ST</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Senegal</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">L</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">Dakar</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">O</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">Cyber Lab</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">CN</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Lab Intermediate CA</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ server_cert ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA:FALSE</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, digitalSignature, keyEncipherment</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">extendedKeyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">serverAuth</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlDistributionPoints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">URI:http://crl.cyber.lab/crl/intermediate.crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityInfoAccess</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OCSP;URI:http://crl.cyber.lab/ocsp/intermediate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectAltName</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">DNS:www.cyber.lab</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ ocsp ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA:FALSE</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, digitalSignature</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">extendedKeyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OCSPSigning</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash</span>
+</span></span></code></pre></div><p>Nous allons maintenant générer la clé privée et le CSR de l&rsquo;Intermediate CA puis la transférer vers le RootCA :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Clé privée Pass PEM : +ptIxeoDsc+kVzer</span>
+</span></span><span style="display:flex;"><span>openssl genrsa -aes256  -out ~/pki/intermediate/private/intermediate.key <span style="color:#ae81ff">4096</span> 
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">400</span> ~/pki/intermediate/private/intermediate.key 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Générer le CSR </span>
+</span></span><span style="display:flex;"><span>openssl req -config ~/pki/intermediate/intermediate.cnf -new -sha256 -key ~/pki/intermediate/private/intermediate.key -out ~/pki/intermediate/csr/intermediate.csr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copier le CSR vers le rootCA</span>
+</span></span><span style="display:flex;"><span>scp ~/pki/intermediate/csr/intermediate.csr  root@rootca1.cyber.lab:~/
+</span></span></code></pre></div><p>Maintenant depuis le Root CA nous allons créer et signer le certificat de l&rsquo;Intermediate et le lui renvoyer :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Création du certificat </span>
+</span></span><span style="display:flex;"><span>openssl ca -config ~/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions v3_intermediate_ca <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">3650</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in ~/intermediate.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/intermediate.crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Envoie du certificat à l&#39;intermediate</span>
+</span></span><span style="display:flex;"><span>scp ~/intermediate.crt  root@subca1.cyber.lab:~/pki/intermediate/certs
+</span></span></code></pre></div><hr>
+<h3 id="phase-13--réémission-du-certificat-du-serveur-web">Phase 1.3 : Réémission du certificat du serveur WEB<a hidden class="anchor" aria-hidden="true" href="#phase-13--réémission-du-certificat-du-serveur-web">#</a></h3>
+<p>Précédemment nous avions généré la clé privée du serveur web dans <code>/etc/ssl/lab/private</code> et les CSR dans <code>/etc/ssl/lab/webserver.csr</code>. Maintenant nous allons transférer ce CSR sur le SubCA et émettre le certificat du serveur web :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scp /etc/ssl/lab/webserver.csr root@subca1.cyber.lab:~/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Sur le SubCA</span>
+</span></span><span style="display:flex;"><span>openssl ca -config ~/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions server_cert <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">365</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in ~/webserver.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/webserver.crt
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Création de la chaîne de confiance</span>
+</span></span><span style="display:flex;"><span>cat ~/pki/intermediate/certs/intermediate.crt webserver.crt &gt; ca-chain
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Transfert du certificat et de la chaîne de confiance sur le Serveur WEB</span>
+</span></span><span style="display:flex;"><span>scp webserver.crt root@www.cyber.lab:/etc/ssl/lab/certs/
+</span></span><span style="display:flex;"><span>scp ca-chain.crt root@www.cyber.lab:/etc/ssl/lab/certs/
+</span></span></code></pre></div><hr>
+<h2 id="phase-2--crl--ocsp">PHASE 2 : CRL &amp; OCSP<a hidden class="anchor" aria-hidden="true" href="#phase-2--crl--ocsp">#</a></h2>
+<p>Durant les précédentes configurations, nous avions émis les certificats avec leur <strong>CRL Distribution Points</strong> (CDP) et l&rsquo;endpoint du OCSP Responder, chaque certificat est émis avec le CDP contenant le CRL de son signataire.
+Dans cette phase nous allons créer et configurer le serveur WEB à ce qu&rsquo;il héberge les CRL et l&rsquo;OCSP Responder, générer le CRL du SubCA  configurer le OCSP Responder et faire un test de révocation.</p>
+<hr>
+<h4 id="configuration-du-serveur-web"><strong>Configuration du serveur web</strong><a hidden class="anchor" aria-hidden="true" href="#configuration-du-serveur-web">#</a></h4>
+<p>Les CRLs seront hébergées sur le nom de domaine <code>crl.cyber.lab</code>, enregistrons donc ce nom sur le serveur DNS :</p>
+<p><img alt="Configuration DNS" loading="lazy" src="/images/Pasted%20image%2020260312101209.png"></p>
+<p>Maintenant nous allons créer un VirtualHost qui va héberger le site des CRLs et l&rsquo;OSCP :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Sur le serveur WEB</span>
+</span></span><span style="display:flex;"><span>mkdir -p /var/www/crl/crl
+</span></span><span style="display:flex;"><span>mkdir -p /var/www/crl/ocsp/root
+</span></span><span style="display:flex;"><span>mkdir -p /var/www/crl/ocsp/intermediate
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Création du VirtualHost</span>
+</span></span><span style="display:flex;"><span>nano /etc/apache2/sites-available/crl.conf
+</span></span></code></pre></div><pre tabindex="0"><code class="language-cnf" data-lang="cnf">&lt;VirtualHost *:80&gt;
+    ServerName crl.cyber.lab
+    DocumentRoot /var/www/crl
+
+    &lt;Directory /var/www/crl&gt;
+        Options Indexes
+        AllowOverride None
+        Require all granted
+    &lt;/Directory&gt;
+    
+&lt;/VirtualHost&gt;
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Activation du Site</span>
+</span></span><span style="display:flex;"><span>a2ensite crl.conf
+</span></span><span style="display:flex;"><span>systemctl reload apache2
+</span></span></code></pre></div><p><img alt="Pasted image 20260312102625" loading="lazy" src="/images/Pasted%20image%2020260312102625.png"></p>
+<h4 id="génération-du-crl-sur-le-subca">Génération du CRL sur le SubCA<a hidden class="anchor" aria-hidden="true" href="#génération-du-crl-sur-le-subca">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>openssl ca -config ~/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -gencrl <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/pki/intermediate/crl/intermediate.crl
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Puis lisons cette crl avec </span>
+</span></span><span style="display:flex;"><span>openssl crl -in ~/pki/intermediate/crl/intermediate.crl -text
+</span></span></code></pre></div><p>La CRL est générée et signée avec la clé du SubCA pour prouver sa validité. Aucun certificat n&rsquo;est encore révoqué comme nous pouvons le voir 👇</p>
+<p><img alt="Vérification CRL" loading="lazy" src="/images/Pasted%20image%2020260312102146.png"></p>
+<hr>
+<h4 id="configuration-du-ocsp-responder">Configuration du OCSP Responder<a hidden class="anchor" aria-hidden="true" href="#configuration-du-ocsp-responder">#</a></h4>
+<p>L&rsquo;OCSP Responder a pour rôle d&rsquo;assurer la vérification en temps réel du statut d&rsquo;un certificat. Ce dernier signe ses réponses pour empêcher une attaque de Man In The Middle.</p>
+<p>Lorsque le client part sur le site web, il vérifie la validité de toute la chaîne de confiance en commençant par l&rsquo;Intermediate et ensuite le certificat du serveur WEB.</p>
+<p>Nous allons configurer deux OCSP Responders, un hébergé sur le RootCA chargé de répondre à la vérification du SubCA et un autre hébergé sur le SubCA pour le certificat Serveur.</p>
+<blockquote>
+<p>NB : En production, les OCSP Responder sont délégués à un serveur dédié</p>
+</blockquote>
+<p><strong>OSCP Responder sur SubCA</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Clé privée</span>
+</span></span><span style="display:flex;"><span>openssl genrsa -out ~/pki/intermediate/private/ocsp.key <span style="color:#ae81ff">4096</span> 
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">400</span> ~/pki/intermediate/private/ocsp.key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># CSR</span>
+</span></span><span style="display:flex;"><span>openssl req -new <span style="color:#ae81ff">\ </span>-key ~/pki/intermediate/private/ocsp.key <span style="color:#ae81ff">\ </span>-out ~/pki/intermediate/csr/ocsp.csr <span style="color:#ae81ff">\ </span>-subj <span style="color:#e6db74">&#34;/C=SN/ST=Senegal/O=Cyber Lab/CN=OCSP Responder&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Emission du certificat</span>
+</span></span><span style="display:flex;"><span>openssl ca -config ~/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">365</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in ~/pki/intermediate/csr/ocsp.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/pki/intermediate/certs/ocsp.crt
+</span></span></code></pre></div><p><strong>OCSP Responder sur Root CA</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Clé privée</span>
+</span></span><span style="display:flex;"><span>openssl genrsa -out ~/pki/root/private/ocsp.key <span style="color:#ae81ff">4096</span> 
+</span></span><span style="display:flex;"><span>chmod <span style="color:#ae81ff">400</span> ~/pki/root/private/ocsp.key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># CSR</span>
+</span></span><span style="display:flex;"><span>openssl req -new  -key ~/pki/root/private/ocsp.key -out ~/pki/root/csr/ocsp.csr  -subj <span style="color:#e6db74">&#34;/C=SN/ST=Senegal/O=Cyber Lab/CN=OCSP Responder RootCA&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Emission du certificat</span>
+</span></span><span style="display:flex;"><span>openssl ca -config ~/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">365</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in ~/pki/root/csr/ocsp.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/pki/root/certs/ocsp.crt
+</span></span></code></pre></div><p>L&rsquo;OCSP responder est un service qui tournera en permanence à travers un port d&rsquo;écoute. Cependant nous avons spécifié l&rsquo;endpoint sur le serveur WEB, la question qui se pose c&rsquo;est comment la requête du client qui se fera en direction du serveur web pourra atteindre le SubCA ?</p>
+<p>Pour cela nous allons utiliser un <strong>Reverse Proxy</strong>  qui redirigera la requête vers le SubCA et le Root CA les gardant isolés.</p>
+<p>Lançons tout d&rsquo;abord les OCSP Responder :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Sur le RootCA</span>
+</span></span><span style="display:flex;"><span>openssl ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -port <span style="color:#ae81ff">2560</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -text <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -index ~/pki/root/index.txt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -CA ~/pki/root/certs/root.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rkey ~/pki/root/private/ocsp.key <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rsigner ~/pki/root/certs/ocsp.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/ocsp.log &amp;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Sur le SubCA</span>
+</span></span><span style="display:flex;"><span>openssl ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -port <span style="color:#ae81ff">2560</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -text <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -index ~/pki/intermediate/index.txt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -CA ~/pki/intermediate/certs/intermediate.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rkey ~/pki/intermediate/private/ocsp.key <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rsigner ~/pki/intermediate/certs/ocsp.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/ocsp.log &amp;
+</span></span></code></pre></div><p>Ensuite configurons le Reverse Proxy sur le Web Server :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Activation des modules nécessaires</span>
+</span></span><span style="display:flex;"><span>a2enmod proxy proxy_http
+</span></span><span style="display:flex;"><span>systemctl restart apache2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Modification de crl.cnf</span>
+</span></span><span style="display:flex;"><span>nano /etc/apache2/sites-available/crl.conf
+</span></span></code></pre></div><pre tabindex="0"><code class="language-cnf" data-lang="cnf">&lt;VirtualHost *:80&gt;
+    ServerName crl.cyber.lab
+    DocumentRoot /var/www/crl
+
+    &lt;Directory /var/www/crl&gt;
+        Options Indexes
+        AllowOverride None
+        Require all granted
+    &lt;/Directory&gt;
+
+    # Reverse Proxy OCSP Root
+    ProxyPass /ocsp/root http://rootca1.cyber.lab:2560
+    ProxyPassReverse /ocsp/root http://rootca1.cyber.lab:2560
+    # OCSP Intermediate
+    ProxyPass /ocsp/intermediate http://subca1.cyber.lab:2560
+    ProxyPassReverse /ocsp/intermediate http://subca1.cyber.lab:2560
+&lt;/VirtualHost&gt;
+</code></pre><p>Quand une requête se fera en direction de <code>/ocsp/intermediate</code> elle sera rediriger vers <code>http://subca1.cyber.lab:2560</code>,  ensuite quand le SubCA va répondre, le Proxy remplacera l&rsquo;URL contenu dans le Header par le sien <code>crl.cyber.lab</code>. Le même principe s&rsquo;applique à une requête sur l&rsquo;endpoint <code>/ocsp/root</code>. Redémarrons le service <code>apache2</code>.</p>
+<hr>
+<p>Testons le OCSP Responder depuis le RootCA :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>openssl ocsp   -issuer ~/intermediate.crt   -cert ~/webserver.crt   -url http://crl.cyber.lab/ocsp/intermediate -CAfile ~/pki/root/certs/root.crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>openssl ocsp   -issuer ~/pki/root/certs/root.crt   -cert ~/intermediate.crt   -url http://crl.cyber.lab/ocsp/root   -CAfile ~/pki/root/certs/root.crt
+</span></span></code></pre></div><p><img alt="Test OCSP Responder SubCA" loading="lazy" src="/images/Pasted%20image%2020260315095846.png"></p>
+<p><img alt="Test OCSP Responder Root CA" loading="lazy" src="/images/Pasted%20image%2020260315095804.png"></p>
+<hr>
+<h4 id="test-de-révocation"><strong>Test de révocation</strong><a hidden class="anchor" aria-hidden="true" href="#test-de-révocation">#</a></h4>
+<p>Nous allons maintenant révoquer le certificat du serveur WEB depuis le SubCA et regénérer le CRL :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>openssl ca -config ~/pki/intermediate/intermediate.cnf -revoke ~/pki/intermediate/newcerts/01.pem
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Génération du CRL</span>
+</span></span><span style="display:flex;"><span>openssl ca -config ~/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -gencrl <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/pki/intermediate/crl/intermediate.crl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copie du CRL sur le Serveur WEB</span>
+</span></span><span style="display:flex;"><span>scp ~/pki/intermediate/crl/intermediate.crl root@www.cyber.lab:/var/www/crl/crl
+</span></span></code></pre></div><p>En refaisant la requête OCSP depuis le RootCA, nous obtenons une réponse disant que le Certificat a été révoqué :</p>
+<p><img alt="Test de Révocation" loading="lazy" src="/images/Pasted%20image%2020260312111709.png"></p>
+<p>Sur le navigateur du client, la révocation n&rsquo;est pas détecté. Pourquoi ?
+Pour en comprendre la raison, définissons d&rsquo;abord la différence entre une <strong>PKI publique</strong> et une <strong>PKI privée</strong>.</p>
+<hr>
+<h4 id="pki-publique--pki-privée">PKI publique &amp; PKI privée<a hidden class="anchor" aria-hidden="true" href="#pki-publique--pki-privée">#</a></h4>
+<p>Une <strong>PKI publique</strong> dispose d&rsquo;une CA <strong>mondialement connu</strong> comme <strong>DigiCert</strong> ou <strong>Let&rsquo;s Encrypt</strong> et incluse dans les Trusts Store (Google, Mozilla, etc). Le Root CA est pré-installé sur l&rsquo;OS et dans le navigateur.</p>
+<p>Une <strong>PKI privée</strong>, quant à elle, est celle disposant d&rsquo;une <strong>CA</strong> généré par une organisation pour ses activités propres. Le Root CA ici n&rsquo;est pas inclus dans les Trusts Store.</p>
+<p>Dans les navigateurs, principalement dans <strong>Google Chrome</strong>, il est installé une base de données de CRLs collectées par Google distribuées à chaque mise à jour de Google Chrome. On appelle cette base de données un <strong>CRLSet</strong>. La révocation est donc vérifiée en local par le navigateur sans faire des requêtes sur le réseau.</p>
+<blockquote>
+<p>C&rsquo;est pourquoi le navigateur de notre client n&rsquo;a pas détecté la révocation.</p>
+</blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/pki/">PKI</a></li>
+      <li><a href="http://localhost:1313/tags/openssl/">OpenSSL</a></li>
+      <li><a href="http://localhost:1313/tags/crl/">CRL</a></li>
+      <li><a href="http://localhost:1313/tags/ocsp/">OCSP</a></li>
+      <li><a href="http://localhost:1313/tags/lab/">Lab</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/declaration-cotonou/">
+    <span class="title">Suivant »</span>
+    <br>
+    <span>La Déclaration de Cotonou a oublié quelque chose...</span>
+  </a>
+</nav>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on x"
+            href="https://x.com/intent/tweet/?text=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f&amp;hashtags=PKI%2cOpenSSL%2cCRL%2cOCSP%2cLab">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f&amp;title=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI&amp;summary=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on reddit"
+            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f&title=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on whatsapp"
+            href="https://api.whatsapp.com/send?text=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on telegram"
+            href="https://telegram.me/share/url?text=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=Lab%202%20%e2%80%94%20CRL%20et%20OCSP%20%3a%20Impl%c3%a9menter%20la%20r%c3%a9vocation%20dans%20une%20PKI&u=http%3a%2f%2flocalhost%3a1313%2fposts%2flab2-crl-ocsp%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer><script src="https://giscus.app/client.js"
+        data-repo="Brizman236/ericyawilhit"
+        data-repo-id="R_kgDORpa0mw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDORpa0m84C4wiQ"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="fr"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Eric Yawilhit</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'Copier';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'Copié !';
+            setTimeout(() => {
+                copybutton.innerHTML = 'Copier';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/about.md",
+                "file": "content/posts/lab2-crl-ocsp.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "about"
+              "title": "lab2-crl-ocsp"
             }
           }
         ]
@@ -185,29 +185,30 @@
   },
   "active": "8ebb33b6b70a8304",
   "lastOpenFiles": [
-    "layouts/partials/comment.html",
-    "public/images/Eric Yawilhit.png",
-    "www.linkedin.com/in/eric-yawilhit.md",
-    "content/about.md",
-    "www.linkedin.com/in",
-    "www.linkedin.com",
+    "public/assets/css/stylesheet.1ad4a0962497bc5ff83482210fb5c80fba77812c7c506bb1a42490a7297543ba.css",
+    "public/fonts/JetBrainsMono-VariableFont_wght.ttf",
+    "static/fonts/JetBrainsMono-VariableFont_wght.ttf",
+    "public/assets/css/stylesheet.f10626f0fe256b15760a674c343bcb0a21f59aa3afb8b3d1dba2fc6bfc0b90ad.css",
+    "public/fonts/AdwaitaMono-Regular.ttf",
+    "static/fonts/AdwaitaMono-Regular.ttf",
+    "public/tags/lab/index.xml",
+    "public/tags/ocsp/index.xml",
+    "public/tags/openssl/index.xml",
+    "public/tags/crl/index.xml",
+    "public/posts/lab2-crl-ocsp/index.html",
+    "public/images/Pasted image 20260315095804.png",
+    "public/images/Pasted image 20260312102146.png",
+    "public/images/topologie-lab2-crl-ocsp.png",
+    "public/images/lab2-cover.png",
+    "public/images/Pasted image 20260315095846.png",
+    "public/images/Pasted image 20260312111709.png",
+    "public/images/Pasted image 20260312102625.png",
+    "public/images/Pasted image 20260312101209.png",
     "static/images/Eric Yawilhit.png",
-    "public/about/index.html",
-    "public/about",
-    "content/posts/declaration-cotonou.md",
-    "public/images/avatar.jpeg",
-    "static/images/avatar.jpeg",
-    "public/assets/css/stylesheet.3b624eada39c47b46d9df425c22c967f35e11d92f9587811d286ce563110eca1.css",
-    "assets/css/extended/custom.css",
-    "assets/css/extended",
-    "assets/css",
-    "layouts/partials/extend_head.html",
-    "layouts/partials",
-    "public/declaration-cotonou.png",
-    "public/images/declaration-cotonou.png",
-    "static/images/declaration-cotonou.png",
-    "themes/PaperMod/images/tn.png",
-    "themes/PaperMod/images/screenshot.png",
-    "public/images/declaration-cotonou 1.png"
+    "content/about.md",
+    "static/images/topologie-lab2-crl-ocsp.png",
+    "content/posts/lab2-crl-ocsp.md",
+    "www.linkedin.com/in/eric-yawilhit.md",
+    "content/posts/declaration-cotonou.md"
   ]
 }

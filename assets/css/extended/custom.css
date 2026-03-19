@@ -1,3 +1,12 @@
 body, article {
     font-family: 'Inter', sans-serif;
 }
+
+@font-face {
+    font-family: 'Adwaita Mono';
+    src: url('/fonts/AdwaitaMono-Regular.ttf') format('truetype');
+}
+
+code, pre {
+    font-family: 'Adwaita Mono', monospace;
+}
