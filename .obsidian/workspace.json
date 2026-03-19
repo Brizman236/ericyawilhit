@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/declaration-cotonou.md",
+                "file": "content/about.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "declaration-cotonou"
+              "title": "about"
             }
           }
         ]
@@ -185,6 +185,15 @@
   },
   "active": "8ebb33b6b70a8304",
   "lastOpenFiles": [
+    "public/images/Eric Yawilhit.png",
+    "www.linkedin.com/in/eric-yawilhit.md",
+    "content/about.md",
+    "www.linkedin.com/in",
+    "www.linkedin.com",
+    "static/images/Eric Yawilhit.png",
+    "public/about/index.html",
+    "public/about",
+    "content/posts/declaration-cotonou.md",
     "public/images/avatar.jpeg",
     "static/images/avatar.jpeg",
     "public/assets/css/stylesheet.3b624eada39c47b46d9df425c22c967f35e11d92f9587811d286ce563110eca1.css",
@@ -193,16 +202,11 @@
     "assets/css",
     "layouts/partials/extend_head.html",
     "layouts/partials",
-    "public/fonts",
-    "static/fonts",
     "public/declaration-cotonou.png",
     "public/images/declaration-cotonou.png",
     "static/images/declaration-cotonou.png",
-    "static/images/Non confirmé 582726.crdownload",
     "themes/PaperMod/images/tn.png",
     "themes/PaperMod/images/screenshot.png",
-    "content/posts/declaration-cotonou.md",
-    "public/images/declaration-cotonou 1.png",
-    "static/Non confirmé 994657.crdownload"
+    "public/images/declaration-cotonou 1.png"
   ]
 }

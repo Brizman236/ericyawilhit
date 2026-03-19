@@ -23,6 +23,8 @@
     <loc>http://localhost:1313/tags/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/about/</loc>
+  </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url>
 </urlset>

@@ -9,7 +9,9 @@ theme = "PaperMod"
   ShowReadingTime = true
   ShowShareButtons = true
   ShowPostNavLinks = true
-  images = ["images/declaration-cotonou.png"]
+  images = ["images/Eric Yawilhit.png"]
+  ShowToc = true
+  ShowCodeCopyButtons = true
 
 [params.profileMode]
   enabled = true
@@ -26,7 +28,11 @@ theme = "PaperMod"
   [[menu.main]]
     name = "Articles"
     url = "/posts/"
-    weight = 1
+    weight = 2
+  [[menu.main]]
+    name = "À propos"
+    url = "/about/"
+    weight = 2
 
 [[params.socialIcons]]
   name = "linkedin"
@@ -35,3 +41,7 @@ theme = "PaperMod"
 [[params.socialIcons]]
   name = "github"
   url = "https://github.com/Brizman236"
+
+[[params.socialIcons]]
+  name = "gmail"
+  url = "ericyawilhit37@gmail.com"
