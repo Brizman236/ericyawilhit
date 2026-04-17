@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "d45260a3367f61ba",
+        "id": "d403f123148380ec",
         "type": "tabs",
         "children": [
           {
-            "id": "8ebb33b6b70a8304",
+            "id": "857c15ee0aad98a2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/lab2-crl-ocsp.md",
+                "file": "content/posts/lab3-pki-signature.md",
                 "mode": "source",
-                "source": false
+                "source": true
               },
               "icon": "lucide-file",
-              "title": "lab2-crl-ocsp"
+              "title": "lab3-pki-signature"
             }
           }
         ]
@@ -183,31 +183,32 @@
       "bases:Créer une nouvelle base": false
     }
   },
-  "active": "8ebb33b6b70a8304",
+  "active": "857c15ee0aad98a2",
   "lastOpenFiles": [
-    "public/assets/css/stylesheet.1ad4a0962497bc5ff83482210fb5c80fba77812c7c506bb1a42490a7297543ba.css",
-    "public/fonts/JetBrainsMono-VariableFont_wght.ttf",
+    "public/assets/css/stylesheet.53d5ff076674478dcf9e4b6c08ebe6670794bd7ff118c637aaba024ed0135734.css",
+    "public/assets/css/stylesheet.e659e8a8ab99925303072de03a022a9f68185218d583a7cd47d2a2657c76c733.css",
+    "public/assets/css/stylesheet.cc6acaeca5c889e1b237be26de195d0f00f09dcb20ed641a08796193fddea1da.css",
+    "public/assets/css/stylesheet.e81c5d1cc282bbfd88391ea9e37d9ef49268779a72c9958c488a367540d2f821.css",
+    "public/assets/css/stylesheet.e400ad465e322f519485f8d8406d2d1a5f708f2fba9ba5b57999395f96df3701.css",
+    "public/assets/css/stylesheet.a30867f058e8e18b7849068c36739914db3741d5b8603588ff92bf907de9b44e.css",
+    "public/fonts/GoogleSansCode-Regular.ttf",
+    "static/fonts/GoogleSansCode-Regular.ttf",
     "static/fonts/JetBrainsMono-VariableFont_wght.ttf",
-    "public/assets/css/stylesheet.f10626f0fe256b15760a674c343bcb0a21f59aa3afb8b3d1dba2fc6bfc0b90ad.css",
-    "public/fonts/AdwaitaMono-Regular.ttf",
     "static/fonts/AdwaitaMono-Regular.ttf",
-    "public/tags/lab/index.xml",
-    "public/tags/ocsp/index.xml",
-    "public/tags/openssl/index.xml",
-    "public/tags/crl/index.xml",
-    "public/posts/lab2-crl-ocsp/index.html",
-    "public/images/Pasted image 20260315095804.png",
-    "public/images/Pasted image 20260312102146.png",
-    "public/images/topologie-lab2-crl-ocsp.png",
-    "public/images/lab2-cover.png",
-    "public/images/Pasted image 20260315095846.png",
-    "public/images/Pasted image 20260312111709.png",
-    "public/images/Pasted image 20260312102625.png",
-    "public/images/Pasted image 20260312101209.png",
-    "static/images/Eric Yawilhit.png",
-    "content/about.md",
-    "static/images/topologie-lab2-crl-ocsp.png",
+    "static/fonts",
+    "public/images/Pasted image 20260417000331.png",
+    "public/images/Pasted image 20260417000356.png",
+    "public/images/Pasted image 20260321012600.png",
+    "public/images/Pasted image 20260321012220.png",
+    "public/images/Pasted image 20260321010741.png",
+    "public/images/lab3-cover1.jpg",
+    "public/images/lab3-cover.jpg",
+    "public/images/lab3-topologie.jpg",
+    "static/images/lab3-topologie.jpg",
+    "content/posts/lab3-pki-signature.md",
+    "static/images/Pasted image 20260417000331.png",
     "content/posts/lab2-crl-ocsp.md",
+    "content/about.md",
     "www.linkedin.com/in/eric-yawilhit.md",
     "content/posts/declaration-cotonou.md"
   ]

@@ -5,7 +5,7 @@ theme = "PaperMod"
 
 [params]
   author = "Eric Yawilhit"
-  description = "J'apprends, je construis, je documente — PKI pour l'Afrique"
+  description = "Je conçois des architectures PKI pour sécuriser la confiance numérique en Afrique"
   ShowReadingTime = true
   ShowShareButtons = true
   ShowPostNavLinks = true
@@ -17,7 +17,7 @@ theme = "PaperMod"
 [params.profileMode]
   enabled = true
   title = "Eric Yawilhit"
-  subtitle = "J'apprends, je construis, je documente — PKI pour l'Afrique."
+  subtitle = "Je conçois des architectures PKI pour sécuriser la confiance numérique en Afrique"
   imageUrl = "/images/avatar.jpeg"
   imageTitle = "Eric Yawilhit"
 

@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 17 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko</title>
+      <link>http://localhost:1313/posts/lab3-pki-signature/</link>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/lab3-pki-signature/</guid>
+      <description>Face au fléau de la falsification des diplômes, ce guide technique détaille la mise en place d&amp;#39;une infrastructure de confiance (PKI) souveraine. À travers un laboratoire pratique utilisant SoftHSM2, OpenSSL et PyHanko, découvrez comment la signature numérique PAdES-LTV permet de garantir l&amp;#39;authenticité et l&amp;#39;intégrité des titres universitaires, vérifiables instantanément par les recruteurs via Adobe Acrobat</description>
+    </item>
     <item>
       <title>Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL</title>
       <link>http://localhost:1313/posts/lab2-crl-ocsp/</link>
