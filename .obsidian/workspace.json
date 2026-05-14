@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/lab3-pki-signature.md",
-                "mode": "source",
+                "file": "content/about.md",
+                "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "lab3-pki-signature"
+              "title": "about"
             }
           }
         ]
@@ -185,6 +185,7 @@
   },
   "active": "857c15ee0aad98a2",
   "lastOpenFiles": [
+    "content/posts/lab3-pki-signature.md",
     "public/assets/css/stylesheet.53d5ff076674478dcf9e4b6c08ebe6670794bd7ff118c637aaba024ed0135734.css",
     "public/assets/css/stylesheet.e659e8a8ab99925303072de03a022a9f68185218d583a7cd47d2a2657c76c733.css",
     "public/assets/css/stylesheet.cc6acaeca5c889e1b237be26de195d0f00f09dcb20ed641a08796193fddea1da.css",
@@ -195,7 +196,6 @@
     "static/fonts/GoogleSansCode-Regular.ttf",
     "static/fonts/JetBrainsMono-VariableFont_wght.ttf",
     "static/fonts/AdwaitaMono-Regular.ttf",
-    "static/fonts",
     "public/images/Pasted image 20260417000331.png",
     "public/images/Pasted image 20260417000356.png",
     "public/images/Pasted image 20260321012600.png",
@@ -205,7 +205,6 @@
     "public/images/lab3-cover.jpg",
     "public/images/lab3-topologie.jpg",
     "static/images/lab3-topologie.jpg",
-    "content/posts/lab3-pki-signature.md",
     "static/images/Pasted image 20260417000331.png",
     "content/posts/lab2-crl-ocsp.md",
     "content/about.md",

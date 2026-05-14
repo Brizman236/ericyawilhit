@@ -39,8 +39,8 @@
       <link>http://localhost:1313/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/about/</guid>
-      <description>&lt;p&gt;Je suis &lt;strong&gt;Eric Yawilhit&lt;/strong&gt;, Etudiant en 2e Année de Licence en Cybersécurité et grand passionné de la &lt;strong&gt;PKI&lt;/strong&gt; et de la &lt;strong&gt;souveraineté numérique africaine&lt;/strong&gt;. Mon objectif est de devenir un expert à la fois &lt;strong&gt;technique&lt;/strong&gt; et &lt;strong&gt;stratégique&lt;/strong&gt; pouvant aider des pays africains à atteindre la souveraineté numérique.&lt;/p&gt;
-&lt;p&gt;Dans l&amp;rsquo;atteinte de cet objectif, mon apprentissage se fait dans une approche pratique, je construis des architectures dans des environnements virtuels pour  maîtriser les concepts et avoir un certain savoir faire.&lt;/p&gt;</description>
+      <description>&lt;p&gt;La souveraineté numérique africaine est un sommet que je m&amp;rsquo;apprête à gravir. Étudiant en 2e année de Licence, je ne suis pas encore un expert, mais je suis un praticien passionné qui construit, chaque jour, les briques de son futur savoir-faire.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mon terrain de jeu : les Labs.&lt;/strong&gt; Convaincu que la théorie ne suffit pas, j’ai élargi mon apprentissage de la &lt;strong&gt;PKI&lt;/strong&gt; (gestion des certificats) vers l&amp;rsquo;&lt;strong&gt;IAM&lt;/strong&gt; (Identity &amp;amp; Access Management). Je documente ma progression en concevant des architectures virtuelles où je simule des environnements réels : centralisation d&amp;rsquo;annuaires, SSO, MFA et sécurisation du cycle de vie de l&amp;rsquo;identité.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
