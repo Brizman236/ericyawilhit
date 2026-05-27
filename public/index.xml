@@ -2,43 +2,43 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Eric Yawilhit</title>
-    <link>http://localhost:1313/</link>
+    <link>https://ericyawilhit.netlify.app/</link>
     <description>Recent content on Eric Yawilhit</description>
     <image>
       <title>Eric Yawilhit</title>
-      <url>http://localhost:1313/images/Eric%20Yawilhit.png</url>
-      <link>http://localhost:1313/images/Eric%20Yawilhit.png</link>
+      <url>https://ericyawilhit.netlify.app/images/Eric%20Yawilhit.png</url>
+      <link>https://ericyawilhit.netlify.app/images/Eric%20Yawilhit.png</link>
     </image>
     <generator>Hugo</generator>
     <language>fr</language>
     <lastBuildDate>Fri, 17 Apr 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ericyawilhit.netlify.app/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko</title>
-      <link>http://localhost:1313/posts/lab3-pki-signature/</link>
+      <link>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</link>
       <pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/lab3-pki-signature/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</guid>
       <description>Face au fléau de la falsification des diplômes, ce guide technique détaille la mise en place d&amp;#39;une infrastructure de confiance (PKI) souveraine. À travers un laboratoire pratique utilisant SoftHSM2, OpenSSL et PyHanko, découvrez comment la signature numérique PAdES-LTV permet de garantir l&amp;#39;authenticité et l&amp;#39;intégrité des titres universitaires, vérifiables instantanément par les recruteurs via Adobe Acrobat</description>
     </item>
     <item>
       <title>Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL</title>
-      <link>http://localhost:1313/posts/lab2-crl-ocsp/</link>
+      <link>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/lab2-crl-ocsp/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</guid>
       <description>Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.</description>
     </item>
     <item>
       <title>La Déclaration de Cotonou a oublié quelque chose...</title>
-      <link>http://localhost:1313/posts/declaration-cotonou/</link>
+      <link>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/declaration-cotonou/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</guid>
       <description>Les ministres africains ont signé la Déclaration de Cotonou avec des ambitions numériques immenses. Mais une infrastructure fondamentale a été oubliée : la PKI.</description>
     </item>
     <item>
       <title>À propos</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://ericyawilhit.netlify.app/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://ericyawilhit.netlify.app/about/</guid>
       <description>&lt;p&gt;La souveraineté numérique africaine est un sommet que je m&amp;rsquo;apprête à gravir. Étudiant en 2e année de Licence, je ne suis pas encore un expert, mais je suis un praticien passionné qui construit, chaque jour, les briques de son futur savoir-faire.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Mon terrain de jeu : les Labs.&lt;/strong&gt; Convaincu que la théorie ne suffit pas, j’ai élargi mon apprentissage de la &lt;strong&gt;PKI&lt;/strong&gt; (gestion des certificats) vers l&amp;rsquo;&lt;strong&gt;IAM&lt;/strong&gt; (Identity &amp;amp; Access Management). Je documente ma progression en concevant des architectures virtuelles où je simule des environnements réels : centralisation d&amp;rsquo;annuaires, SSO, MFA et sécurisation du cycle de vie de l&amp;rsquo;identité.&lt;/p&gt;</description>
     </item>
