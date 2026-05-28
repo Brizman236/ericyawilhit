@@ -2,36 +2,43 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/posts/</link>
+    <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Eric Yawilhit</description>
     <image>
       <title>Eric Yawilhit</title>
-      <url>https://ericyawilhit.netlify.app/images/Eric%20Yawilhit.png</url>
-      <link>https://ericyawilhit.netlify.app/images/Eric%20Yawilhit.png</link>
+      <url>http://localhost:1313/images/Eric%20Yawilhit.png</url>
+      <link>http://localhost:1313/images/Eric%20Yawilhit.png</link>
     </image>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Fri, 17 Apr 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak</title>
+      <link>http://localhost:1313/posts/nexgen-lab-1/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nexgen-lab-1/</guid>
+      <description>Face aux risques d&amp;#39;éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d&amp;#39;une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l&amp;#39;authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.</description>
+    </item>
     <item>
       <title>Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko</title>
-      <link>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</link>
+      <link>http://localhost:1313/posts/lab3-pki-signature/</link>
       <pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</guid>
+      <guid>http://localhost:1313/posts/lab3-pki-signature/</guid>
       <description>Face au fléau de la falsification des diplômes, ce guide technique détaille la mise en place d&amp;#39;une infrastructure de confiance (PKI) souveraine. À travers un laboratoire pratique utilisant SoftHSM2, OpenSSL et PyHanko, découvrez comment la signature numérique PAdES-LTV permet de garantir l&amp;#39;authenticité et l&amp;#39;intégrité des titres universitaires, vérifiables instantanément par les recruteurs via Adobe Acrobat</description>
     </item>
     <item>
       <title>Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL</title>
-      <link>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</link>
+      <link>http://localhost:1313/posts/lab2-crl-ocsp/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</guid>
+      <guid>http://localhost:1313/posts/lab2-crl-ocsp/</guid>
       <description>Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.</description>
     </item>
     <item>
       <title>La Déclaration de Cotonou a oublié quelque chose...</title>
-      <link>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</link>
+      <link>http://localhost:1313/posts/declaration-cotonou/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</guid>
+      <guid>http://localhost:1313/posts/declaration-cotonou/</guid>
       <description>Les ministres africains ont signé la Déclaration de Cotonou avec des ambitions numériques immenses. Mais une infrastructure fondamentale a été oubliée : la PKI.</description>
     </item>
   </channel>

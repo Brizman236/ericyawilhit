@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak | Eric Yawilhit</title>
+<meta name="keywords" content="">
+<meta name="description" content="Face aux risques d&#39;éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d&#39;une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l&#39;authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.">
+<meta name="author" content="Eric Yawilhit">
+<link rel="canonical" href="http://localhost:1313/posts/nexgen-lab-1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.53d5ff076674478dcf9e4b6c08ebe6670794bd7ff118c637aaba024ed0135734.css" integrity="sha256-U9X/B2Z0R43PnktsCOvmZweUvX/xGMY3qroCTtATVzQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/nexgen-lab-1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Articles">
+                    <span>Articles</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="À propos">
+                    <span>À propos</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak
+    </h1>
+    <div class="post-description">
+      Face aux risques d&#39;éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d&#39;une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l&#39;authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.
+    </div>
+    <div class="post-meta"><span title='2026-05-28 00:00:00 +0000 UTC'>May 28, 2026</span>&nbsp;·&nbsp;<span>16 min</span>&nbsp;·&nbsp;<span>Eric Yawilhit</span>
+
+</div>
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:1313/images/nexgen-1-topo.png" alt="Signature numérique de diplômes">
+        
+</figure><div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table des matières</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#contexte--objectifs" aria-label="Contexte &amp; Objectifs">Contexte &amp; Objectifs</a><ul>
+                        
+                <li>
+                    <a href="#%c3%a9tape-1--le-c%c5%93ur-de-lidentit%c3%a9-freeipa" aria-label="Étape 1 : Le Cœur de l&rsquo;Identité (FreeIPA)">Étape 1 : Le Cœur de l&rsquo;Identité (FreeIPA)</a><ul>
+                        
+                <li>
+                    <a href="#%c3%a9tape-11--configuration-de-lidentit%c3%a9-de-la-vm" aria-label="Étape 1.1 : Configuration de l&rsquo;Identité de la VM">Étape 1.1 : Configuration de l&rsquo;Identité de la VM</a></li>
+                <li>
+                    <a href="#%c3%a9tape-12--installation-et-configuration-du-serveur-freeipa" aria-label="Étape 1.2 : Installation et configuration du serveur FreeIPA">Étape 1.2 : Installation et configuration du serveur FreeIPA</a></li></ul>
+                </li>
+                <li>
+                    <a href="#etape-2--enrollement-syst%c3%a8me" aria-label="Etape 2 : Enrollement Système">Etape 2 : Enrollement Système</a></li>
+                <li>
+                    <a href="#etape-3--gestion-des-privil%c3%a8ges-et-contr%c3%b4le-dacc%c3%a8s" aria-label="Etape 3 : Gestion des Privilèges et Contrôle d&rsquo;Accès">Etape 3 : Gestion des Privilèges et Contrôle d&rsquo;Accès</a><ul>
+                        
+                <li>
+                    <a href="#etape-31--cr%c3%a9ation-des-identit%c3%a9s-et-des-groupes" aria-label="Etape 3.1 : Création des Identités et des Groupes">Etape 3.1 : Création des Identités et des Groupes</a></li>
+                <li>
+                    <a href="#etape-32--le-contr%c3%b4le-dacc%c3%a8s-hbac-multi-machine" aria-label="Etape 3.2 : Le Contrôle d&rsquo;Accès (HBAC) Multi-machine">Etape 3.2 : Le Contrôle d&rsquo;Accès (HBAC) Multi-machine</a></li>
+                <li>
+                    <a href="#etape-33--le-sudo-centralis%c3%a9-moindre-privil%c3%a8ge" aria-label="Etape 3.3 : Le SUDO Centralisé (Moindre Privilège)">Etape 3.3 : Le SUDO Centralisé (Moindre Privilège)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#etape-4--d%c3%a9ploiement-de-keycloak" aria-label="Etape 4 : Déploiement de KeyCloak">Etape 4 : Déploiement de KeyCloak</a><ul>
+                        
+                <li>
+                    <a href="#le-d%c3%a9ploiement" aria-label="Le Déploiement">Le Déploiement</a><ul>
+                        
+                <li>
+                    <a href="#1--dns-et-arborescence-des-repertoires" aria-label="1.  DNS et Arborescence des repertoires">1.  DNS et Arborescence des repertoires</a></li>
+                <li>
+                    <a href="#2-le-fichier-docker-compose-pour-keycloak" aria-label="2. Le fichier Docker Compose pour Keycloak">2. Le fichier Docker Compose pour Keycloak</a></li>
+                <li>
+                    <a href="#3-les-variables-denvironnement" aria-label="3. Les variables d&rsquo;environnement">3. Les variables d&rsquo;environnement</a></li>
+                <li>
+                    <a href="#4-le-certificat-tls-de-keycloak" aria-label="4. Le certificat TLS de KeyCloak">4. Le certificat TLS de KeyCloak</a></li>
+                <li>
+                    <a href="#5-lancer-le-d%c3%a9ploiement" aria-label="5. Lancer le déploiement">5. Lancer le déploiement</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#etape-5--configuration-de-keycloak" aria-label="Etape 5 : Configuration de Keycloak">Etape 5 : Configuration de Keycloak</a><ul>
+                        
+                <li>
+                    <a href="#etape-51--f%c3%a9d%c3%a9ration-didentit%c3%a9" aria-label="Etape 5.1 : Fédération d&rsquo;Identité">Etape 5.1 : Fédération d&rsquo;Identité</a></li></ul>
+                </li>
+                <li>
+                    <a href="#etape-5--configuration-des-clients-sp" aria-label="Etape 5 : Configuration des clients (SP)">Etape 5 : Configuration des clients (SP)</a><ul>
+                        
+                <li>
+                    <a href="#etape-51--configuration-de-gitea" aria-label="Etape 5.1 : Configuration de Gitea">Etape 5.1 : Configuration de Gitea</a></li>
+                <li>
+                    <a href="#etape-52--configuration-de-grafana" aria-label="Etape 5.2 : Configuration de Grafana">Etape 5.2 : Configuration de Grafana</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="contexte--objectifs">Contexte &amp; Objectifs<a hidden class="anchor" aria-hidden="true" href="#contexte--objectifs">#</a></h2>
+<p>NexGen Solution est une entreprise moderne qui explose mais qui fait face à un certains nombres de porblèmes critiques : </p>
+<ul>
+<li>Une faible gestion des mots de passe</li>
+<li>L&rsquo;éparpillement des identités</li>
+<li>Présence des comptes dormant avec des accès</li>
+</ul>
+<p>Ces problèmes la mettent dans une position délicate pouvant entraîner de graves conséquences. Par exemple un employé vient à démissionner pour la concurrence mais que ses accès demeurent, ce dernier peut causer une fuite de données, dégradant la réputation de Nex Gen.</p>
+<p>Ce dont Nex Gen a besoin est une infrastructure de gestion centralisé des identités et des accès. Techniquement il s&rsquo;agit de mettre en place :</p>
+<ul>
+<li>Une source de vérité unique pour les utilsateurs via un annuaire centralisé : cela permet une révocation instantanée des accès</li>
+<li>Un mécanisme de SSO (<strong>Single Sign On</strong>) pour ses applications Web, ce qui réduit l&rsquo;éparpillement des identifiants en permettant une seule authentification et améliore la productivité en évitant aux employés de mémoriser 10 mots de passe différents pour 10 services différents</li>
+<li>Des politiques de contrôles d&rsquo;accès</li>
+</ul>
+<p>Ce lab s&rsquo;inscrit dans une démarche d&rsquo;apprentissage me permettant de développer mes compétences dans la sécurité de l&rsquo;identité en maîtrisant :</p>
+<ul>
+<li><strong>Maîtrise de la chaîne de confiance :</strong>
+<ul>
+<li>Comprendre comment un certificat (PKI) devient l&rsquo;élément de preuve pour sécuriser une identité (LDAPS/StartTLS) et comment la confiance se transmet du serveur d&rsquo;identité à l&rsquo;application.</li>
+</ul>
+</li>
+<li><strong>Anatomie des protocoles de Fédération :</strong>
+<ul>
+<li>Au-delà du SAML, décortiquer le fonctionnement des <strong>échanges de jetons (Tokens)</strong>. Comprendre la différence entre un flux où le serveur parle directement au client et celui où l&rsquo;utilisateur joue le rôle d&rsquo;intermédiaire (Back-channel vs Front-channel).</li>
+</ul>
+</li>
+<li><strong>Compréhension de la délégation d&rsquo;authentification (Kerberos) :</strong>
+<ul>
+<li>Maîtriser le concept de &ldquo;Ticket-Granting Ticket&rdquo; (TGT). Savoir comment un utilisateur prouve son identité au réseau une seule fois sans jamais renvoyer son mot de passe sur le fil.</li>
+</ul>
+</li>
+<li><strong>Interopérabilité et Standardisation :</strong>
+<ul>
+<li>Apprendre à faire dialoguer des systèmes hétérogènes (un conteneur Linux, une VM Rocky, une application Web) en utilisant des standards ouverts pour éviter l&rsquo;enfermement propriétaire.</li>
+</ul>
+</li>
+<li><strong>Hybridation des infrastructures :</strong>
+<ul>
+<li>Comprendre les mécanismes réseau (DNS, routage, ports) qui permettent à une identité de traverser les couches de virtualisation (VM ↔ Conteneur).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="étape-1--le-cœur-de-lidentité-freeipa">Étape 1 : Le Cœur de l&rsquo;Identité (FreeIPA)<a hidden class="anchor" aria-hidden="true" href="#étape-1--le-cœur-de-lidentité-freeipa">#</a></h3>
+<p>L&rsquo;entreprise a besoin de centraliser ses identités afin de</p>
+<ul>
+<li><strong>Réduire l&rsquo;erreur humaine et la charge de travail</strong> en automatisant la création des comptes utilisateurs et de services</li>
+<li><strong>Minimiser le risque de sécurité</strong> en empêchant la présence des comptes dormants grâce à la révocation instantanée des accès.</li>
+</ul>
+<p>Pour ce faire, la solution que nous allons utiliser est <strong>FreeIPA</strong>, un système open-source de gestion des identités, des politiques et des audits (<strong>IPA</strong>) conçu pour des environnements Linux. Le choix de <strong>FreeIPA</strong> peut être justifié par ces caractéristiques :</p>
+<ul>
+<li>Il i<strong>ntègre nativemen</strong>t un serveur <strong>LDAP</strong> (permettant le stockage), un serveur <strong>Kerberos</strong> pour l&rsquo;authentification sécurisée, un serveur <strong>DNS</strong> et une <strong>PKI</strong> servant à chiffrer les flux. Pour NexGen cela lui évite de créer 4 serveurs différents</li>
+<li>il est <strong>Open-Source</strong>, contrairement aux solutions boîte-noire comme <strong>Microsoft Active Directory</strong> il nous permet de voir exactement comment LDAP et Kerberos s&rsquo;articulent ensemble ce qui est parfait pour maîtriser les flux</li>
+</ul>
+<hr>
+<h4 id="étape-11--configuration-de-lidentité-de-la-vm">Étape 1.1 : Configuration de l&rsquo;Identité de la VM<a hidden class="anchor" aria-hidden="true" href="#étape-11--configuration-de-lidentité-de-la-vm">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. On renomme la machine proprement au niveau du système</span>
+</span></span><span style="display:flex;"><span>sudo hostnamectl set-hostname ipa.nexgen.lab
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. On l&#39;ajoute dans le fichier /etc/hosts pour la résolution locale immédiate</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;192.168.101.10 ipa.nexgen.lab ipa&#34;</span> | sudo tee -a /etc/hosts
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. Ouverture des ports à travers le Pare-Feu</span>
+</span></span><span style="display:flex;"><span>firewall-cmd --add-service<span style="color:#f92672">=</span>freeipa-ldap --add-service<span style="color:#f92672">=</span>freeipa-ldaps
+</span></span><span style="display:flex;"><span>firewall-cmd --add-service<span style="color:#f92672">=</span>freeipa-ldap --add-service<span style="color:#f92672">=</span>freeipa-ldaps --permanent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo firewall-cmd --permanent --add-port<span style="color:#f92672">={</span>80/tcp,443/tcp,389/tcp,636/tcp,88/tcp,464/tcp,53/tcp,88/udp,464/udp,53/udp,123/udp<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>sudo firewall-cmd --reload
+</span></span></code></pre></div><h4 id="étape-12--installation-et-configuration-du-serveur-freeipa">Étape 1.2 : Installation et configuration du serveur FreeIPA<a hidden class="anchor" aria-hidden="true" href="#étape-12--installation-et-configuration-du-serveur-freeipa">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. Installation des packages nécessaires</span>
+</span></span><span style="display:flex;"><span>dnf install freeipa-server freeipa-server-dns
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Installation du serveur</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># DM Password : w55MZaLqQBxY6TlyuZRd7g==</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Admin Password : hniqhVIQSyMTMetpiESJPg==</span>
+</span></span><span style="display:flex;"><span>ipa-server-install --setup-dns -r NEXGEN.LAB -n nexgen.lab -p w55MZaLqQBxY6TlyuZRd7g<span style="color:#f92672">==</span> -a hniqhVIQSyMTMetpiESJPg<span style="color:#f92672">==</span> --mkhomedir --hostname ipa.nexgen.lab  -N -U --forwarder<span style="color:#f92672">=</span>1.1.1.1  --ip-address<span style="color:#f92672">=</span>192.168.101.10
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. Vérifier que tous les services tournent</span>
+</span></span><span style="display:flex;"><span>ipactl status
+</span></span></code></pre></div><p><img alt="Pasted image 20260515224648" loading="lazy" src="/images/Pasted%20image%2020260515224648.png"></p>
+<hr>
+<h3 id="etape-2--enrollement-système">Etape 2 : Enrollement Système<a hidden class="anchor" aria-hidden="true" href="#etape-2--enrollement-système">#</a></h3>
+<p>L&rsquo;entreprise a besoin de raccorder ses postes de travail et serveurs à une source unique d&rsquo;authentification afin de :</p>
+<ul>
+<li>Faciliter la gestion des équipements en supprimant les créations des comptes locaux machine par machine</li>
+<li>Garantir la sécurité de ces derniers en permettant la gestion centraliser des droits <code>sudo</code> et de faire du Host-Based Access Control (décider quel utilisateur à le droit de se connecter sur quelle machine)</li>
+</ul>
+<p>Nous allons configurer et intégrer une machine cliente fedora dans le Domaine :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. Changement du FQDN du Client</span>
+</span></span><span style="display:flex;"><span>sudo hostnamectl set-hostname fedora.nexgen.lab
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. On l&#39;ajoute dans le fichier /etc/hosts pour la résolution locale immédiate</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;192.168.101.2 fedora.nexgen.lab&#34;</span> | sudo tee -a /etc/hosts
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Attribution d&#39;une IP Statique avec DNS pointant vers le serveur FreeIPA</span>
+</span></span><span style="display:flex;"><span>sudo nmcli c mod <span style="color:#e6db74">&#39;Wired connection 2&#39;</span> ipv4.address 192.168.101.2/24 ipv4.gateway 192.168.101.1 ipv4.dns 192.168.101.10 ipv4.method auto
+</span></span><span style="display:flex;"><span>sudo nmcli c down <span style="color:#e6db74">&#39;Wired connection 2&#39;</span> <span style="color:#f92672">&amp;&amp;</span> sudo nmcli c up <span style="color:#e6db74">&#39;Wired connection 2&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. Installation du client FreeIPA</span>
+</span></span><span style="display:flex;"><span>sudo dnf install freeipa-client -y
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. Jointure du client au domaine</span>
+</span></span><span style="display:flex;"><span>ipa-client-install --domain<span style="color:#f92672">=</span>nexgen.lab --server<span style="color:#f92672">=</span>ipa.nexgen.lab --realm<span style="color:#f92672">=</span>NEXGEN.LAB --mkhomedir --hostname fedora.nexgen.lab -N -U --ip-address<span style="color:#f92672">=</span>192.168.101.2 -w hniqhVIQSyMTMetpiESJPg<span style="color:#f92672">==</span> -p admin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. Ajout d&#39;un utilisateur depuis le serveur FreeIPA pour la vérification</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;Y8DWBGdrvSxi+dahy+REiQ==&#39;</span> | ipa user-add <span style="color:#e6db74">&#39;e.anderson&#39;</span> --first<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Elliot&#39;</span> --last<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Anderson&#39;</span> --cn<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Elliot Anderson&#39;</span> --displayname<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;elliot&#39;</span> --initials<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;EA&#39;</span> --shell<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/bin/bash&#39;</span> --email<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;e.anderson@nexgen.lab&#39;</span> --password --city<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Dakar&#39;</span> --state<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Sénégal&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6. Connexion depuis le client fedora</span>
+</span></span><span style="display:flex;"><span>su - e.anderson
+</span></span></code></pre></div><p>La dernière commande nous demandera le mot de passe prédéfini et un nouveau mot de passe.</p>
+<hr>
+<h3 id="etape-3--gestion-des-privilèges-et-contrôle-daccès">Etape 3 : Gestion des Privilèges et Contrôle d&rsquo;Accès<a hidden class="anchor" aria-hidden="true" href="#etape-3--gestion-des-privilèges-et-contrôle-daccès">#</a></h3>
+<p>L&rsquo;entreprise a besoin de sectoriser les accès et les privilèges sur ses machines afin de :</p>
+<ul>
+<li><strong>Limiter la surface d&rsquo;attaque du parc informatique</strong> en définissant de manière stricte le périmètre de connexion des utilisateurs (HBAC - <em>Host-Based Access Control</em>), empêchant ainsi un accès non autorisé aux machines critiques.</li>
+<li><strong>Garantir le principe de moindre privilège</strong> en s&rsquo;assurant que les collaborateurs ne disposent que des droits strictement nécessaires à l&rsquo;accomplissement de leurs missions, notamment à travers une gestion fine et centralisée des droits d&rsquo;administration (<code>sudo</code>).</li>
+</ul>
+<h4 id="etape-31--création-des-identités-et-des-groupes">Etape 3.1 : Création des Identités et des Groupes<a hidden class="anchor" aria-hidden="true" href="#etape-31--création-des-identités-et-des-groupes">#</a></h4>
+<p>Pour matérialiser ce besoin dans le lab, nous allons créer deux groupes d&rsquo;utilsateurs et deux utilisateurs test.</p>
+<blockquote>
+<p>J&rsquo;ai ajouté une autre machine au domaine <code>server-1.nexgen.lab</code> .</p>
+</blockquote>
+<p><strong>Création des groupes</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Création du groupe des Administrateurs Système</span>
+</span></span><span style="display:flex;"><span>ipa group-add grp-sysadmins --desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Administrateurs du parc NexGen&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Création du groupe des Développeurs</span>
+</span></span><span style="display:flex;"><span>ipa group-add grp-developpers --desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Équipe de développement NexGen&#34;</span>
+</span></span></code></pre></div><p><img alt="Pasted image 20260516090751" loading="lazy" src="/images/Pasted%20image%2020260516090751.png"></p>
+<p><strong>Créations des utilisateurs et assignation</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Création et attribution du groupe grp-sysadmins</span>
+</span></span><span style="display:flex;"><span>ipa user-add m-admin --first<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Mamadou&#39;</span> --last<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Admin&#39;</span> --cn <span style="color:#e6db74">&#39;Mamadou Admin&#39;</span> --random
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;NexGen2026!&#39;</span> | ipa user-mod m-admin --password
+</span></span><span style="display:flex;"><span>ipa group-add-member grp-sysadmins --users<span style="color:#f92672">=</span>m-admin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Création et attribution du groupe grp-developpers</span>
+</span></span><span style="display:flex;"><span>ipa user-add e-dev --first<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Mamadou&#39;</span> --last<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Dev&#39;</span> --random 
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;NexGen2026?&#39;</span> | ipa user-mod m-dev --password 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Ajout dans son groupe </span>
+</span></span><span style="display:flex;"><span>ipa group-add-member grp-developpers --users<span style="color:#f92672">=</span>m-dev
+</span></span></code></pre></div><h4 id="etape-32--le-contrôle-daccès-hbac-multi-machine">Etape 3.2 : Le Contrôle d&rsquo;Accès (HBAC) Multi-machine<a hidden class="anchor" aria-hidden="true" href="#etape-32--le-contrôle-daccès-hbac-multi-machine">#</a></h4>
+<p>Par défaut, <strong>FreeIPA</strong> dispose d&rsquo;un règle <code>allow_all</code> qui autorise tous les utilisateurs à se connecter sur n&rsquo;importe quelle machine du domaine. Nous allons la désactiver et modifier notre stratégie pour refléter la réalité en entreprise :</p>
+<ul>
+<li>Les <strong>administrateurs</strong> doivent pourvoir se connecter à <strong>toutes les machines</strong> (<code>fedora</code> et <code>server-1</code>)</li>
+<li>Les <strong>Développeurs</strong> que sur la machine <code>fedora</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. S&#39;assurer que allow_all est bien désactivé </span>
+</span></span><span style="display:flex;"><span>ipa hbacrule-disable allow_all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Création des règles pour les SysAdmin (accès partout)</span>
+</span></span><span style="display:flex;"><span>ipa hbacrule-add allow_sysadmin_global --desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Autorise les admins sur tout le parc&#34;</span> 
+</span></span><span style="display:flex;"><span>ipa hbacrule-add-user allow_sysadmin_global --groups<span style="color:#f92672">=</span>grp-sysadmins 
+</span></span><span style="display:flex;"><span>ipa hbacrule-add-host allow_sysadmin_global --hosts<span style="color:#f92672">={</span>fedora.nexgen.lab,server-1.nexgen.lab<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>ipa hbacrule-add-service allow_sysadmin_global --hbacsvcs<span style="color:#f92672">=</span>sshd --hbacsvcs<span style="color:#f92672">=</span>login
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. CRÉATION DE LA RÈGLE POUR LES DEVS (Accès Fedora uniquement)</span>
+</span></span><span style="display:flex;"><span>ipa hbacrule-add allow_dev_restricted --desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Autorise les devs uniquement sur la Fedora&#34;</span>
+</span></span><span style="display:flex;"><span>ipa hbacrule-add-user allow_dev_restricted --groups<span style="color:#f92672">=</span>grp-developpers
+</span></span><span style="display:flex;"><span>ipa hbacrule-add-host allow_dev_restricted --hosts<span style="color:#f92672">=</span>fedora.nexgen.lab
+</span></span><span style="display:flex;"><span>ipa hbacrule-add-service allow_dev_restricted --hbacsvcs<span style="color:#f92672">=</span>sshd --hbacsvcs<span style="color:#f92672">=</span>login
+</span></span></code></pre></div><h4 id="etape-33--le-sudo-centralisé-moindre-privilège">Etape 3.3 : Le SUDO Centralisé (Moindre Privilège)<a hidden class="anchor" aria-hidden="true" href="#etape-33--le-sudo-centralisé-moindre-privilège">#</a></h4>
+<p>Après avoir décidé quels utilisateurs ou groupe d&rsquo;utilisateurs peuvent accéder à telle ou telle machine, il nous faut maintenant décidé quel droit chaque utilisateur doit avoir, quelles actions sont elles permises. Pour ce faire nous allons appliquer le principe du moindre privilège.</p>
+<p>Traditionnellement cela se fait en éditant le fichier <code>/etc/sudoers</code> sur chaque machine, cependant avec un Annuaire, on  configurera <strong>seule fois</strong> la règle sur le server <strong>FreeIPA</strong> et les machines du domaine vont l&rsquo;appliquer directement.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. Créer la règle Sudo</span>
+</span></span><span style="display:flex;"><span>ipa sudorule-add rule-sysadmin-sudo --desc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Droits root pour les sysadmins de NexGen&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Assigner le groupe bénéficiaire</span>
+</span></span><span style="display:flex;"><span>ipa sudorule-add-user sr-sysadmins-root --groups<span style="color:#f92672">=</span>grp-sysadmins
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. Autoriser l&#39;exécution de TOUTES les commandes (all) en tant que TOUS les utilisateurs (all)</span>
+</span></span><span style="display:flex;"><span>ipa sudorule-mod rule-sysadmin-sudo --cmdcat<span style="color:#f92672">=</span>all --hostcat<span style="color:#f92672">=</span>all --runasusercat<span style="color:#f92672">=</span>all --runasgroupcat<span style="color:#f92672">=</span>all
+</span></span></code></pre></div><p>Si l&rsquo;on s&rsquo;arrête là, on obtiendrai l&rsquo;erreur ci-dessous lors de l&rsquo;execution d&rsquo;une commande avec <code>sudo</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-Plaintext" data-lang="Plaintext"><span style="display:flex;"><span>sudo: PAM account management error: Permission denied
+</span></span><span style="display:flex;"><span>sudo: a password is required
+</span></span></code></pre></div><p>Cela se produit car <code>sudo</code> est un sous-service <code>PAM</code>, un sous-service qu&rsquo;après avoir désactivé le <strong>HBAC Rule</strong> <code>allow_all</code> nous n&rsquo;avons pas autorisé pour un quelconque utilisateur ou groupe d&rsquo;utilisateur.</p>
+<p>Pour pouvoir permettre aux Sysadmins d&rsquo;accéder à ce service, nous allons l&rsquo;ajouter aux <strong>Services</strong> du <strong>HBAC Rule</strong> <code>allow_sysadmin_global</code> :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ipa hbacrule-add-service allow_sysadmin_global --hbacsvcs<span style="color:#f92672">=</span>sudo
+</span></span></code></pre></div><blockquote>
+<p><strong>NB :</strong> Par défaut les utilisateurs n&rsquo;ont pas le droit d&rsquo;exécuter <code>sudo</code> c&rsquo;est pourquoi nous n&rsquo;avons pas configurer une règle qui l&rsquo;interdit pour le groupe des développeurs.</p>
+</blockquote>
+<hr>
+<h3 id="etape-4--déploiement-de-keycloak">Etape 4 : Déploiement de KeyCloak<a hidden class="anchor" aria-hidden="true" href="#etape-4--déploiement-de-keycloak">#</a></h3>
+<p>Dans les infrastructures, les identités et les accès sont gérés grâce aux protocoles comme le <strong>LDAP</strong> et le <strong>Kerberos</strong>, des règles sont appliqués à des utilisateurs, à des machines du domaine. Les entreprises disposent de nos jours des applications internes comme un portail web, un outil RH ou bien une API web. Pour pouvoir les sécuriser, des mécanismes d&rsquo;<strong>authentification</strong> et de <strong>gestion des accès</strong> doivent être mis en place; ces applications ne sont pas compatibles avec les protocoles traditionnels utilisés pour ces mécanismes comme le <strong>Kerberos</strong> et le <strong>LDAP</strong>. Elles ne peuvent pas :</p>
+<ul>
+<li>Communiquer avec l&rsquo;annuaire <strong>LDAP</strong>, la source de vérité</li>
+<li>Utiliser <strong>Kerberos</strong> pour les authentifications</li>
+<li>Intéragir avec <strong>FreeIPA</strong> ou <strong>Active Directory</strong> pour la gestion des accès et des privilèges</li>
+</ul>
+<p><strong>Comment faire ?</strong>
+C&rsquo;est ici que <strong>Keycloak</strong> intervient. C&rsquo;est une solution open-source de gestions des identités et accès conçu pour les applications web. Il intègre :</p>
+<ul>
+<li>Un <strong>système d&rsquo;authentification</strong></li>
+<li>Une <strong>base de données de mots de passe</strong></li>
+<li>Un <strong>système de gestion de privilège</strong>
+Il sert de &ldquo;<strong>traducteur</strong>&rdquo; entre les protocoles de gestions de l&rsquo;identité et des accès et les applications web.</li>
+</ul>
+<hr>
+<h4 id="le-déploiement">Le Déploiement<a hidden class="anchor" aria-hidden="true" href="#le-déploiement">#</a></h4>
+<blockquote>
+<p>Pour ce déploiement j&rsquo;ai utilisé un guide fournie par <a href="https://www.it-connect.fr/tuto-keycloak-installation-avec-docker/">IT-Connect</a></p>
+</blockquote>
+<h5 id="1--dns-et-arborescence-des-repertoires">1.  DNS et Arborescence des repertoires<a hidden class="anchor" aria-hidden="true" href="#1--dns-et-arborescence-des-repertoires">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. Configuration du nom de domaine de Keycloak (Sur le serveur FreeIPA)</span>
+</span></span><span style="display:flex;"><span>ipa dnsrecord-add nexgen.lab sso --a-ip-address<span style="color:#f92672">=</span>192.168.101.208
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Création de la structure de dossier (sur sso.nexgen.lab)</span>
+</span></span><span style="display:flex;"><span>mkdir -p /opt/docker-compose/keycloak <span style="color:#f92672">&amp;&amp;</span> cd /opt/docker-compose/keycloak
+</span></span><span style="display:flex;"><span>mkdir certs postgresql
+</span></span></code></pre></div><p>Le résultat finanl attendue est :</p>
+<pre tabindex="0"><code>keycloak/
+├── certs
+│   ├── tls.crt
+│   └── tls.key
+|   └── tls.cnf
+├── docker-compose.yml
+├── .env
+└── postgresql
+</code></pre><h5 id="2-le-fichier-docker-compose-pour-keycloak">2. Le fichier Docker Compose pour Keycloak<a hidden class="anchor" aria-hidden="true" href="#2-le-fichier-docker-compose-pour-keycloak">#</a></h5>
+<p>Le fichier <code>docker-compose.yml</code> contiendra :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">services</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">keycloak</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">keycloak_app</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">quay.io/keycloak/keycloak:latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">restart</span>: <span style="color:#ae81ff">always</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KEYCLOAK_ADMIN</span>: <span style="color:#ae81ff">${KEYCLOAK_USER}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KEYCLOAK_ADMIN_PASSWORD</span>: <span style="color:#ae81ff">${KEYCLOAK_PASSWORD}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_HOSTNAME</span>: <span style="color:#ae81ff">${KEYCLOAK_URL}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_DB</span>: <span style="color:#ae81ff">postgres</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_DB_USERNAME</span>: <span style="color:#ae81ff">${POSTGRES_USER}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_DB_PASSWORD</span>: <span style="color:#ae81ff">${POSTGRES_PASSWORD}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_DB_URL_HOST</span>: <span style="color:#ae81ff">keycloak_postgres</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_DB_URL_DATABASE</span>: <span style="color:#ae81ff">keycloak</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_HTTPS_CERTIFICATE_FILE</span>: <span style="color:#ae81ff">/etc/x509/https/tls.crt</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">KC_HTTPS_CERTIFICATE_KEY_FILE</span>: <span style="color:#ae81ff">/etc/x509/https/tls.key</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./certs:/etc/x509/https</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">depends_on</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">keycloak_postgres</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">condition</span>: <span style="color:#ae81ff">service_healthy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;80:8080&#34;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#34;443:8443&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">keycloak-network</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">command</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">start</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">keycloak_postgres</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">keycloak_postgres</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">postgres:17</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">restart</span>: <span style="color:#ae81ff">always</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">environment</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">POSTGRES_DB</span>: <span style="color:#ae81ff">keycloak</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">POSTGRES_USER</span>: <span style="color:#ae81ff">${POSTGRES_USER}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">POSTGRES_PASSWORD</span>: <span style="color:#ae81ff">${POSTGRES_PASSWORD}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">./postgresql:/var/lib/postgresql/data</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">keycloak-network</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">healthcheck</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">test</span>: [<span style="color:#e6db74">&#34;CMD-SHELL&#34;</span>, <span style="color:#e6db74">&#34;pg_isready -U ${POSTGRES_USER} -d keycloak&#34;</span>]
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">interval</span>: <span style="color:#ae81ff">10s</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">timeout</span>: <span style="color:#ae81ff">5s</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">retries</span>: <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">networks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">keycloak-network</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">keycloak-network</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">driver</span>: <span style="color:#ae81ff">bridge</span>
+</span></span></code></pre></div><p>Quelques explications au sujet du contenu de ce fichier.</p>
+<p>La première partie déclare le service <strong><code>keycloak</code></strong>, avec un conteneur qui sera nommé <strong><code>keycloak_app</code></strong> :</p>
+<ul>
+<li>Différentes <strong>variables d&rsquo;environnement</strong> sont définies sous <strong><code>environment</code></strong>. Certaines d&rsquo;elles seront par la suite dans un fichier <strong><code>.env</code></strong>, ce qui facilite le partage de valeurs entre plusieurs conteneurs (ce qui limite les risques d&rsquo;erreurs liées à la cohérence des valeurs).</li>
+<li><strong><code>KC_HTTPS_CERTIFICATE_FILE: /etc/x509/https/tls.crt</code></strong> : nom du fichier correspondant au certificat TLS (accès HTTPS).</li>
+<li><strong><code>KC_HTTPS_CERTIFICATE_KEY_FILE: /etc/x509/https/tls.key</code></strong> : nom du fichier correspondant à la clé privée associée au certificat.</li>
+<li><strong><code>./certs:/etc/x509/https</code></strong> : le répertoire <strong><code>certs</code></strong> situé à la racine du projet sera mappé dans le conteneur. Ceci permet de pousser les fichiers du certificat dans le conteneur facilement.</li>
+<li>La section <strong><code>ports</code></strong> indique que le conteneur sera exposé sur deux ports : <strong><code>80</code></strong> pour l&rsquo;accès HTTP (on pourrait même s&rsquo;en passer) et <strong><code>443</code></strong> pour l&rsquo;accès HTTPS.</li>
+</ul>
+<p>La deuxième partie déclare le service <strong><code>keycloak_postgres</code></strong>, avec un conteneur qui sera nommé <strong><code>keycloak_postgres</code></strong> :</p>
+<ul>
+<li>Deux <strong>variables d&rsquo;environnement</strong> sont définies sous <strong><code>environment</code></strong>, pour préciser le nom d&rsquo;utilisateur et le mot de passe de connexion à l&rsquo;instance. Ces valeurs seront définies dans le fichier <strong><code>.env</code></strong>.</li>
+<li><strong><code>./postgresql:/var/lib/postgresql/data</code></strong> : le répertoire <strong><code>postgresql</code></strong> situé à la racine du projet sera mappé dans le conteneur. Il assure la persistance des données liées à la base de données, et donc, notre application.</li>
+</ul>
+<h5 id="3-les-variables-denvironnement">3. Les variables d&rsquo;environnement<a hidden class="anchor" aria-hidden="true" href="#3-les-variables-denvironnement">#</a></h5>
+<p>Nous allons par la suite créer le fichier <code>.env</code> qui contiendra les variables d&rsquo;environnement :</p>
+<pre tabindex="0"><code>KEYCLOAK_USER=admin
+KEYCLOAK_PASSWORD=P@ssword!
+KEYCLOAK_URL=sso.nexgen.lab
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=Postgres@Nexgen
+</code></pre><h5 id="4-le-certificat-tls-de-keycloak">4. Le certificat TLS de KeyCloak<a hidden class="anchor" aria-hidden="true" href="#4-le-certificat-tls-de-keycloak">#</a></h5>
+<p>Dans le cadre de ce lab nous allons générer un certificat auto-signé dans <code>certs</code>. Tout d&rsquo;abord nous allons créer le fichier de configuration du certificat :</p>
+<pre tabindex="0"><code>[ req ]
+default_bits       = 2048
+prompt             = no
+default_md         = sha256
+x509_extensions    = v3_req
+distinguished_name = dn
+
+[ dn ]
+C  = SN
+ST = Dakar
+O  = NexGen Lab
+OU = Security
+CN = sso.nexgen.lab
+
+[ v3_req ]
+subjectAltName = @alt_names
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+
+[ alt_names ]
+DNS.1 = sso.nexgen.lab
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo openssl req -x509 -nodes -days <span style="color:#ae81ff">365</span> -newkey rsa:4096 -keyout tls.key -out tls.crt --config tls.cnf -extensions v3_req
+</span></span></code></pre></div><h5 id="5-lancer-le-déploiement">5. Lancer le déploiement<a hidden class="anchor" aria-hidden="true" href="#5-lancer-le-déploiement">#</a></h5>
+<p>Nous allons lancer le déploiement dès à présent avec la commande <code>docker compose up</code> dans le répertoire <code>/opt/docker-compose/keycloak/</code></p>
+<hr>
+<h3 id="etape-5--configuration-de-keycloak">Etape 5 : Configuration de Keycloak<a hidden class="anchor" aria-hidden="true" href="#etape-5--configuration-de-keycloak">#</a></h3>
+<p>L&rsquo;objectif de cette étape est de rendre notre <strong>Fournisseur d&rsquo;Identité (IdP)</strong> pleinement opérationnel. Nous allons structurer cette configuration autour de deux axes majeurs :</p>
+<ul>
+<li>
+<p><strong>La Fédération d&rsquo;Identité (Liaison LDAP) :</strong> Interconnecter Keycloak avec l&rsquo;annuaire FreeIPA. Cela permettra de synchroniser dynamiquement les comptes utilisateurs, leurs attributs et la vérification des mots de passe, évitant ainsi toute gestion locale des identités dans Keycloak.</p>
+</li>
+<li>
+<p><strong>La Fédération SSO (Déclaration des Clients) :</strong> Enregistrer et configurer nos deux applications cibles (Gitea et Grafana) en tant que &ldquo;Clients&rdquo; de confiance afin de matérialiser le mécanisme de session unique.</p>
+</li>
+</ul>
+<h4 id="etape-51--fédération-didentité">Etape 5.1 : Fédération d&rsquo;Identité<a hidden class="anchor" aria-hidden="true" href="#etape-51--fédération-didentité">#</a></h4>
+<p>Avant de brancher nos applications à KeyCloak, ce dernier doit d&rsquo;abord connaître les utilisateurs. On va le lier avec FreeIPA :</p>
+<ul>
+<li>Dans le menu gauche, aller sur <strong>User Federation</strong> puis <strong>Ldap Provider</strong></li>
+<li>Les paramètres
+<ul>
+<li><strong>UI display name</strong> : <code>FreeIPA</code></li>
+<li><strong>Vendor</strong> : <code>Red Hat Directory Server</code> car FreeIPA est basé sur Red Hat</li>
+<li><strong>Connection URL</strong>: <code>ldap://ipa.nexgen.lab:389</code></li>
+<li><strong>Bind DN</strong> : <code>uid=admin,cn=users,cn=accounts,dc=nexgen,dc=lab</code></li>
+<li><strong>Bind Credentials</strong> : <code>hniqhVIQSyMTMetpiESJPg==</code> (Mot de passe admin)</li>
+<li><strong>Edit mode</strong> : <code>READ_ONLY</code></li>
+<li><strong>Users DN</strong> : <code>cn=users,cn=accounts,dc=nexgen,dc=lab</code></li>
+<li><strong>UUID LDAP attribute</strong> : <code>ipauniqueid</code></li>
+</ul>
+</li>
+<li>Cliquer sur <strong>Save</strong></li>
+</ul>
+<p><img alt="Pasted image 20260525090649" loading="lazy" src="/images/Pasted%20image%2020260525090649.png"></p>
+<p>La fédération LDAP est maintenant fonctionnelle. Si l&rsquo;on cherche un utilsateur FreeIPA, <code>m-dev</code> par exemple dans Keycloak, nous le verrons :
+<img alt="Pasted image 20260525091314" loading="lazy" src="/images/Pasted%20image%2020260525091314.png">
+Cependant, ce dernier ne nous fournit que les utilisateurs et leurs informations (nom, prénom, email, &hellip;) et non leur <strong>groupe</strong>. L&rsquo;absence des groupes nous empêche d&rsquo;effectuer la ségrégation des privilèges entre un utilisateur standard et un administrateur sur les Applications. Pour pallier cela, il nous faut utiliser les <strong>Mappers LDAP</strong>, fonctionnalité servant à récupérer les groupes depuis l&rsquo;annuaire et les associer avec les utilisateurs correspondants :</p>
+<ul>
+<li>Cliquer sur <strong>User Federation</strong>  dans le menu gauche, puis sur le provider dernièrement ajouté, dans mon cas <strong>FreeIPA</strong></li>
+<li>Sur la page du Provider, cliquer sur l&rsquo;onglet <strong>Mapper</strong> :
+<img alt="Pasted image 20260525092519" loading="lazy" src="/images/Pasted%20image%2020260525092519.png"></li>
+<li>Cliquer sur <strong>Add Mapper</strong></li>
+<li>Remplir le formulaire :
+<ul>
+<li><strong>Name</strong> : <code>freeipa-groups</code></li>
+<li><strong>Mapper type</strong> : <code>group-ldap-mapper</code></li>
+<li><strong>LDAP Groups DN</strong> : <code>cn=groups,cn=accounts,dc=nexgen,dc=lab</code></li>
+<li><strong>Mode</strong> : <code>READ_ONLY</code></li>
+<li>Cliquer sur <strong>Save</strong></li>
+</ul>
+</li>
+</ul>
+<p>Après cela, nous pouvons voir les groupes importés en cliquant sur <strong>Groups</strong> dans le menu à gauche :</p>
+<p><img alt="Pasted image 20260525101347" loading="lazy" src="/images/Pasted%20image%2020260525101347.png"></p>
+<p>Notre Source d&rsquo;Identité Keycloak est maintenant prêt à l&rsquo;emploi.</p>
+<hr>
+<h3 id="etape-5--configuration-des-clients-sp">Etape 5 : Configuration des clients (SP)<a hidden class="anchor" aria-hidden="true" href="#etape-5--configuration-des-clients-sp">#</a></h3>
+<p>Un <strong>client</strong> est une application tierce qui délègue sa confiance à KeyCloak, c&rsquo;est-à-dire que l&rsquo;authentification des utilisateurs est gérée par KeyCloak.</p>
+<p>Une entreprise comme NexGen peut disposer de plusieurs applications, la centralisation de la gestion des clients sur KeyCloak permet :</p>
+<ul>
+<li>d&rsquo;éviter la duplication des identités en utilisant une seule source de vérité, l&rsquo;<strong>annuaire LDAP</strong></li>
+<li>d&rsquo;éviter l&rsquo;éparpillement des identifiants grâce au <strong>SSO</strong> qui permet une authentification unique pour toutes les applications (clients / SPs)</li>
+<li>d&rsquo;éviter que chaque application gère ses propres connexions directement vers l&rsquo;annuaire augmentant la surface d&rsquo;attaque</li>
+</ul>
+<p>Dans cette étape nous allons configurer deux clients/applications afin qu&rsquo;ils puissent déléguer leur confiance à KeyCloak. Nous avons :</p>
+<ul>
+<li><strong>Gitea</strong> : Un système de contrôle de version déployé dans une VM au domaine <code>git.nexgen.lab</code></li>
+<li><strong>Grafana</strong> : Une plateforme open source de visualisation et d&rsquo;analyse de données hébergée dans une VM au domaine <code>grafana.nexgen.lab</code></li>
+</ul>
+<p>Pour les deux clients nous allons utiliser le protocole <strong>OpenID Connect</strong>. C&rsquo;est un protocole standard d&rsquo;authentification, extension de l&rsquo;<strong>OAuth 2.0</strong>.</p>
+<h4 id="etape-51--configuration-de-gitea">Etape 5.1 : Configuration de Gitea<a hidden class="anchor" aria-hidden="true" href="#etape-51--configuration-de-gitea">#</a></h4>
+<p>Tout d&rsquo;abord nous allons créer le client sur KeyCloak :</p>
+<ul>
+<li>Dans le menu, cliquer sur <strong>Clients</strong> puis sur <strong>Create client</strong></li>
+<li><strong>Client type</strong> : <code>OpenID Connect</code></li>
+<li><strong>Client ID</strong> : <code>Gitea</code></li>
+<li>Cliquer sur <strong>Next</strong></li>
+<li>Cocher <strong>Client Authentication</strong> : pour définir un mot de passe avec lequel l&rsquo;application s&rsquo;authentifiera pour intéragir avec KeyCloak</li>
+<li>Dans  <strong>Authentication Flow</strong>, cocher seulement <strong>Standard Flow</strong></li>
+<li>Cliquer sur <strong>Next</strong></li>
+<li><strong>Valid redirect URLs</strong> : <code>http://git.nexgen.lab/user/oauth2/Keycloak/callback</code></li>
+<li><strong>Web origins</strong> : <code>http://git.nexgen.lab/</code></li>
+<li>Cliquer sur <strong>Save</strong></li>
+<li>Sur la page du Client, aller dans <strong>Creadentials</strong> puis copier le secret :
+<img alt="Pasted image 20260525114819" loading="lazy" src="/images/Pasted%20image%2020260525114819.png"></li>
+</ul>
+<p>Ensuite configurer l&rsquo;utilisation d&rsquo;OpenID Connect comment méthode d&rsquo;authentification sur Gitea :</p>
+<ul>
+<li>Se connecter en tant qu&rsquo;Administrateur sur <strong>Gitea</strong></li>
+<li>Cliquer sur la photo de profil en haut à gauche, puis sur <strong>Site Administration</strong></li>
+<li>Dans le menu à gauche, aller dans <strong>Identity Access</strong> puis <strong>Authentication Sources</strong></li>
+<li>Cliquer sur <strong>Add Authentication Source</strong></li>
+<li>Remplir le formulaire :
+- <strong>Authentication Type</strong> : <code>OAuth2</code>
+- <strong>Authentication Name</strong> : <code>Keycloak</code>
+- <strong>OAuth2 Provider</strong> : <code>OpenID Connect</code>
+- <strong>Client ID (Key)</strong> : <code>Gitea</code>
+- <strong>Client Secret</strong> : Le secret précédemment copié
+- <strong>OpenID Connect Auto Discovery URL</strong> : <code>https://sso.nexgen.lab/realms/master/.well-known/openid-configuration</code></li>
+</ul>
+<p>Si nous validons la config à ce niveau, nous aurons une erreur disant que l&rsquo;autorité signataire du certificat de KeyCloak n&rsquo;est pas reconnue :</p>
+<p><img alt="Pasted image 20260525121844" loading="lazy" src="/images/Pasted%20image%2020260525121844.png"></p>
+<p>Pour résoudre ce problème, nosu devons enregistrer le certificat TLS de Keycloak dans le trust store du système qui héberge Gitea.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 1. Depuis Keycloak, copier le certificat vers Gitea</span>
+</span></span><span style="display:flex;"><span>scp /opt/docker-compose/keycloak/certs/tls.crt root@git.nexgen.lab:~/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Sur git.nexgen.lab, copier le certificat sur le Conteneur de Gitea /usr/local/share/ca-certificates</span>
+</span></span><span style="display:flex;"><span>docker cp tls.crt gitea:/usr/local/share/ca-certificates/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. Mettre à jour le Trust Store</span>
+</span></span><span style="display:flex;"><span>docker exec -u root -it gitea /bin/bash update-ca-certificates
+</span></span></code></pre></div><p>Puis lorsque recommençons l&rsquo;ajout de la source d&rsquo;authentificat, il se solde par un succès.</p>
+<p><img alt="Pasted image 20260525175639" loading="lazy" src="/images/Pasted%20image%2020260525175639.png">
+En allant sur la page de connexion après s&rsquo;être déconnecté, on remarque une nouvelle option de connexion :</p>
+<p><img alt="Pasted image 20260525183009" loading="lazy" src="/images/Pasted%20image%2020260525183009.png"></p>
+<p>Testons-la avec l&rsquo;utilisateur du domaine <code>m-dev</code> :
+<img alt="Pasted image 20260525183228" loading="lazy" src="/images/Pasted%20image%2020260525183228.png"></p>
+<video width="100%" controls>
+  <source src="/videos/test-gitea-keycloak-authentication-source.webm" type="video/webm">
+  Votre navigateur ne supporte pas la lecture de cette vidéo.
+</video>
+<p>Gitea peut maintenant déléguer l&rsquo;authentification de ses utilisateurs à Keycloak.</p>
+<hr>
+<h4 id="etape-52--configuration-de-grafana">Etape 5.2 : Configuration de Grafana<a hidden class="anchor" aria-hidden="true" href="#etape-52--configuration-de-grafana">#</a></h4>
+<p>Comme avec la configuration précédente, nous allons tout d&rsquo;abord nous allons créer le client sur KeyCloak :</p>
+<ul>
+<li>Dans le menu, cliquer sur <strong>Clients</strong> puis sur <strong>Create client</strong></li>
+<li><strong>Client type</strong> : <code>OpenID Connect</code></li>
+<li><strong>Client ID</strong> : <code>Grafana</code></li>
+<li>Cliquer sur <strong>Next</strong></li>
+<li>Cocher <strong>Client Authentication</strong></li>
+<li>Dans  <strong>Authentication Flow</strong>, cocher seulement <strong>Standard Flow</strong></li>
+<li>Cliquer sur <strong>Next</strong></li>
+<li><strong>Valid redirect URLs</strong> : <code>http://grafana.nexgen.lab/login/generic_oauth</code></li>
+<li><strong>Valid post logout redirect URIs</strong> : <code>http://grafana.nexgen.lab/</code></li>
+<li><strong>Web origins</strong> : <code>http://grafana.nexgen.lab</code></li>
+<li>Cliquer sur <strong>Save</strong></li>
+<li>Sur la page du Client, aller dans <strong>Creadentials</strong> puis copier le secret.</li>
+</ul>
+<p>Ensuite nous allons configurer Wiki.js afin qu&rsquo;il délègue l&rsquo;authentification à Keylcloak :</p>
+<ul>
+<li>Se connecter en tant qu&rsquo;administrateur</li>
+<li>Sur le menu à gauche, sous <strong>Administration</strong> cliquer sur <strong>Authentication</strong></li>
+<li>Cliquer sur <strong>Generic OAuth</strong></li>
+<li><strong>Display name</strong> : <code>OAuth</code></li>
+<li><strong>Client ID</strong> : <code>Grafana</code></li>
+<li><strong>Scopes</strong> :
+<ul>
+<li><code>profile</code> : autoriser Grafana à récupérer des informations sur profil de l&rsquo;utilisateur  (Nom, Prénom, etc)</li>
+<li><code>email</code> : autoriser Grafana à récupérer l&rsquo;adresse mail de l&rsquo;utilisateur</li>
+</ul>
+</li>
+<li><strong>Auth URL</strong> : <code>https://sso.nexgen.lab/realms/master/protocol/openid-connect/auth</code></li>
+<li><strong>Token URL</strong> : <code>https://sso.nexgen.lab/realms/master/protocol/openid-connect/token</code></li>
+<li><strong>API URL</strong> :  <code>https://sso.nexgen.lab/realms/master/protocol/openid-connect/userinfo</code></li>
+<li>Cocher <code>Allow sign up</code></li>
+<li><strong>Sign out redirect URL</strong> : <code>https://sso.nexgen.lab/realms/master/protocol/openid-connect/logout</code></li>
+<li><strong>Save</strong> &amp; <strong>Enable</strong></li>
+</ul>
+<hr>
+<video width="100%" controls>
+  <source src="/videos/sso-validated.webm" type="video/webm">
+  Votre navigateur ne supporte pas la lecture de cette vidéo.
+</video>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/lab3-pki-signature/">
+    <span class="title">Suivant »</span>
+    <br>
+    <span>Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko</span>
+  </a>
+</nav>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on x"
+            href="https://x.com/intent/tweet/?text=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f&amp;hashtags=">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f&amp;title=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak&amp;summary=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on reddit"
+            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f&title=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on whatsapp"
+            href="https://api.whatsapp.com/send?text=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on telegram"
+            href="https://telegram.me/share/url?text=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=F%c3%a9d%c3%a9rer%20l%27Identit%c3%a9%20d%27Entreprise%20%3a%20D%c3%a9ploiement%20d%27une%20Architecture%20SSO%20Souveraine%20avec%20FreeIPA%20et%20Keycloak&u=http%3a%2f%2flocalhost%3a1313%2fposts%2fnexgen-lab-1%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer><script src="https://giscus.app/client.js"
+        data-repo="Brizman236/ericyawilhit"
+        data-repo-id="R_kgDORpa0mw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDORpa0m84C4wiQ"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="fr"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Eric Yawilhit</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'Copier';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'Copié !';
+            setTimeout(() => {
+                copybutton.innerHTML = 'Copier';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

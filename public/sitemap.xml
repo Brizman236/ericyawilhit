@@ -2,47 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ericyawilhit.netlify.app/</loc>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-05-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/nexgen-lab-1/</loc>
+    <lastmod>2026-05-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-05-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/lab3-pki-signature/</loc>
     <lastmod>2026-04-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</loc>
-    <lastmod>2026-04-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ericyawilhit.netlify.app/posts/</loc>
-    <lastmod>2026-04-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/crl/</loc>
+    <loc>http://localhost:1313/tags/crl/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/lab/</loc>
+    <loc>http://localhost:1313/tags/lab/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</loc>
+    <loc>http://localhost:1313/posts/lab2-crl-ocsp/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/ocsp/</loc>
+    <loc>http://localhost:1313/tags/ocsp/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/openssl/</loc>
+    <loc>http://localhost:1313/tags/openssl/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/pki/</loc>
+    <loc>http://localhost:1313/tags/pki/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/afrique/</loc>
+    <loc>http://localhost:1313/tags/afrique/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</loc>
+    <loc>http://localhost:1313/posts/declaration-cotonou/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/tags/souverainet%C3%A9-num%C3%A9rique/</loc>
+    <loc>http://localhost:1313/tags/souverainet%C3%A9-num%C3%A9rique/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/about/</loc>
+    <loc>http://localhost:1313/about/</loc>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
   </url>
 </urlset>
