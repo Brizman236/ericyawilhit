@@ -37,6 +37,20 @@ Ce lab s'inscrit dans une démarche d'apprentissage me permettant de développer
     - Comprendre les mécanismes réseau (DNS, routage, ports) qui permettent à une identité de traverser les couches de virtualisation (VM ↔ Conteneur).
 
 ___
+
+### Configuration réseau
+
+| **Machine / Service**  |       **FQDN**        |               **Rôle / Description**                |       **Ports Critiques**       |
+| :--------------------: | :-------------------: | :-------------------------------------------------: | :-----------------------------: |
+|   **FreeIPA Server**   |   `ipa.nexgen.lab`    |     Source de vérité (LDAP, Kerberos, DNS, PKI)     | `389`, `636`, `88`, `464`, `53` |
+| **Fedora Workstation** |  `fedora.nexgen.lab`  |  Poste client intégré au domaine (Test HBAC/SUDO)   |          Flux sortants          |
+|   **Linux Server 1**   | `server-1.nexgen.lab` | Serveur d'infrastructure (Accès restreint SysAdmin) |           `22 (sshd)`           |
+|   **Keycloak (IdP)**   |   `sso.nexgen.lab`    |  Passerelle de Fédération d'Identité & SSO (OIDC)   |           `80`, `443`           |
+|     **Gitea (SP)**     |   `git.nexgen.lab`    |      Forge logicielle (Client OpenID Connect)       |          `80` ou `443`          |
+|    **Grafana (SP)**    | `grafana.nexgen.lab`  |   Supervision & Métriques (Client OpenID Connect)   |          `80` ou `443`          |
+
+___
+
 ### Étape 1 : Le Cœur de l'Identité (FreeIPA)
 
 L'entreprise a besoin de centraliser ses identités afin de 
