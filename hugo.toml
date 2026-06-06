@@ -34,6 +34,10 @@ theme = "PaperMod"
     name = "À propos"
     url = "/about/"
     weight = 2
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2
 
 [[params.socialIcons]]
   name = "linkedin"

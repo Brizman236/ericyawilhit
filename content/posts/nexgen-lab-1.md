@@ -3,6 +3,17 @@ title: "Fédérer l'Identité d'Entreprise : Déploiement d'une Architecture SSO
 date: 2026-05-28
 draft: false
 description: Face aux risques d'éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d'une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l'authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.
+tags:
+  - IAM
+  - SSO
+  - Keycloak
+  - FreeIPA
+  - OpenID Connect
+  - LDAP
+  - Kerberos
+  - HBAC
+  - Linux Security
+  - DevSecOps
 cover:
   image: /images/nexgen-1-topo.png
   alt: Signature numérique de diplômes
@@ -20,7 +31,7 @@ NexGen Solution est une entreprise moderne qui explose mais qui fait face à un 
 Ces problèmes la mettent dans une position délicate pouvant entraîner de graves conséquences. Par exemple un employé vient à démissionner pour la concurrence mais que ses accès demeurent, ce dernier peut causer une fuite de données, dégradant la réputation de Nex Gen.
 
 Ce dont Nex Gen a besoin est une infrastructure de gestion centralisé des identités et des accès. Techniquement il s'agit de mettre en place :
-- Une source de vérité unique pour les utilsateurs via un annuaire centralisé : cela permet une révocation instantanée des accès
+- Une source de vérité unique pour les utilisateurs via un annuaire centralisé : cela permet une révocation instantanée des accès
 - Un mécanisme de SSO (**Single Sign On**) pour ses applications Web, ce qui réduit l'éparpillement des identifiants en permettant une seule authentification et améliore la productivité en évitant aux employés de mémoriser 10 mots de passe différents pour 10 services différents
 - Des politiques de contrôles d'accès
 

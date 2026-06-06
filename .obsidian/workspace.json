@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/nexgen-lab-1.md",
+                "file": "content/posts/nexgen-lab-2.md",
                 "mode": "source",
-                "source": false
+                "source": true
               },
               "icon": "lucide-file",
-              "title": "nexgen-lab-1"
+              "title": "nexgen-lab-2"
             }
           }
         ]
@@ -185,29 +185,31 @@
   },
   "active": "857c15ee0aad98a2",
   "lastOpenFiles": [
-    "content/about.md",
-    "static/images/nexgen-1-topo.png",
     "content/posts/nexgen-lab-1.md",
-    "static/images/Non confirmé 656659.crdownload",
-    "public/images/nexgen-1-topo.png",
-    "public/images/Non confirmé 757143.crdownload",
-    "static/images/Non confirmé 757143.crdownload",
-    "static/videos/sso-validated.webm",
-    "public/posts/nexgen-lab-1/index.html",
-    "public/posts/nexgen-lab-1",
+    "public/tags/ldap/index.xml",
+    "public/tags/sso/page/1/index.html",
+    "public/tags/sso/page/1",
+    "public/tags/sso/page",
+    "public/tags/sso/index.xml",
+    "public/tags/sso/index.html",
+    "public/tags/sso",
+    "public/tags/hbac/page/1/index.html",
+    "public/tags/hbac/page/1",
+    "public/tags/hbac/page",
+    "content/posts/nexgen-lab-2.md",
+    "public/images/nexgen-2-topo.png",
+    "static/images/nexgen-2-topo.png",
+    "public/images/Pasted image 20260605232824.png",
+    "public/images/Pasted image 20260603222051.png",
+    "public/images/Pasted image 20260603221010.png",
+    "public/images/Pasted image 20260601000018.png",
+    "public/images/nexgen-2-flux.png",
+    "static/images/Pasted image 20260605232824.png",
+    "static/images/Pasted image 20260603222051.png",
+    "static/images/Pasted image 20260603221010.png",
+    "content/posts/nexgen-lab.md",
+    "content/about.md",
     "content/posts/lab3-pki-signature.md",
-    "public/videos/test-gitea-keycloak-authentication-source.webm",
-    "public/videos/sso-validated.webm",
-    "public/videos",
-    "public/images/Pasted image 20260525183228.png",
-    "public/images/Pasted image 20260525183009.png",
-    "public/images/Pasted image 20260525175639.png",
-    "public/images/Pasted image 20260525121844.png",
-    "public/images/Pasted image 20260525114819.png",
-    "public/images/Pasted image 20260525101347.png",
-    "public/images/Pasted image 20260525092519.png",
-    "public/images/Pasted image 20260525091314.png",
-    "static/videos/test-gitea-keycloak-authentication-source.webm",
     "content/posts/declaration-cotonou.md",
     "content/posts/lab2-crl-ocsp.md",
     "www.linkedin.com/in/eric-yawilhit.md"

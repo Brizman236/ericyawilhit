@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sécuriser le Partage de Fichiers : Implémentation du RBAC et du Provisioning JIT avec Keycloak et Nextcloud</title>
+      <link>http://localhost:1313/posts/nexgen-lab-2/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nexgen-lab-2/</guid>
+      <description>Découvrez comment implémenter une gestion des accès basée sur les rôles (RBAC) étanche et automatisée. Ce guide pratique détaille l&amp;#39;interconnexion entre Keycloak et Nextcloud via l&amp;#39;application Social Login, la transmission de la claim &amp;#39;groups&amp;#39;, et le provisioning Just-In-Time (JIT) pour cloisonner dynamiquement les dossiers d&amp;#39;équipe.</description>
+    </item>
     <item>
       <title>Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak</title>
       <link>http://localhost:1313/posts/nexgen-lab-1/</link>

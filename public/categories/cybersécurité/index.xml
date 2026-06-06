@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Cybersécurité on Eric Yawilhit</title>
+    <link>http://localhost:1313/categories/cybers%C3%A9curit%C3%A9/</link>
+    <description>Recent content in Cybersécurité on Eric Yawilhit</description>
+    <image>
+      <title>Eric Yawilhit</title>
+      <url>http://localhost:1313/images/Eric%20Yawilhit.png</url>
+      <link>http://localhost:1313/images/Eric%20Yawilhit.png</link>
+    </image>
+    <generator>Hugo</generator>
+    <language>fr</language>
+    <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/cybers%C3%A9curit%C3%A9/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sécuriser le Partage de Fichiers : Implémentation du RBAC et du Provisioning JIT avec Keycloak et Nextcloud</title>
+      <link>http://localhost:1313/posts/nexgen-lab-2/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nexgen-lab-2/</guid>
+      <description>Découvrez comment implémenter une gestion des accès basée sur les rôles (RBAC) étanche et automatisée. Ce guide pratique détaille l&amp;#39;interconnexion entre Keycloak et Nextcloud via l&amp;#39;application Social Login, la transmission de la claim &amp;#39;groups&amp;#39;, et le provisioning Just-In-Time (JIT) pour cloisonner dynamiquement les dossiers d&amp;#39;équipe.</description>
+    </item>
+  </channel>
+</rss>

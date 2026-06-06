@@ -11,8 +11,106 @@
     </image>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IAM</title>
+      <link>http://localhost:1313/tags/iam/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/iam/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Just-in-Time Provisioning</title>
+      <link>http://localhost:1313/tags/just-in-time-provisioning/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/just-in-time-provisioning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Keycloak</title>
+      <link>http://localhost:1313/tags/keycloak/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/keycloak/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Nextcloud</title>
+      <link>http://localhost:1313/tags/nextcloud/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/nextcloud/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenID Connect</title>
+      <link>http://localhost:1313/tags/openid-connect/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/openid-connect/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RBAC</title>
+      <link>http://localhost:1313/tags/rbac/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/rbac/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Social Login</title>
+      <link>http://localhost:1313/tags/social-login/</link>
+      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/social-login/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DevSecOps</title>
+      <link>http://localhost:1313/tags/devsecops/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/devsecops/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>FreeIPA</title>
+      <link>http://localhost:1313/tags/freeipa/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/freeipa/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>HBAC</title>
+      <link>http://localhost:1313/tags/hbac/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/hbac/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kerberos</title>
+      <link>http://localhost:1313/tags/kerberos/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/kerberos/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LDAP</title>
+      <link>http://localhost:1313/tags/ldap/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/ldap/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux Security</title>
+      <link>http://localhost:1313/tags/linux-security/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/linux-security/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SSO</title>
+      <link>http://localhost:1313/tags/sso/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/sso/</guid>
+      <description></description>
+    </item>
     <item>
       <title>CRL</title>
       <link>http://localhost:1313/tags/crl/</link>
