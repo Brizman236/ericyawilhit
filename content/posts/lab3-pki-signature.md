@@ -2,7 +2,7 @@
 title: "Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko"
 date: 2026-04-17
 draft: false
-description: Face au fléau de la falsification des diplômes, ce guide technique détaille la mise en place d'une infrastructure de confiance (PKI) souveraine. À travers un laboratoire pratique utilisant SoftHSM2, OpenSSL et PyHanko, découvrez comment la signature numérique PAdES-LTV permet de garantir l'authenticité et l'intégrité des titres universitaires, vérifiables instantanément par les recruteurs via Adobe Acrobat
+description: "Face au fléau de la falsification des diplômes, ce guide technique détaille la mise en place d'une infrastructure de confiance (PKI) souveraine. À travers un laboratoire pratique utilisant SoftHSM2, OpenSSL et PyHanko, découvrez comment la signature numérique PAdES-LTV permet de garantir l'authenticité et l'intégrité des titres universitaires, vérifiables instantanément par les recruteurs via Adobe Acrobat"
 cover:
   image: /images/lab3-cover.jpg
   alt: Signature numérique de diplômes

@@ -2,7 +2,7 @@
 title: "Fédérer l'Identité d'Entreprise : Déploiement d'une Architecture SSO Souveraine avec FreeIPA et Keycloak"
 date: 2026-05-28
 draft: false
-description: Face aux risques d'éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d'une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l'authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.
+description: "Face aux risques d'éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d'une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l'authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana."
 tags:
   - IAM
   - SSO

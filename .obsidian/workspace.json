@@ -41,7 +41,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Explorateur de fichiers"
@@ -186,6 +188,10 @@
   "active": "857c15ee0aad98a2",
   "lastOpenFiles": [
     "content/posts/nexgen-lab-1.md",
+    "content/posts/lab3-pki-signature.md",
+    "content/posts/lab2-crl-ocsp.md",
+    "content/posts/declaration-cotonou.md",
+    "content/posts/nexgen-lab-2.md",
     "public/tags/ldap/index.xml",
     "public/tags/sso/page/1/index.html",
     "public/tags/sso/page/1",
@@ -196,7 +202,6 @@
     "public/tags/hbac/page/1/index.html",
     "public/tags/hbac/page/1",
     "public/tags/hbac/page",
-    "content/posts/nexgen-lab-2.md",
     "public/images/nexgen-2-topo.png",
     "static/images/nexgen-2-topo.png",
     "public/images/Pasted image 20260605232824.png",
@@ -209,9 +214,6 @@
     "static/images/Pasted image 20260603221010.png",
     "content/posts/nexgen-lab.md",
     "content/about.md",
-    "content/posts/lab3-pki-signature.md",
-    "content/posts/declaration-cotonou.md",
-    "content/posts/lab2-crl-ocsp.md",
     "www.linkedin.com/in/eric-yawilhit.md"
   ]
 }
