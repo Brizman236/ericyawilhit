@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/nexgen-lab-2.md",
-                "mode": "source",
+                "file": "content/posts/declaration-cotonou.md",
+                "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "nexgen-lab-2"
+              "title": "declaration-cotonou"
             }
           }
         ]
@@ -187,10 +187,10 @@
   },
   "active": "857c15ee0aad98a2",
   "lastOpenFiles": [
+    "content/posts/nexgen-lab-2.md",
     "static/images/nexgen-2-topo.png.crdownload",
     "content/posts/declaration-cotonou.md",
     "static/images/nexgen-2-flux.png.crdownload",
-    "content/posts/nexgen-lab-2.md",
     "content/posts/nexgen-lab-1.md",
     "content/posts/lab3-pki-signature.md",
     "content/posts/lab2-crl-ocsp.md",
@@ -202,7 +202,6 @@
     "public/tags/sso/index.html",
     "public/tags/sso",
     "public/tags/hbac/page/1/index.html",
-    "public/tags/hbac/page/1",
     "public/images/nexgen-2-topo.png",
     "static/images/nexgen-2-topo.png",
     "public/images/Pasted image 20260605232824.png",
