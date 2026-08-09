@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Eric Yawilhit</title>
+    <link>http://localhost:1313/en/</link>
+    <description>Recent content on Eric Yawilhit</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/en/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Federating Enterprise Identity: Deploying a Sovereign SSO Architecture with FreeIPA and Keycloak</title>
+      <link>http://localhost:1313/en/posts/nexgen-lab-1/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/posts/nexgen-lab-1/</guid>
+      <description>Faced with the risks of scattered identities and dormant accounts, this technical guide walks through building a robust IAM infrastructure. Through a hands-on lab interconnecting FreeIPA (LDAP/Kerberos) and Keycloak, discover how to centralize authentication and implement an SSO mechanism via OpenID Connect (OIDC) to secure critical applications like Gitea and Grafana.</description>
+    </item>
+    <item>
+      <title>Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko</title>
+      <link>http://localhost:1313/en/posts/lab3-pki-signature/</link>
+      <pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/posts/lab3-pki-signature/</guid>
+      <description>Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.</description>
+    </item>
+    <item>
+      <title>Lab 2 — CRL and OCSP: Implementing Revocation in a PKI with OpenSSL</title>
+      <link>http://localhost:1313/en/posts/lab2-crl-ocsp/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/posts/lab2-crl-ocsp/</guid>
+      <description>How to implement CRL and OCSP in a complete PKI with OpenSSL. Certificate revocation, OCSP Responder, and Apache Reverse Proxy.</description>
+    </item>
+    <item>
+      <title>The Cotonou Declaration Left Something Out...</title>
+      <link>http://localhost:1313/en/posts/declaration-cotonou/</link>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/posts/declaration-cotonou/</guid>
+      <description>African ministers signed the Cotonou Declaration with immense digital ambitions. But a fundamental infrastructure was forgotten: the PKI.</description>
+    </item>
+  </channel>
+</rss>

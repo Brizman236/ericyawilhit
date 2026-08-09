@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko | Eric Yawilhit</title>
+<meta name="keywords" content="">
+<meta name="description" content="Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/en/posts/lab3-pki-signature/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="fr" href="http://localhost:1313/posts/lab3-pki-signature/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/en/posts/lab3-pki-signature/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/en/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/" title="FR"
+                                aria-label="FR">Fr</a>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/en/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/en/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/en/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko
+    </h1>
+    <div class="post-description">
+      Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.
+    </div>
+    <div class="post-meta"><span title='2026-04-17 00:00:00 +0000 UTC'>April 17, 2026</span>&nbsp;|&nbsp;<span>Translations:</span>
+<ul class="i18n_list">
+    <li>
+        <a href="http://localhost:1313/posts/lab3-pki-signature/">Fr</a>
+    </li>
+</ul>
+
+</div>
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:1313/images/lab3-cover.jpg" alt="Digital signature of university diplomas">
+        
+</figure>
+  <div class="post-content"><h2 id="context--objectives">Context &amp; Objectives<a hidden class="anchor" aria-hidden="true" href="#context--objectives">#</a></h2>
+<p>In the university sector and on the African job market, widespread diploma forgery is a major concern. This is largely due to the lack of reliable infrastructure capable of verifying the validity of diplomas issued by African universities and schools.</p>
+<p>With PKI, such a verification infrastructure can be implemented using <strong>digital signatures</strong>.</p>
+<p>How can a digital signature prevent diploma forgery? How can we determine whether a digitally signed diploma is valid?</p>
+<p>Diploma forgery occurs when a <em>graduate</em> applies for a job or an academic program. In this scenario, we have two main actors involved: the university that issued the diploma and the recruiter who receives it.</p>
+<p>How can the recruiter trust the diploma presented by the student? How can they verify its validity?</p>
+<p>To achieve this, the recruiter needs a trusted third party recognized as a trust authority. This entity (the MESRI — Ministry of Higher Education, Research and Innovation in Senegal) will not sign the diplomas directly. Its role will be to certify the identity of the university, which guarantees:</p>
+<ul>
+<li>that the signature placed on the diploma actually comes from the university in question and not from a malicious third party;</li>
+<li>the integrity of the document, since the signature would become invalid if the document were modified;</li>
+<li>non-repudiation: the university cannot deny having signed/issued the diploma.</li>
+</ul>
+<p>The recruiter will not need to contact the university for verification. The university&rsquo;s certificate is embedded in the PDF, allowing Adobe Acrobat to extract it and automatically perform the verification, then build the chain of trust back to the MESRI.</p>
+<p>We know that certificates all have an expiration date. Therefore, it would not be possible to verify the validity of a diploma if the signer&rsquo;s certificate has expired, or if the private key used to sign the document has been compromised.</p>
+<p>How can the validity of a diploma be preserved in these two situations? At what point in time should the signature be considered valid?</p>
+<p>The digital signature does not need to be valid at the time of verification, but rather at the time of issuance. This is what <strong>PAdES-LTV</strong> solves, which we will explore later.</p>
+<p>To implement this trust infrastructure, we will adopt the following hierarchy:</p>
+<ul>
+<li>a Root CA representing the MESRI;</li>
+<li>a SubCA representing the University (in our case, UCAD);</li>
+<li>the person authorized to sign diplomas within the university; in our case, the Rector.</li>
+</ul>
+<p>In this lab, we will implement:</p>
+<ul>
+<li>a PKI with <strong>SoftHSM2</strong>;</li>
+<li>a <strong>signing certificate</strong> for the Rector;</li>
+<li>PDF signing with PyHanko (PAdES);</li>
+<li>verification with Adobe Acrobat Reader.</li>
+</ul>
+<p><strong>Learning Objectives</strong></p>
+<ul>
+<li>Understand PKCS#11 with SoftHSM2;</li>
+<li>Implement PAdES;</li>
+<li>Explore a concrete use case — digital sovereignty.</li>
+</ul>
+<hr>
+<h2 id="topology">Topology<a hidden class="anchor" aria-hidden="true" href="#topology">#</a></h2>
+<p><img alt="/images/lab3-topologie.jpg" loading="lazy" src="/images/lab3-topologie.jpg"></p>
+<hr>
+<h2 id="network-configuration">Network Configuration<a hidden class="anchor" aria-hidden="true" href="#network-configuration">#</a></h2>
+<table>
+	<thead>
+			<tr>
+					<th>Machine</th>
+					<th>Role</th>
+					<th>OS</th>
+					<th>HSM</th>
+					<th>IP</th>
+					<th>FQDN</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>mesri-ca</code></td>
+					<td>Root CA</td>
+					<td>Ubuntu Server</td>
+					<td>SoftHSM2</td>
+					<td>192.168.122.20</td>
+					<td>rootca1.cyber.lab</td>
+			</tr>
+			<tr>
+					<td><code>ucad-ca</code></td>
+					<td>Intermediate CA</td>
+					<td>Ubuntu Server</td>
+					<td>SoftHSM2</td>
+					<td>192.168.122.40</td>
+					<td>subca1.cyber.lab</td>
+			</tr>
+			<tr>
+					<td><code>recteur</code></td>
+					<td>PDF Signer</td>
+					<td>Fedora</td>
+					<td>SoftHSM2</td>
+					<td>DHCP</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td><code>dns</code></td>
+					<td>DNS</td>
+					<td>Ubuntu Server</td>
+					<td>—</td>
+					<td>192.168.122.10</td>
+					<td>dns.cyber.lab</td>
+			</tr>
+			<tr>
+					<td><code>client</code></td>
+					<td>Adobe Reader</td>
+					<td>Windows 10</td>
+					<td>—</td>
+					<td>DHCP</td>
+					<td>—</td>
+			</tr>
+			<tr>
+					<td><code>crl-server</code></td>
+					<td>Revocation</td>
+					<td>Ubuntu Server</td>
+					<td>SoftHSM2</td>
+					<td>192.168.122.30</td>
+					<td>crl.cyber.lab</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="phase-1-tool-installation">PHASE 1: Tool Installation<a hidden class="anchor" aria-hidden="true" href="#phase-1-tool-installation">#</a></h2>
+<p>In this lab, we need:</p>
+<ul>
+<li><strong>OpenSSL CA</strong></li>
+<li><strong>SoftHSM2</strong>: it simulates a secure hardware module by storing private keys in an encrypted database on disk. It stores private keys outside the standard filesystem.</li>
+<li><strong>GnuTLS</strong>: a cryptographic tool suite, notably providing <code>p11tool</code> for interacting with PKCS#11 tokens. It is used to list, inspect, and verify private keys stored in SoftHSM2.</li>
+<li><strong>libengine-pkcs11-openssl</strong>: a PKCS#11 plugin for OpenSSL. It allows OpenSSL to delegate cryptographic operations to a PKCS#11 token such as SoftHSM2.</li>
+<li><strong>PyHanko</strong>: a Python library specialized in PDF signing. It supports PAdES, LTV, and timestamps.</li>
+<li><strong>OpenSC</strong>: a suite of tools for smart cards and PKCS#11 tokens. It provides <code>pkcs11-tool</code> for interacting with SoftHSM2. It will be used to generate key pairs inside SoftHSM.</li>
+<li><strong>python-pkcs11</strong>: a Python library allowing applications to use PKCS#11.</li>
+</ul>
+<p>To install them, run the following commands:</p>
+<p>On the Root CA and SubCA:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt update <span style="color:#f92672">&amp;&amp;</span> apt install -y openssl softhsm2 gnutls-bin libengine-pkcs11-openssl opensc
+</span></span></code></pre></div><p>On the Revocation Server:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt update <span style="color:#f92672">&amp;&amp;</span> apt install -y apache2
+</span></span></code></pre></div><p>On Fedora:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dnf update -y
+</span></span><span style="display:flex;"><span>sudo dnf install -y softhsm opensc gnutls-utils python3-pip libengine-pkcs11-openssl
+</span></span><span style="display:flex;"><span>pip install <span style="color:#e6db74">&#39;pyHanko[pkcs11,image-support,opentype,qr]&#39;</span>
+</span></span><span style="display:flex;"><span>pip install pyhanko-cli python-pkcs11
+</span></span></code></pre></div><hr>
+<h2 id="phase-2-mesri-pki-root-ca">PHASE 2: MESRI PKI (Root CA)<a hidden class="anchor" aria-hidden="true" href="#phase-2-mesri-pki-root-ca">#</a></h2>
+<h3 id="phase-21--initialize-softhsm2-on-the-root-ca">Phase 2.1 — Initialize SoftHSM2 on the Root CA<a hidden class="anchor" aria-hidden="true" href="#phase-21--initialize-softhsm2-on-the-root-ca">#</a></h3>
+<p>We are going to initialize a <strong>token</strong> in the Root CA&rsquo;s SoftHSM2.</p>
+<p>A token is a logical instance of the HSM that can contain cryptographic objects (private keys, public keys, certificates, secret data). In our case, it will contain the Root CA&rsquo;s private key.</p>
+<p>It has:</p>
+<ul>
+<li>
+<p>A label/name;</p>
+</li>
+<li>
+<p>A user PIN: used to manipulate the objects stored inside it;</p>
+</li>
+<li>
+<p>An SO PIN: used by the administrator.</p>
+</li>
+</ul>
+<p>Let&rsquo;s initialize our token:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>softhsm2-util --init-token --slot <span style="color:#ae81ff">0</span> --label <span style="color:#e6db74">&#34;mesri-root&#34;</span> --pin <span style="color:#ae81ff">1234</span> --so-pin <span style="color:#ae81ff">2468</span>
+</span></span></code></pre></div><p><img alt="/images/Pasted image 20260321010741.png" loading="lazy" src="/images/Pasted%20image%2020260321010741.png"></p>
+<p>The slot (the physical or logical location where a token is inserted) has been reset to:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>1893920401
+</span></span></code></pre></div><hr>
+<h3 id="phase-22--generate-the-root-ca-private-key-in-softhsm2">Phase 2.2 — Generate the Root CA Private Key in SoftHSM2<a hidden class="anchor" aria-hidden="true" href="#phase-22--generate-the-root-ca-private-key-in-softhsm2">#</a></h3>
+<p>We will use the <code>pkcs11-tool</code> utility while specifying the <strong>PKCS#11</strong> library of SoftHSM:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/usr/lib/softhsm/libsofthsm2.so
+</span></span></code></pre></div><p><code>pkcs11-tool</code> is a generic tool and does not know which HSM is being used, which is why we must explicitly specify it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --login --pin <span style="color:#ae81ff">1234</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --keypairgen <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --key-type rsa:4096 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --label <span style="color:#e6db74">&#34;mesri-root-key&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --token-label <span style="color:#e6db74">&#34;mesri-root&#34;</span>
+</span></span></code></pre></div><p><img alt="/images/Pasted image 20260321012220.png" loading="lazy" src="/images/Pasted%20image%2020260321012220.png"></p>
+<p>Let&rsquo;s verify the contents of the token to make sure the key pair is present:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --login --pin <span style="color:#ae81ff">1234</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --list-objects <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --token-label <span style="color:#e6db74">&#34;mesri-root&#34;</span>
+</span></span></code></pre></div><p><img alt="/images/Pasted image 20260321012600.png" loading="lazy" src="/images/Pasted%20image%2020260321012600.png"></p>
+<hr>
+<h3 id="phase-23--creating-the-root-ca-certificate">Phase 2.3 — Creating the Root CA Certificate<a hidden class="anchor" aria-hidden="true" href="#phase-23--creating-the-root-ca-certificate">#</a></h3>
+<p>First, we will create the Root CA directory structure:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /root/pki/root/<span style="color:#f92672">{</span>certs,crl,csr,newcerts<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>touch /root/pki/root/index.txt
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; /root/pki/root/serial
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; /root/pki/root/crlnumber
+</span></span></code></pre></div><p>Then create the <code>/root/pki/root/root.cnf</code> configuration file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span>[ <span style="color:#a6e22e">ca</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_ca</span> = <span style="color:#a6e22e">CA_default</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Main entry point — tells OpenSSL which section</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># to use as the default configuration</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">openssl_conf</span> = <span style="color:#a6e22e">openssl_init</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">openssl_init</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">engines</span> = <span style="color:#a6e22e">engine_section</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">engine_section</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pkcs11</span> = <span style="color:#a6e22e">pkcs11_section</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">pkcs11_section</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">engine_id</span> = <span style="color:#a6e22e">pkcs11</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">MODULE_PATH</span> = <span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">usr</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">lib64</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">pkcs11</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">opensc-pkcs11</span>.<span style="color:#a6e22e">so</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">init</span> = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">CA_default</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Working directories</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dir</span>               = <span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">pki</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Root CA PKI root directory</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certs</span>             = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">certs</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Stores issued certificates</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl_dir</span>           = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Stores generated CRLs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">new_certs_dir</span>     = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">newcerts</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Stores a copy of every signed certificate</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># named after its serial number</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">database</span>          = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">index</span>.<span style="color:#a6e22e">txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Registry of all issued certificates</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Format: Status | Expiry | Serial | DN</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">serial</span>            = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">serial</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># File containing the next serial number</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Automatically incremented after each signature</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlnumber</span>         = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">crlnumber</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Number of the next generated CRL</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">private_key</span>       = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">private</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span>.<span style="color:#a6e22e">key</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># We will not put anything here — the key is stored in SoftHSM2</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># A PKCS#11 URI will be used instead</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certificate</span>       = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">certs</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span>.<span style="color:#a6e22e">crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Self-signed Root CA certificate</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl</span>               = <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">dir</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">crl</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span>.<span style="color:#a6e22e">crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Current Root CA CRL</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>        = <span style="color:#a6e22e">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Hashing algorithm — SHA256 is the current standard</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_days</span>      = <span style="color:#ae81ff">3650</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Validity period of issued certificates — 10 years</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_crl_days</span>  = <span style="color:#ae81ff">30</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># CRL validity period — 30 days</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">policy</span>            = <span style="color:#a6e22e">policy_strict</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># CSR validation policy</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">policy_strict</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Required fields and their constraints</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># match    = must exactly match the Root CA</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># supplied = must be provided in the CSR</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># optional = may be absent</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">countryName</span>             = <span style="color:#a6e22e">supplied</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stateOrProvinceName</span>     = <span style="color:#a6e22e">supplied</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">organizationName</span>        = <span style="color:#a6e22e">supplied</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">commonName</span>              = <span style="color:#a6e22e">supplied</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">req</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_bits</span>        = <span style="color:#ae81ff">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Default key size — 4096 bits for Root CA</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">prompt</span>              = <span style="color:#a6e22e">no</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Do not interactively request DN fields</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>          = <span style="color:#a6e22e">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">distinguished_name</span>  = <span style="color:#a6e22e">dn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">dn</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Root CA Distinguished Name</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">C</span>  = <span style="color:#a6e22e">SN</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Senegal</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ST</span> = <span style="color:#a6e22e">Senegal</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">O</span>  = <span style="color:#a6e22e">MESRI</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Ministry of Higher Education</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">CN</span> = <span style="color:#a6e22e">MESRI</span> <span style="color:#a6e22e">Root</span> <span style="color:#a6e22e">CA</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Name that will appear in certificates</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">v3_ca</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Extensions applied to the Root CA certificate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> = <span style="color:#a6e22e">critical</span>, <span style="color:#a6e22e">CA</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># This entity IS a CA</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># critical = the client must understand this extension</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> = <span style="color:#a6e22e">critical</span>, <span style="color:#a6e22e">keyCertSign</span>, <span style="color:#a6e22e">cRLSign</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># keyCertSign = can sign certificates</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># cRLSign     = can sign CRLs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> = <span style="color:#a6e22e">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Public key fingerprint</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Used to identify the key in the chain</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityKeyIdentifier</span> = <span style="color:#a6e22e">keyid</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">always</span>, <span style="color:#a6e22e">issuer</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Reference to the key that signed this certificate</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># For the Root CA = references itself</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">v3_intermediate_ca</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Extensions applied to the Intermediate CA certificate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> = <span style="color:#a6e22e">critical</span>, <span style="color:#a6e22e">CA</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">pathlen</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># CA:true   = this is a CA</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># pathlen:0 = cannot create another SubCA below it</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> = <span style="color:#a6e22e">critical</span>, <span style="color:#a6e22e">keyCertSign</span>, <span style="color:#a6e22e">cRLSign</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> = <span style="color:#a6e22e">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityKeyIdentifier</span> = <span style="color:#a6e22e">keyid</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">always</span>, <span style="color:#a6e22e">issuer</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlDistributionPoints</span> = <span style="color:#a6e22e">URI</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">http</span><span style="color:#960050;background-color:#1e0010">://</span><span style="color:#a6e22e">crl</span>.<span style="color:#a6e22e">cyber</span>.<span style="color:#a6e22e">lab</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">crl</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span>.<span style="color:#a6e22e">crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityInfoAccess</span> = <span style="color:#a6e22e">OCSP</span><span style="color:#960050;background-color:#1e0010">;</span><span style="color:#a6e22e">URI</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">http</span><span style="color:#960050;background-color:#1e0010">://</span><span style="color:#a6e22e">crl</span>.<span style="color:#a6e22e">cyber</span>.<span style="color:#a6e22e">lab</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">ocsp</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">root</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># The client looks for the Root CA CRL here</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">ocsp</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Extensions for the Root CA OCSP Responder certificate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> = <span style="color:#a6e22e">CA</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">FALSE</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> = <span style="color:#a6e22e">critical</span>, <span style="color:#a6e22e">digitalSignature</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">extendedKeyUsage</span> = <span style="color:#a6e22e">OCSPSigning</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Explicitly authorizes this certificate to sign</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># OCSP responses</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> = <span style="color:#a6e22e">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">noCheck</span> = <span style="color:#a6e22e">ignored</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># RFC 6960 — tells the client not to check</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># the revocation status of THIS OCSP certificate</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># prevents an infinite validation loop</span>
+</span></span></code></pre></div><p>To generate the Root CA certificate, we first need to retrieve the PKCS#11 URI of the key by listing the objects in the <code>mesri-root</code> token using GnuTLS&rsquo;s <code>p11tool</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>p11tool --list-all --login <span style="color:#e6db74">&#34;pkcs11:token=mesri-root&#34;</span> --provider /usr/lib/softhsm/libsofthsm2.so
+</span></span></code></pre></div><p>Example output:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>pkcs11:model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=cdb4e58ef0e2ee91;token=mesri-root;object=mesri-root-key;type=private
+</span></span></code></pre></div><p>Then use it to create the certificate:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl req -new -x509 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -key <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -config /root/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions v3_ca <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">7300</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/root/certs/root.crt
+</span></span></code></pre></div><hr>
+<h3 id="phase-24--generate-the-initial-root-ca-crl">Phase 2.4 — Generate the Initial Root CA CRL<a hidden class="anchor" aria-hidden="true" href="#phase-24--generate-the-initial-root-ca-crl">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl ca -config /root/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -gencrl <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/root/crl/root.crl
+</span></span></code></pre></div><p>We have finished creating the Root CA. Let&rsquo;s now move on to the SubCA, representing the university — UCAD in our case.</p>
+<hr>
+<h2 id="phase-3--ucad-subca">PHASE 3 — UCAD SubCA<a hidden class="anchor" aria-hidden="true" href="#phase-3--ucad-subca">#</a></h2>
+<p>The SubCA configuration will be almost identical to the Root CA configuration. The main difference is that the SubCA certificate must be signed by the Root CA.</p>
+<p>First, let&rsquo;s create the directory structure and configuration file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /root/pki/intermediate/<span style="color:#f92672">{</span>certs,crl,csr,newcerts<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>touch /root/pki/intermediate/index.txt
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; /root/pki/intermediate/serial
+</span></span><span style="display:flex;"><span>echo <span style="color:#ae81ff">01</span> &gt; /root/pki/intermediate/crlnumber
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>nano /root/pki/intermediate/intermediate.conf
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[ ca ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_ca</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA_default</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ CA_default ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">dir</span>               <span style="color:#f92672">=</span> <span style="color:#e6db74">/root/pki/intermediate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certs</span>             <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/certs</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl_dir</span>           <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">new_certs_dir</span>     <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/newcerts</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">database</span>          <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/index.txt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">serial</span>            <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/serial</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlnumber</span>         <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crlnumber</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">certificate</span>       <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/certs/intermediate.crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crl</span>               <span style="color:#f92672">=</span> <span style="color:#e6db74">$dir/crl/intermediate.crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_days</span>      <span style="color:#f92672">=</span> <span style="color:#e6db74">3650</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_crl_days</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">30</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">policy</span>            <span style="color:#f92672">=</span> <span style="color:#e6db74">policy_strict</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ policy_strict ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">countryName</span>             <span style="color:#f92672">=</span> <span style="color:#e6db74">match</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stateOrProvinceName</span>     <span style="color:#f92672">=</span> <span style="color:#e6db74">match</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">organizationName</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">match</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">commonName</span>              <span style="color:#f92672">=</span> <span style="color:#e6db74">supplied</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ req ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_bits</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">4096</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">prompt</span>              <span style="color:#f92672">=</span> <span style="color:#e6db74">no</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default_md</span>          <span style="color:#f92672">=</span> <span style="color:#e6db74">sha256</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">distinguished_name</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">dn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ dn ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">C</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">SN</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ST</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Senegal</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">O</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">UCAD</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">CN</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">UCAD Intermediate CA</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ recteur ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">digitalSignature, nonRepudiation</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">extKeyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">emailProtection</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA:FALSE</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">crlDistributionPoints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">URI:http://crl.cyber.lab/crl/intermediate.crl</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">authorityInfoAccess</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OCSP;URI:http://crl.cyber.lab/ocsp/intermediate</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ ocsp ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">basicConstraints</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">CA:FALSE</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">keyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">critical, digitalSignature</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">extendedKeyUsage</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OCSPSigning</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">subjectKeyIdentifier</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">noCheck</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">ignored</span>
+</span></span></code></pre></div><hr>
+<h3 id="phase-31--initialize-softhsm2-on-the-subca">Phase 3.1 — Initialize SoftHSM2 on the SubCA<a hidden class="anchor" aria-hidden="true" href="#phase-31--initialize-softhsm2-on-the-subca">#</a></h3>
+<p>We will create a token named <code>ucad-intermediate</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>softhsm2-util --init-token --slot <span style="color:#ae81ff">0</span> --label <span style="color:#e6db74">&#34;ucad-subca&#34;</span> --pin <span style="color:#ae81ff">1234</span> --so-pin <span style="color:#ae81ff">5678</span>
+</span></span></code></pre></div><p><strong>Generate the SubCA private key in SoftHSM2</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --login --pin <span style="color:#ae81ff">1234</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --keypairgen <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --key-type rsa:4096 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --label <span style="color:#e6db74">&#34;ucad-subca-key&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --token-label <span style="color:#e6db74">&#34;ucad-subca&#34;</span>
+</span></span></code></pre></div><h3 id="phase-32--generate-the-subca-csr-and-issue-its-certificate">Phase 3.2 — Generate the SubCA CSR and Issue Its Certificate<a hidden class="anchor" aria-hidden="true" href="#phase-32--generate-the-subca-csr-and-issue-its-certificate">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl req -new <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -key <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-subca-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -config /root/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/intermediate/csr/intermediate.csr
+</span></span></code></pre></div><h4 id="issue-the-subca-certificate">Issue the SubCA Certificate<a hidden class="anchor" aria-hidden="true" href="#issue-the-subca-certificate">#</a></h4>
+<p>After copying the CSR to the Root CA, we will use <code>openssl ca</code> to issue the SubCA certificate:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl ca -config /root/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions v3_intermediate_ca <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">3650</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in ~/ucad-subca.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/intermediate.crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy the MESRI and UCAD certificates to the SubCA</span>
+</span></span><span style="display:flex;"><span>scp intermediate.crt root@subca1.cyber.lab:~/
+</span></span></code></pre></div><hr>
+<h2 id="phase-4--the-revocation-server">PHASE 4 — The Revocation Server<a hidden class="anchor" aria-hidden="true" href="#phase-4--the-revocation-server">#</a></h2>
+<p>It will be used in our lab to expose revocation endpoints (CRLs and OCSP Responders) through HTTP using Apache.</p>
+<p>In production, a dedicated server is typically used to host OCSP Responders, keeping the Root CA isolated.</p>
+<p>In our lab, we will start the OCSP Responders on the Root CA and SubCA and use a reverse proxy on the revocation server to keep them isolated.</p>
+<p>The CRLs will be generated and deployed to the server using <code>scp</code>.</p>
+<h3 id="phase-41--issue-the-ocsp-responder-certificates">PHASE 4.1 — Issue the OCSP Responder Certificates<a hidden class="anchor" aria-hidden="true" href="#phase-41--issue-the-ocsp-responder-certificates">#</a></h3>
+<p>We have two OCSP Responders, one on the Root CA and another on the SubCA.</p>
+<p>First, we will generate their private keys in the SoftHSM2 instances:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># On the Root CA</span>
+</span></span><span style="display:flex;"><span>pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --login --pin <span style="color:#ae81ff">1234</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --keypairgen <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --key-type rsa:4096 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --label <span style="color:#e6db74">&#34;mesri-ocsp-key&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --token-label <span style="color:#e6db74">&#34;mesri-root&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># On the SubCA</span>
+</span></span><span style="display:flex;"><span>pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --login --pin <span style="color:#ae81ff">1234</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --keypairgen <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --key-type rsa:4096 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --label <span style="color:#e6db74">&#34;ucad-ocsp-key&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --token-label <span style="color:#e6db74">&#34;ucad-subca&#34;</span>
+</span></span></code></pre></div><p>Then generate the CSRs and issue the certificates:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># On the Root CA</span>
+</span></span><span style="display:flex;"><span>openssl req -new <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -key <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-ocsp-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -subj <span style="color:#e6db74">&#34;/C=SN/ST=Senegal/O=MESRI/CN=MESRI OCSP Responder&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/root/csr/ocsp-root.csr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>openssl ca -config /root/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">365</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in /root/pki/root/csr/ocsp-root.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/root/certs/ocsp-root.crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># On the SubCA</span>
+</span></span><span style="display:flex;"><span>openssl req -new <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -key <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-ocsp-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -subj <span style="color:#e6db74">&#34;/C=SN/ST=Senegal/O=UCAD/CN=UCAD OCSP Responder&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/intermediate/csr/ocsp-ucad.csr
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>openssl ca -config /root/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">365</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-subca-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in /root/pki/intermediate/csr/ocsp-ucad.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/intermediate/certs/ocsp-ucad.crt
+</span></span></code></pre></div><hr>
+<h3 id="phase-42--apache-configuration">PHASE 4.2 — Apache Configuration<a hidden class="anchor" aria-hidden="true" href="#phase-42--apache-configuration">#</a></h3>
+<p>We will create and configure a VirtualHost that will expose our endpoints.</p>
+<p><strong>Create the directories on the server:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p /var/www/revoke/crl
+</span></span><span style="display:flex;"><span>mkdir -p /var/www/revoke/ocsp/<span style="color:#f92672">{</span>root,intermediate<span style="color:#f92672">}</span>
+</span></span></code></pre></div><p><strong>VirtualHost configuration file: <code>/etc/apache2/sites-available/revoke.conf</code></strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-apache" data-lang="apache"><span style="display:flex;"><span><span style="color:#f92672">&lt;VirtualHost</span> <span style="color:#e6db74">*:80</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    ServerName crl.cyber.lab
+</span></span><span style="display:flex;"><span>    DocumentRoot <span style="color:#e6db74">/var/www/revoke</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;Directory</span> <span style="color:#e6db74">/var/www/revoke</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>        Options Indexes
+</span></span><span style="display:flex;"><span>        AllowOverride <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>        Require <span style="color:#66d9ef">all</span> granted
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/Directory&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Reverse Proxy for Root OCSP</span>
+</span></span><span style="display:flex;"><span>    ProxyPass <span style="color:#e6db74">/ocsp/root</span> http://rootca1.cyber.lab:2560
+</span></span><span style="display:flex;"><span>    ProxyPassReverse <span style="color:#e6db74">/ocsp/root</span> http://rootca1.cyber.lab:2560
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Intermediate OCSP</span>
+</span></span><span style="display:flex;"><span>    ProxyPass <span style="color:#e6db74">/ocsp/intermediate</span> http://subca1.cyber.lab:2560
+</span></span><span style="display:flex;"><span>    ProxyPassReverse <span style="color:#e6db74">/ocsp/intermediate</span> http://subca1.cyber.lab:2560
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/VirtualHost&gt;</span>
+</span></span></code></pre></div><p><strong>Enable the required modules and the site:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>a2enmod proxy proxy_http
+</span></span><span style="display:flex;"><span>a2ensite revoke.conf
+</span></span><span style="display:flex;"><span>systemctl reload apache2
+</span></span></code></pre></div><p>To use PKCS#11 when starting an OCSP Responder, we first need to create the PKCS#11 provider in the OpenSSL configuration file <code>/etc/ssl/openssl.cnf</code>.</p>
+<p>First, install the <code>pkcs11-provider</code> package:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt install -y pkcs11-provider
+</span></span></code></pre></div><p>Then modify <code>openssl.cnf</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#a6e22e">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[provider_sect]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">default</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">default_sect</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pkcs11</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">pkcs11_sect</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[ pkcs11_sect ]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">module</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/lib/x86_64-linux-gnu/ossl-modules/pkcs11.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pkcs11-module-path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/lib/softhsm/libsofthsm2.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">activate</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[default_sect]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">activate</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">...</span>
+</span></span></code></pre></div><p><strong>Start the OCSP Responders:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># On the Root CA</span>
+</span></span><span style="display:flex;"><span>openssl ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -port <span style="color:#ae81ff">2560</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -text <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -index ~/pki/root/index.txt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -CA ~/pki/root/certs/root.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rkey <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-ocsp-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rsigner ~/pki/root/certs/ocsp-root.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/ocsp.log &amp;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># On the SubCA</span>
+</span></span><span style="display:flex;"><span>openssl ocsp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -port <span style="color:#ae81ff">2560</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -text <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -index ~/pki/intermediate/index.txt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -CA ~/pki/intermediate/certs/intermediate.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rkey <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-ocsp-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -rsigner ~/pki/intermediate/certs/ocsp-ucad.crt <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/ocsp.log &amp;
+</span></span></code></pre></div><p>To avoid the <code>No CKA_ID in source object</code> error, we must assign the same IDs to the keys of each OCSP Responder:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># On the Root CA</span>
+</span></span><span style="display:flex;"><span>p11tool --login <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-ocsp-key;type=private;pin-value=1234&#34;</span> --set-id<span style="color:#f92672">=</span><span style="color:#ae81ff">01</span>
+</span></span><span style="display:flex;"><span>p11tool --login <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-ocsp-key;type=public;pin-value=1234&#34;</span> --set-id<span style="color:#f92672">=</span><span style="color:#ae81ff">01</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># On the SubCA</span>
+</span></span><span style="display:flex;"><span>p11tool --login <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-ocsp-key;type=private;pin-value=1234&#34;</span> --set-id<span style="color:#f92672">=</span><span style="color:#ae81ff">02</span>
+</span></span><span style="display:flex;"><span>p11tool --login <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-ocsp-key;type=public;pin-value=1234&#34;</span> --set-id<span style="color:#f92672">=</span><span style="color:#ae81ff">02</span>
+</span></span></code></pre></div><p><strong>Generate and publish the CRLs:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># On the Root CA</span>
+</span></span><span style="display:flex;"><span>openssl ca -config /root/pki/root/root.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -gencrl <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/root/crl/root.crl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scp /root/pki/root/crl/root.crl root@192.168.122.30:/var/www/revoke/crl/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># On the SubCA</span>
+</span></span><span style="display:flex;"><span>openssl ca -config /root/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -gencrl <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-subca-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/intermediate/crl/intermediate.crl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scp /root/pki/intermediate/crl/intermediate.crl root@192.168.122.30:/var/www/revoke/crl/
+</span></span></code></pre></div><hr>
+<h2 id="phase-5--rector-certificate">PHASE 5 — Rector Certificate<a hidden class="anchor" aria-hidden="true" href="#phase-5--rector-certificate">#</a></h2>
+<p>The Rector needs a digital identity in order to sign diplomas.</p>
+<p>It consists of two essential elements:</p>
+<ul>
+<li>
+<p>The private key: stored in SoftHSM and never leaves it;</p>
+</li>
+<li>
+<p>The Rector&rsquo;s certificate, issued by the UCAD SubCA with the extension required for signing.</p>
+</li>
+</ul>
+<p>To create this digital identity, we will:</p>
+<ul>
+<li>
+<p>Generate the Rector&rsquo;s private key and CSR in SoftHSM;</p>
+</li>
+<li>
+<p>Create a certificate template on the SubCA and issue the Rector&rsquo;s certificate;</p>
+</li>
+<li>
+<p>Configure PyHanko to use the private key and certificate to sign PDFs.</p>
+</li>
+</ul>
+<h3 id="phase-51--generate-the-private-key-in-the-rectors-softhsm">PHASE 5.1 — Generate the Private Key in the Rector&rsquo;s SoftHSM<a hidden class="anchor" aria-hidden="true" href="#phase-51--generate-the-private-key-in-the-rectors-softhsm">#</a></h3>
+<p>By default, SoftHSM can only be used in root mode. We will create a user configuration to allow the Rector to use their private key.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p ~/.config/softhsm2
+</span></span><span style="display:flex;"><span>mkdir -p ~/.softhsm2/tokens
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cat &gt; ~/.config/softhsm2/softhsm2.conf <span style="color:#e6db74">&lt;&lt; EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">directories.tokendir = $HOME/.softhsm2/tokens/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">objectstore.backend = file
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>export SOFTHSM2_CONF<span style="color:#f92672">=</span>~/.config/softhsm2/softhsm2.conf
+</span></span></code></pre></div><p>The user&rsquo;s tokens will be stored in:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.softhsm2/tokens
+</span></span></code></pre></div><p>Initialize the token:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>softhsm2-util --init-token --slot <span style="color:#ae81ff">0</span> --label <span style="color:#e6db74">&#34;recteur&#34;</span> --pin <span style="color:#ae81ff">1234</span> --so-pin <span style="color:#ae81ff">5678</span>
+</span></span></code></pre></div><p>Generate the keys:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pkcs11-tool --module /usr/lib64/softhsm/libsofthsm.so <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --login <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --token-label <span style="color:#e6db74">&#34;recteur&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --pin <span style="color:#ae81ff">1234</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --keypairgen <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --key-type rsa:2048 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  --label <span style="color:#e6db74">&#34;recteur-key&#34;</span>
+</span></span></code></pre></div><p>Generate the CSR:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl req -new <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -key <span style="color:#e6db74">&#34;pkcs11:model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=247e8903bf1b2f9e;token=recteur;object=recteur-key;type=public?pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out ~/recteur-diallo.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -subj <span style="color:#e6db74">&#34;/C=SN/ST=Senegal/O=UCAD/CN=Recteur UCAD&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy to the SubCA</span>
+</span></span><span style="display:flex;"><span>scp recteur.csr root@192.168.122.40:~/pki/intermediate/csr/
+</span></span></code></pre></div><h3 id="phase-52--issue-the-rectors-certificate">PHASE 5.2 — Issue the Rector&rsquo;s Certificate<a hidden class="anchor" aria-hidden="true" href="#phase-52--issue-the-rectors-certificate">#</a></h3>
+<p>Next, let&rsquo;s issue the Rector&rsquo;s certificate for one year:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>openssl ca -config /root/pki/intermediate/intermediate.cnf <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -extensions recteur <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -days <span style="color:#ae81ff">365</span> -notext -md sha256 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -engine pkcs11 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyform engine <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -keyfile <span style="color:#e6db74">&#34;pkcs11:token=ucad-subca;object=ucad-subca-key;type=private;pin-value=1234&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -in ~/pki/intermediate/csr/recteur.csr <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  -out /root/pki/intermediate/certs/recteur.crt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scp /root/pki/intermediate/certs/recteur.crt mrrobot@192.168.122.24:~/certificate
+</span></span></code></pre></div><hr>
+<h2 id="phase-6--pdf-signing">PHASE 6 — PDF Signing<a hidden class="anchor" aria-hidden="true" href="#phase-6--pdf-signing">#</a></h2>
+<p>In this phase, we will sign a fictional PDF document.</p>
+<p>After thoroughly studying the <code>pyHanko</code> documentation, I developed the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko.sign <span style="color:#f92672">import</span> pkcs11, signers, timestamps, fields
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko.pdf_utils.incremental_writer <span style="color:#f92672">import</span> IncrementalPdfFileWriter
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> asn1crypto <span style="color:#f92672">import</span> x509, pem
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko <span style="color:#f92672">import</span> stamp
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko.pdf_utils <span style="color:#f92672">import</span> text, images
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko.pdf_utils.font <span style="color:#f92672">import</span> opentype
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko.sign.fields <span style="color:#f92672">import</span> SigSeedSubFilter
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyhanko_certvalidator <span style="color:#f92672">import</span> ValidationContext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Function for loading PEM</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pemDecode</span>(cert_path):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(cert_path, <span style="color:#e6db74">&#34;rb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        pem_byte <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>        _, _, certdata <span style="color:#f92672">=</span> pem<span style="color:#f92672">.</span>unarmor(pem_byte)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x509<span style="color:#f92672">.</span>Certificate<span style="color:#f92672">.</span>load(certdata)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">derRead</span>(cert_path):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(cert_path, <span style="color:#e6db74">&#34;rb&#34;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>        cert_bytes <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x509<span style="color:#f92672">.</span>Certificate<span style="color:#f92672">.</span>load(cert_bytes)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Parameters</span>
+</span></span><span style="display:flex;"><span>DOCUMENT_PATH <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/document.pdf&#34;</span>
+</span></span><span style="display:flex;"><span>RCTR_CERT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/recteur.crt&#34;</span>
+</span></span><span style="display:flex;"><span>INTRMDT_CERT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/intermediate.crt&#34;</span>
+</span></span><span style="display:flex;"><span>ROOT_CERT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/root.crt&#34;</span>
+</span></span><span style="display:flex;"><span>MODULE_PATH <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/usr/lib64/softhsm/libsofthsm.so&#34;</span>
+</span></span><span style="display:flex;"><span>SLOT_NO <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>TOKEN_LABEL <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;recteur&#34;</span>
+</span></span><span style="display:flex;"><span>KEY_LABEL <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;recteur-key&#34;</span>
+</span></span><span style="display:flex;"><span>PNG_STAMP_PATH <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/ucad.jpg&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Trust chain for DigiCert&#39;s Time Stamp Responder</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Since DigiCert&#39;s Root CA is already present in the trust stores,</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># we only need to specify the SubCA and the Responder</span>
+</span></span><span style="display:flex;"><span>TSA_CA_CRT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.pem&#34;</span>
+</span></span><span style="display:flex;"><span>TSA_RESPONDER <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/home/mrrobot/certificate/DigiCertSHA512RSA4096TimestampResponder20251.cer&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">sign</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Session initialization</span>
+</span></span><span style="display:flex;"><span>    session <span style="color:#f92672">=</span> pkcs11<span style="color:#f92672">.</span>open_pkcs11_session(
+</span></span><span style="display:flex;"><span>        MODULE_PATH,
+</span></span><span style="display:flex;"><span>        slot_no<span style="color:#f92672">=</span>SLOT_NO,
+</span></span><span style="display:flex;"><span>        token_label<span style="color:#f92672">=</span>TOKEN_LABEL,
+</span></span><span style="display:flex;"><span>        user_pin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;1234&#34;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># CMS creation</span>
+</span></span><span style="display:flex;"><span>    signer <span style="color:#f92672">=</span> pkcs11<span style="color:#f92672">.</span>PKCS11Signer(
+</span></span><span style="display:flex;"><span>        pkcs11_session<span style="color:#f92672">=</span>session,
+</span></span><span style="display:flex;"><span>        signing_cert<span style="color:#f92672">=</span>pemDecode(cert_path<span style="color:#f92672">=</span>RCTR_CERT),
+</span></span><span style="display:flex;"><span>        ca_chain<span style="color:#f92672">=</span>[pemDecode(INTRMDT_CERT)]
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Timestamp</span>
+</span></span><span style="display:flex;"><span>    timestmps <span style="color:#f92672">=</span> timestamps<span style="color:#f92672">.</span>HTTPTimeStamper(<span style="color:#e6db74">&#34;http://timestamp.digicert.com&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Validation context providing information required</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># to build the proof of time</span>
+</span></span><span style="display:flex;"><span>    vc <span style="color:#f92672">=</span> ValidationContext(
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Include issuers to build the trust chain</span>
+</span></span><span style="display:flex;"><span>        trust_roots<span style="color:#f92672">=</span>[pemDecode(ROOT_CERT), pemDecode(TSA_CA_CRT)],
+</span></span><span style="display:flex;"><span>        other_certs<span style="color:#f92672">=</span>[pemDecode(INTRMDT_CERT), derRead(TSA_RESPONDER)],
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Allow retrieval of revocation information</span>
+</span></span><span style="display:flex;"><span>        allow_fetching<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>        revocation_mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;hard-fail&#39;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Metadata: OCSP-CRL responses, PAdES specification,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># validation context</span>
+</span></span><span style="display:flex;"><span>    signature_meta <span style="color:#f92672">=</span> signers<span style="color:#f92672">.</span>PdfSignatureMetadata(
+</span></span><span style="display:flex;"><span>        field_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Signature&#39;</span>,
+</span></span><span style="display:flex;"><span>        md_algorithm<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sha256&#39;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Specify the signature as a PAdES signature</span>
+</span></span><span style="display:flex;"><span>        subfilter<span style="color:#f92672">=</span>SigSeedSubFilter<span style="color:#f92672">.</span>PADES,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Include the validation context</span>
+</span></span><span style="display:flex;"><span>        validation_context<span style="color:#f92672">=</span>vc,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Embed OCSP responses</span>
+</span></span><span style="display:flex;"><span>        embed_validation_info<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Tell pyHanko to put in an extra DocumentTimeStamp</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># to kick off the PAdES-LTA timestamp chain.</span>
+</span></span><span style="display:flex;"><span>        use_pades_lta<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Signature</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> open(DOCUMENT_PATH, <span style="color:#e6db74">&#39;rb&#39;</span>) <span style="color:#66d9ef">as</span> doc:
+</span></span><span style="display:flex;"><span>        w <span style="color:#f92672">=</span> IncrementalPdfFileWriter(doc)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        fields<span style="color:#f92672">.</span>append_signature_field(
+</span></span><span style="display:flex;"><span>            w,
+</span></span><span style="display:flex;"><span>            sig_field_spec<span style="color:#f92672">=</span>fields<span style="color:#f92672">.</span>SigFieldSpec(
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#39;Signature&#39;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># (bottom-left-x, bottom-left-y, top-right-x, top-right-y)</span>
+</span></span><span style="display:flex;"><span>                box<span style="color:#f92672">=</span>(<span style="color:#ae81ff">400</span>, <span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">550</span>, <span style="color:#ae81ff">110</span>)
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        out <span style="color:#f92672">=</span> signers<span style="color:#f92672">.</span>PdfSigner(
+</span></span><span style="display:flex;"><span>            signature_meta<span style="color:#f92672">=</span>signature_meta,
+</span></span><span style="display:flex;"><span>            signer<span style="color:#f92672">=</span>signer,
+</span></span><span style="display:flex;"><span>            timestamper<span style="color:#f92672">=</span>timestmps,
+</span></span><span style="display:flex;"><span>            stamp_style<span style="color:#f92672">=</span>stamp<span style="color:#f92672">.</span>TextStampStyle(
+</span></span><span style="display:flex;"><span>                stamp_text<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Signed by: </span><span style="color:#e6db74">%(signer)s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Time: </span><span style="color:#e6db74">%(ts)s</span><span style="color:#e6db74">&#34;</span>,
+</span></span><span style="display:flex;"><span>                background<span style="color:#f92672">=</span>images<span style="color:#f92672">.</span>PdfImage(PNG_STAMP_PATH)
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#34;signed.pdf&#34;</span>, <span style="color:#e6db74">&#34;wb&#34;</span>) <span style="color:#66d9ef">as</span> out_file:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">await</span> out<span style="color:#f92672">.</span>async_sign_pdf(w, output<span style="color:#f92672">=</span>out_file)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>asyncio<span style="color:#f92672">.</span>run(sign())
+</span></span></code></pre></div><p>The code above signs the <code>document.pdf</code> file and produces the signed file <code>signed.pdf</code> using <strong>PAdES-LTV</strong>.</p>
+<p>A <strong>PAdES-LTV</strong> signature embeds within the document the evidence that, at the date and time of issuance, as demonstrated by the OCSP responses, the signer&rsquo;s certificate was valid.</p>
+<p>The date and time are provided by a Time Stamping Authority (in this case <strong>DigiCert TSA</strong>) and signed by the TSA, guaranteeing the reliability of the time at which the document was signed.</p>
+<hr>
+<h2 id="phase-7--testing-with-adobe">PHASE 7 — Testing with Adobe<a hidden class="anchor" aria-hidden="true" href="#phase-7--testing-with-adobe">#</a></h2>
+<p>When a recruiter receives a signed diploma, they may not have technical expertise and therefore need an accessible tool to verify its validity.</p>
+<p>Adobe is the reference tool because it is widely used in businesses and natively supports the PAdES standard.</p>
+<p>We will test the signature&rsquo;s reliability on a Windows client where Adobe has been installed.</p>
+<p>First, we need to import the MESRI Root CA certificate.</p>
+<p>The MESRI Root CA certificate will allow Adobe to reconstruct the trust chain.</p>
+<p>To do this, open Adobe:</p>
+<ul>
+<li>
+<p>Menu</p>
+</li>
+<li>
+<p>Preferences</p>
+</li>
+<li>
+<p>Signatures</p>
+</li>
+<li>
+<p>Trusted Identities and Certificates &gt; More&hellip;</p>
+</li>
+<li>
+<p>Trusted Certificates &gt; Import</p>
+</li>
+<li>
+<p>Browse and select the MESRI Root CA certificate</p>
+</li>
+<li>
+<p>In the Contact section, click the certificate name</p>
+</li>
+<li>
+<p>Click the certificate in the Certificates section and then click Trust</p>
+</li>
+<li>
+<p>Check <code>Use this certificate as a trusted root</code> and <code>Certified documents</code></p>
+</li>
+</ul>
+<p>Then, when we open the <code>signed.pdf</code> file and click on the signature:</p>
+<p><img alt="/images/Pasted image 20260417000356.png" loading="lazy" src="/images/Pasted%20image%2020260417000356.png"></p>
+<p>Open the Signature Panel:</p>
+<p><img alt="/images/Pasted image 20260417000331.png" loading="lazy" src="/images/Pasted%20image%2020260417000331.png"></p>
+<blockquote>
+<p>Since DigiCert&rsquo;s Root CA is already present in Adobe&rsquo;s Trust Store, we do not need to import it manually.</p>
+</blockquote>
+<p>The LAB is validated ✅.</p>
+<hr>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>In this lab, I built a PKI infrastructure and implemented <strong>PAdES-LTV</strong> PDF signing.</p>
+<p>Through this work, I learned:</p>
+<ul>
+<li>
+<p>what an <strong>HSM</strong> is and how to interact with it through <strong>PKCS#11</strong>;</p>
+</li>
+<li>
+<p>how to perform PDF signing with <strong>PyHanko</strong>;</p>
+</li>
+<li>
+<p>why <strong>PAdES-LTV</strong> is important for diploma signing.</p>
+</li>
+</ul>
+<p>However, the lab has some limitations:</p>
+<ul>
+<li>
+<p>The token PIN is the only security layer protecting the use of the private key in the HSM and is stored in plain text in the signing script&rsquo;s source code;</p>
+</li>
+<li>
+<p>The use of a software HSM emulator&hellip;</p>
+</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/en/">Eric Yawilhit</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

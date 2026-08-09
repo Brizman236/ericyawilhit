@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on Eric Yawilhit</title>
+    <link>http://localhost:1313/en/tags/</link>
+    <description>Recent content in Tags on Eric Yawilhit</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/en/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DevSecOps</title>
+      <link>http://localhost:1313/en/tags/devsecops/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/devsecops/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>FreeIPA</title>
+      <link>http://localhost:1313/en/tags/freeipa/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/freeipa/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>HBAC</title>
+      <link>http://localhost:1313/en/tags/hbac/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/hbac/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>IAM</title>
+      <link>http://localhost:1313/en/tags/iam/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/iam/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kerberos</title>
+      <link>http://localhost:1313/en/tags/kerberos/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/kerberos/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Keycloak</title>
+      <link>http://localhost:1313/en/tags/keycloak/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/keycloak/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LDAP</title>
+      <link>http://localhost:1313/en/tags/ldap/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/ldap/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux Security</title>
+      <link>http://localhost:1313/en/tags/linux-security/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/linux-security/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenID Connect</title>
+      <link>http://localhost:1313/en/tags/openid-connect/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/openid-connect/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SSO</title>
+      <link>http://localhost:1313/en/tags/sso/</link>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/sso/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CRL</title>
+      <link>http://localhost:1313/en/tags/crl/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/crl/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Lab</title>
+      <link>http://localhost:1313/en/tags/lab/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/lab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OCSP</title>
+      <link>http://localhost:1313/en/tags/ocsp/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/ocsp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenSSL</title>
+      <link>http://localhost:1313/en/tags/openssl/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/openssl/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PKI</title>
+      <link>http://localhost:1313/en/tags/pki/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/pki/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Africa</title>
+      <link>http://localhost:1313/en/tags/africa/</link>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/africa/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Digital-Sovereignty</title>
+      <link>http://localhost:1313/en/tags/digital-sovereignty/</link>
+      <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/tags/digital-sovereignty/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

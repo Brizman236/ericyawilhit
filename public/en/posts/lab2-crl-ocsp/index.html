@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Lab 2 — CRL and OCSP: Implementing Revocation in a PKI with OpenSSL | Eric Yawilhit</title>
+<meta name="keywords" content="PKI, OpenSSL, CRL, OCSP, Lab">
+<meta name="description" content="How to implement CRL and OCSP in a complete PKI with OpenSSL. Certificate revocation, OCSP Responder, and Apache Reverse Proxy.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/en/posts/lab2-crl-ocsp/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="fr" href="http://localhost:1313/posts/lab2-crl-ocsp/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/en/posts/lab2-crl-ocsp/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/en/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/" title="FR"
+                                aria-label="FR">Fr</a>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/en/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/en/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/en/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Lab 2 — CRL and OCSP: Implementing Revocation in a PKI with OpenSSL
+    </h1>
+    <div class="post-description">
+      How to implement CRL and OCSP in a complete PKI with OpenSSL. Certificate revocation, OCSP Responder, and Apache Reverse Proxy.
+    </div>
+    <div class="post-meta"><span title='2026-03-19 00:00:00 +0000 UTC'>March 19, 2026</span>&nbsp;|&nbsp;<span>Translations:</span>
+<ul class="i18n_list">
+    <li>
+        <a href="http://localhost:1313/posts/lab2-crl-ocsp/">Fr</a>
+    </li>
+</ul>
+
+</div>
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:1313/images/lab2-cover.png" alt="Lab 2 — CRL and OCSP">
+        
+</figure>
+  <div class="post-content"><h2 id="context--objectives">Context &amp; Objectives<a hidden class="anchor" aria-hidden="true" href="#context--objectives">#</a></h2>
+<p>In <a href="https://github.com/Brizman236/Home-Labs/blob/main/PKI%20TLS%20Lab/Documentation.md">Lab 1</a>,  I configured a complete PKI architecture consisting of a <strong>Root CA</strong>, an <strong>Intermediate CA</strong>, and a WEB server using <strong>HTTPS</strong>. The trust chain was successfully validated from a Windows client.</p>
+<p>However, this infrastructure has a <strong>critical gap</strong>: <strong>the absence of a certificate revocation mechanism</strong>. In the current state of the Lab, if the WEB server&rsquo;s private key is compromised before its expiration date, the client will continue to trust the certificate as long as it has not yet expired. This could lead to a <strong>Man-In-The-Middle</strong> attack. The risk concerns not only the WEB server&rsquo;s private key, but also the private key of the <strong>Intermediate CA</strong>. Therefore, a <strong>revocation</strong> mechanism must be implemented to reduce the risk.</p>
+<p>This second lab addresses this gap by introducing the two standard certificate revocation mechanisms:</p>
+<ul>
+<li><strong>CRL (Certificate Revocation List)</strong> — a blacklist periodically published by a CA, listing revoked certificates</li>
+<li><strong>OCSP (Online Certificate Status Protocol)</strong> — a real-time verification service that makes it possible to instantly determine the status of a certificate</li>
+</ul>
+<p>Implementing these mechanisms also requires redesigning the existing PKI architecture. Indeed, Lab 1 used the <code>openssl x509</code> command to sign certificates — a manual approach that does not maintain a record of issued certificates. Revocation requires the use of <code>openssl ca</code>, which maintains an <code>index.txt</code> file serving as a certificate database and allowing certificates to be revoked.</p>
+<p>The objectives of this lab are therefore to:</p>
+<ul>
+<li>Rebuild the PKI with <code>openssl ca</code> to have a complete registry</li>
+<li>Configure the <strong>CDP (CRL Distribution Point)</strong> in the certificates</li>
+<li>Deploy and test the <strong>CRL</strong></li>
+<li>Deploy and test the <strong>OCSP Responder</strong></li>
+<li>Validate revocation in real time from the Windows client</li>
+</ul>
+<hr>
+<h2 id="topologie">Topologie<a hidden class="anchor" aria-hidden="true" href="#topologie">#</a></h2>
+<p><img alt="Topologie Lab 2" loading="lazy" src="/images/topologie-lab2-crl-ocsp.png"></p>
+<hr>
+<h2 id="network-configuration">Network Configuration<a hidden class="anchor" aria-hidden="true" href="#network-configuration">#</a></h2>
+<table>
+	<thead>
+			<tr>
+					<th>Machines Hostname IP Domain Name</th>
+					<th></th>
+					<th></th>
+					<th></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Root CA</td>
+					<td>RootCA</td>
+					<td>192.168.122.20</td>
+					<td>rootca1.cyber.lab</td>
+			</tr>
+			<tr>
+					<td>Intermediate CA</td>
+					<td>SubCA</td>
+					<td>192.168.122.40</td>
+					<td>subca1.cyber.lab</td>
+			</tr>
+			<tr>
+					<td>Web Server</td>
+					<td>web</td>
+					<td>192.168.122.30</td>
+					<td><a href="http://www.cyber.lab">www.cyber.lab</a> crl.cyber.lab</td>
+			</tr>
+			<tr>
+					<td>Windows Client</td>
+					<td>-</td>
+					<td>DHCP</td>
+					<td>-</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="phase-1-pki-reconstruction">PHASE 1: PKI Reconstruction<a hidden class="anchor" aria-hidden="true" href="#phase-1-pki-reconstruction">#</a></h2>
+<h3 id="phase-11-root-ca-creation">Phase 1.1: Root CA Creation<a hidden class="anchor" aria-hidden="true" href="#phase-11-root-ca-creation">#</a></h3>
+<pre tabindex="0"><code># Folder structure
+mkdir -p ~/pki/root/{private,certs,crl,csr,newcerts}
+
+# Protect the private key directory
+chmod 700 ~/pki/root/private
+
+# Issued certificates registry 
+touch ~/pki/root/index.txt
+
+# Serial number — starts at 01 
+echo 01 &gt; ~/pki/root/serial 
+
+# CRL number 
+echo 01 &gt; ~/pki/root/crlnumber
+
+# Create the configuration file
+nano pki/root/root.cnf
+</code></pre><pre tabindex="0"><code>[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = /root/pki/root
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+crlnumber         = $dir/crlnumber
+private_key       = $dir/private/root.key
+certificate       = $dir/certs/root.crt
+crl               = $dir/crl/root.crl
+default_md        = sha256
+default_days      = 3650
+default_crl_days  = 30
+policy            = policy_strict
+
+[ policy_strict ]
+countryName             = match
+stateOrProvinceName     = match
+organizationName        = match
+commonName              = supplied
+
+[ req ]
+default_bits        = 4096
+prompt              = no
+default_md          = sha256
+distinguished_name  = dn
+
+[ dn ]
+C  = SN
+ST = Senegal
+O  = Cyber Lab
+CN = Lab Root CA
+
+[ v3_root_ca ]
+basicConstraints = critical, CA:true
+keyUsage = critical, keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always, issuer
+
+[ v3_intermediate_ca ]
+basicConstraints = critical, CA:true, pathlen:0
+keyUsage = critical, keyCertSign, cRLSign
+subjectKeyIdentifier = hash
+crlDistributionPoints = URI:http://crl.cyber.lab/crl/root.crl
+authorityInfoAccess = OCSP;URI:http://crl.cyber.lab/ocsp/root
+
+[ ocsp ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature
+extendedKeyUsage = OCSPSigning
+subjectKeyIdentifier = hash
+</code></pre><p>The <code>.cnf</code> file of a <strong>CA</strong> is its issuance policy; it defines all the types of certificates it is authorized to issue. In our case, the <code>.cnf</code> file defines the extensions for the RootCA (<code>v3_root_ca</code>) and SubCA (<code>v3_intermediate_ca</code>) certificates.</p>
+<ul>
+<li><code>crlDistributionPoints</code> specifies the endpoint from which the CRL can be retrieved, as does <code>authorityInfoAccess</code> for OCSP</li>
+<li>the <code>keyUsage</code> <code>cRLSign</code> specifies that this authority&rsquo;s private key can sign CRLs</li>
+</ul>
+<p>With the configuration file in place, we can now generate the Root CA:</p>
+<pre tabindex="0"><code># Private key PEM pass : JG/IpvS3gxqzKg5J
+openssl genrsa -aes256 -out ~/pki/root/private/root.key 4096
+chmod 400 ~/pki/root/private/root.key
+
+# Self-signed certificate
+openssl req -config ~/pki/root/root.cnf \
+  -key ~/pki/root/private/root.key \
+  -new -x509 -days 7300 -sha256 \
+  -extensions v3_root_ca \
+  -out ~/pki/root/certs/root.crt
+</code></pre><hr>
+<h3 id="phase-12-intermediate-ca-creation">Phase 1.2: Intermediate CA Creation<a hidden class="anchor" aria-hidden="true" href="#phase-12-intermediate-ca-creation">#</a></h3>
+<pre tabindex="0"><code># Folder structure
+mkdir -p ~/pki/intermediate/{private,certs,crl,csr,newcerts}
+chmod 700 ~/pki/intermediate/private
+
+touch ~/pki/intermediate/index.txt
+echo 01 &gt; ~/pki/intermediate/serial
+echo 01 &gt; ~/pki/intermediate/crlnumber
+
+# Create the configuration file
+nano ~/pki/intermediate/intermediate.cnf
+</code></pre><pre tabindex="0"><code>[ ca ]
+default_ca = CA_default
+
+[ CA_default ]
+dir               = /root/pki/intermediate
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+crlnumber         = $dir/crlnumber
+private_key       = $dir/private/intermediate.key
+certificate       = $dir/certs/intermediate.crt
+crl               = $dir/crl/intermediate.crl
+default_md        = sha256
+default_days      = 365
+default_crl_days  = 7
+policy            = policy_loose
+
+[ policy_loose ]
+countryName             = optional
+stateOrProvinceName     = optional
+organizationName        = optional
+commonName              = supplied
+
+[ req ]
+default_bits        = 4096
+prompt              = no
+default_md          = sha256
+distinguished_name  = dn
+
+[ dn ]
+C  = SN
+ST = Senegal
+L  = Dakar
+O  = Cyber Lab
+CN = Lab Intermediate CA
+
+[ server_cert ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectKeyIdentifier = hash
+crlDistributionPoints = URI:http://crl.cyber.lab/crl/intermediate.crl
+authorityInfoAccess = OCSP;URI:http://crl.cyber.lab/ocsp/intermediate
+subjectAltName = DNS:www.cyber.lab
+
+[ ocsp ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature
+extendedKeyUsage = OCSPSigning
+subjectKeyIdentifier = hash
+</code></pre><p>We will now generate the private key and CSR for the Intermediate CA and then transfer it to the RootCA:</p>
+<pre tabindex="0"><code># Private key Pass PEM : +ptIxeoDsc+kVzer
+openssl genrsa -aes256  -out ~/pki/intermediate/private/intermediate.key 4096 
+chmod 400 ~/pki/intermediate/private/intermediate.key 
+
+# Generate the CSR 
+openssl req -config ~/pki/intermediate/intermediate.cnf -new -sha256 -key ~/pki/intermediate/private/intermediate.key -out ~/pki/intermediate/csr/intermediate.csr
+
+# Copy the CSR to the RootCA
+scp ~/pki/intermediate/csr/intermediate.csr  root@rootca1.cyber.lab:~/
+</code></pre><p>Now, from the Root CA, we will create and sign the Intermediate CA certificate and send it back:</p>
+<pre tabindex="0"><code># Certificate creation 
+openssl ca -config ~/pki/root/root.cnf \
+  -extensions v3_intermediate_ca \
+  -days 3650 -notext -md sha256 \
+  -in ~/intermediate.csr \
+  -out ~/intermediate.crt
+
+# Send the certificate to the Intermediate CA
+scp ~/intermediate.crt  root@subca1.cyber.lab:~/pki/intermediate/certs
+</code></pre><hr>
+<h3 id="phase-13-reissuing-the-web-server-certificate">Phase 1.3: Reissuing the WEB Server Certificate<a hidden class="anchor" aria-hidden="true" href="#phase-13-reissuing-the-web-server-certificate">#</a></h3>
+<p>Previously, we generated the web server&rsquo;s private key in <code>/etc/ssl/lab/private</code> and the CSR in <code>/etc/ssl/lab/webserver.csr</code>. We will now transfer this CSR to the SubCA and issue the web server certificate:</p>
+<pre tabindex="0"><code>scp /etc/ssl/lab/webserver.csr root@subca1.cyber.lab:~/
+
+# On the SubCA
+openssl ca -config ~/pki/intermediate/intermediate.cnf \
+  -extensions server_cert \
+  -days 365 -notext -md sha256 \
+  -in ~/webserver.csr \
+  -out ~/webserver.crt
+  
+# Create the trust chain
+cat ~/pki/intermediate/certs/intermediate.crt webserver.crt &gt; ca-chain
+
+# Transfer the certificate and trust chain to the WEB Server
+scp webserver.crt root@www.cyber.lab:/etc/ssl/lab/certs/
+scp ca-chain.crt root@www.cyber.lab:/etc/ssl/lab/certs/
+</code></pre><hr>
+<h2 id="phase-2-crl--ocsp">PHASE 2: CRL &amp; OCSP<a hidden class="anchor" aria-hidden="true" href="#phase-2-crl--ocsp">#</a></h2>
+<p>During the previous configurations, we issued the certificates with their <strong>CRL Distribution Points</strong> (CDP) and the OCSP Responder endpoint. Each certificate is issued with a CDP containing the CRL of its issuer.
+In this phase, we will configure the WEB server to host the CRLs and the OCSP Responder, generate the SubCA&rsquo;s CRL, configure the OCSP Responder, and perform a revocation test.</p>
+<hr>
+<h4 id="web-server-configuration"><strong>Web Server Configuration</strong><a hidden class="anchor" aria-hidden="true" href="#web-server-configuration">#</a></h4>
+<p>The CRLs will be hosted under the <code>crl.cyber.lab</code> domain name, so we will register this name on the DNS server:</p>
+<p>We will now create a VirtualHost that will host the CRL and OCSP site:</p>
+<pre tabindex="0"><code># On the WEB Server
+mkdir -p /var/www/crl/crl
+mkdir -p /var/www/crl/ocsp/root
+mkdir -p /var/www/crl/ocsp/intermediate
+
+# Create the VirtualHost
+nano /etc/apache2/sites-available/crl.conf
+</code></pre><pre tabindex="0"><code>&lt;VirtualHost *:80&gt;
+    ServerName crl.cyber.lab
+    DocumentRoot /var/www/crl
+
+    &lt;Directory /var/www/crl&gt;
+        Options Indexes
+        AllowOverride None
+        Require all granted
+    &lt;/Directory&gt;
+    
+&lt;/VirtualHost&gt;
+</code></pre><pre tabindex="0"><code># Enable the Site
+a2ensite crl.conf
+systemctl reload apache2
+</code></pre><h4 id="generating-the-crl-on-the-subca">Generating the CRL on the SubCA<a hidden class="anchor" aria-hidden="true" href="#generating-the-crl-on-the-subca">#</a></h4>
+<pre tabindex="0"><code>openssl ca -config ~/pki/intermediate/intermediate.cnf \
+  -gencrl \
+  -out ~/pki/intermediate/crl/intermediate.crl
+  
+# Then read this CRL with 
+openssl crl -in ~/pki/intermediate/crl/intermediate.crl -text
+</code></pre><p>The CRL is generated and signed with the SubCA&rsquo;s key to prove its validity. No certificate has been revoked yet, as we can see below 👇</p>
+<hr>
+<h4 id="configuring-the-ocsp-responder">Configuring the OCSP Responder<a hidden class="anchor" aria-hidden="true" href="#configuring-the-ocsp-responder">#</a></h4>
+<p>The OCSP Responder is responsible for real-time verification of a certificate&rsquo;s status. It signs its responses to prevent a Man-In-The-Middle attack.</p>
+<p>When the client accesses the web site, it verifies the validity of the entire trust chain, starting with the Intermediate CA and then the WEB server certificate.</p>
+<p>We will configure two OCSP Responders: one hosted on the RootCA, responsible for responding to SubCA verification requests, and another hosted on the SubCA for the Server certificate.</p>
+<blockquote>
+<p>NB: In production, OCSP Responders are delegated to a dedicated server</p>
+</blockquote>
+<p><strong>OCSP Responder on SubCA</strong></p>
+<pre tabindex="0"><code># Private key
+openssl genrsa -out ~/pki/intermediate/private/ocsp.key 4096 
+chmod 400 ~/pki/intermediate/private/ocsp.key
+
+# CSR
+openssl req -new \ -key ~/pki/intermediate/private/ocsp.key \ -out ~/pki/intermediate/csr/ocsp.csr \ -subj &#34;/C=SN/ST=Senegal/O=Cyber Lab/CN=OCSP Responder&#34;
+
+# Certificate issuance
+openssl ca -config ~/pki/intermediate/intermediate.cnf \
+  -extensions ocsp \
+  -days 365 -notext -md sha256 \
+  -in ~/pki/intermediate/csr/ocsp.csr \
+  -out ~/pki/intermediate/certs/ocsp.crt
+</code></pre><p><strong>OCSP Responder on Root CA</strong></p>
+<pre tabindex="0"><code># Private key
+openssl genrsa -out ~/pki/root/private/ocsp.key 4096 
+chmod 400 ~/pki/root/private/ocsp.key
+
+# CSR
+openssl req -new  -key ~/pki/root/private/ocsp.key -out ~/pki/root/csr/ocsp.csr  -subj &#34;/C=SN/ST=Senegal/O=Cyber Lab/CN=OCSP Responder RootCA&#34;
+
+# Certificate issuance
+openssl ca -config ~/pki/root/root.cnf \
+  -extensions ocsp \
+  -days 365 -notext -md sha256 \
+  -in ~/pki/root/csr/ocsp.csr \
+  -out ~/pki/root/certs/ocsp.crt
+</code></pre><p>The OCSP Responder is a service that will run continuously through a listening port. However, we specified the endpoint on the WEB server. The question is: how can the client&rsquo;s request, which will be sent to the web server, reach the SubCA?</p>
+<p>For this, we will use a <strong>Reverse Proxy</strong> that will redirect the request to the SubCA and Root CA while keeping them isolated.</p>
+<p>Let&rsquo;s first start the OCSP Responders:</p>
+<pre tabindex="0"><code># On the RootCA
+openssl ocsp \
+  -port 2560 \
+  -text \
+  -index ~/pki/root/index.txt \
+  -CA ~/pki/root/certs/root.crt \
+  -rkey ~/pki/root/private/ocsp.key \
+  -rsigner ~/pki/root/certs/ocsp.crt \
+  -out ~/ocsp.log &amp;
+
+# On the SubCA
+openssl ocsp \
+  -port 2560 \
+  -text \
+  -index ~/pki/intermediate/index.txt \
+  -CA ~/pki/intermediate/certs/intermediate.crt \
+  -rkey ~/pki/intermediate/private/ocsp.key \
+  -rsigner ~/pki/intermediate/certs/ocsp.crt \
+  -out ~/ocsp.log &amp;
+</code></pre><p>Next, let&rsquo;s configure the Reverse Proxy on the Web Server:</p>
+<pre tabindex="0"><code># Enable the required modules
+a2enmod proxy proxy_http
+systemctl restart apache2
+
+# Modify crl.cnf
+nano /etc/apache2/sites-available/crl.conf
+</code></pre><pre tabindex="0"><code>&lt;VirtualHost *:80&gt;
+    ServerName crl.cyber.lab
+    DocumentRoot /var/www/crl
+
+    &lt;Directory /var/www/crl&gt;
+        Options Indexes
+        AllowOverride None
+        Require all granted
+    &lt;/Directory&gt;
+
+    # Reverse Proxy OCSP Root
+    ProxyPass /ocsp/root http://rootca1.cyber.lab:2560
+    ProxyPassReverse /ocsp/root http://rootca1.cyber.lab:2560
+    # OCSP Intermediate
+    ProxyPass /ocsp/intermediate http://subca1.cyber.lab:2560
+    ProxyPassReverse /ocsp/intermediate http://subca1.cyber.lab:2560
+&lt;/VirtualHost&gt;
+</code></pre><p>When a request is sent to <code>/ocsp/intermediate</code>, it will be redirected to <code>http://subca1.cyber.lab:2560</code>. Then, when the SubCA responds, the Proxy will replace the URL contained in the Header with its own, <code>crl.cyber.lab</code>. The same principle applies to a request sent to the <code>/ocsp/root</code> endpoint. Let&rsquo;s restart the <code>apache2</code> service.</p>
+<hr>
+<p>Let&rsquo;s test the OCSP Responder from the RootCA:</p>
+<pre tabindex="0"><code>openssl ocsp   -issuer ~/intermediate.crt   -cert ~/webserver.crt   -url http://crl.cyber.lab/ocsp/intermediate -CAfile ~/pki/root/certs/root.crt
+
+openssl ocsp   -issuer ~/pki/root/certs/root.crt   -cert ~/intermediate.crt   -url http://crl.cyber.lab/ocsp/root   -CAfile ~/pki/root/certs/root.crt
+</code></pre><hr>
+<h4 id="revocation-test"><strong>Revocation Test</strong><a hidden class="anchor" aria-hidden="true" href="#revocation-test">#</a></h4>
+<p>We will now revoke the WEB server certificate from the SubCA and regenerate the CRL:</p>
+<pre tabindex="0"><code>openssl ca -config ~/pki/intermediate/intermediate.cnf -revoke ~/pki/intermediate/newcerts/01.pem
+
+# Generate the CRL
+openssl ca -config ~/pki/intermediate/intermediate.cnf \
+  -gencrl \
+  -out ~/pki/intermediate/crl/intermediate.crl
+
+# Copy the CRL to the WEB Server
+scp ~/pki/intermediate/crl/intermediate.crl root@www.cyber.lab:/var/www/crl/crl
+</code></pre><p>By running the OCSP request again from the RootCA, we get a response stating that the certificate has been revoked:</p>
+<p>On the client&rsquo;s browser, the revocation is not detected. Why?
+To understand the reason, let&rsquo;s first define the difference between a <strong>public PKI</strong> and a <strong>private PKI</strong>.</p>
+<hr>
+<h4 id="public-pki--private-pki">Public PKI &amp; Private PKI<a hidden class="anchor" aria-hidden="true" href="#public-pki--private-pki">#</a></h4>
+<p>A <strong>public PKI</strong> has a <strong>globally known</strong> CA such as <strong>DigiCert</strong> or <strong>Let&rsquo;s Encrypt</strong>, which is included in Trust Stores (Google, Mozilla, etc.). The Root CA is pre-installed in the operating system and in the browser.</p>
+<p>A <strong>private PKI</strong>, on the other hand, is one with a <strong>CA</strong> generated by an organization for its own activities. The Root CA is not included in Trust Stores.</p>
+<p>In browsers, primarily in <strong>Google Chrome</strong>, there is a database of CRLs collected by Google and distributed with each Google Chrome update. This database is called a <strong>CRLSet</strong>. Revocation is therefore checked locally by the browser without making network requests.</p>
+<blockquote>
+<p>This is why the browser on our client did not detect the revocation.</p>
+</blockquote>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/en/tags/pki/">PKI</a></li>
+      <li><a href="http://localhost:1313/en/tags/openssl/">OpenSSL</a></li>
+      <li><a href="http://localhost:1313/en/tags/crl/">CRL</a></li>
+      <li><a href="http://localhost:1313/en/tags/ocsp/">OCSP</a></li>
+      <li><a href="http://localhost:1313/en/tags/lab/">Lab</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/en/">Eric Yawilhit</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

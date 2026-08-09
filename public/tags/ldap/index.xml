@@ -2,23 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>LDAP on Eric Yawilhit</title>
-    <link>http://localhost:1313/tags/ldap/</link>
+    <link>https://ericyawilhit.netlify.app/tags/ldap/</link>
     <description>Recent content in LDAP on Eric Yawilhit</description>
-    <image>
-      <title>Eric Yawilhit</title>
-      <url>http://localhost:1313/images/Eric%20Yawilhit.png</url>
-      <link>http://localhost:1313/images/Eric%20Yawilhit.png</link>
-    </image>
     <generator>Hugo</generator>
-    <language>fr</language>
+    <language>en</language>
     <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/ldap/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ericyawilhit.netlify.app/tags/ldap/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak</title>
-      <link>http://localhost:1313/posts/nexgen-lab-1/</link>
+      <title>Federating Enterprise Identity: Deploying a Sovereign SSO Architecture with FreeIPA and Keycloak</title>
+      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab-1/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/nexgen-lab-1/</guid>
-      <description>Face aux risques d&amp;#39;éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d&amp;#39;une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l&amp;#39;authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.</description>
+      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab-1/</guid>
+      <description>Faced with the risks of scattered identities and dormant accounts, this technical guide walks through building a robust IAM infrastructure. Through a hands-on lab interconnecting FreeIPA (LDAP/Kerberos) and Keycloak, discover how to centralize authentication and implement an SSO mechanism via OpenID Connect (OIDC) to secure critical applications like Gitea and Grafana.</description>
     </item>
   </channel>
 </rss>

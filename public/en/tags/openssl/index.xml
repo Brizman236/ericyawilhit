@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>OpenSSL on Eric Yawilhit</title>
+    <link>http://localhost:1313/en/tags/openssl/</link>
+    <description>Recent content in OpenSSL on Eric Yawilhit</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 19 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/en/tags/openssl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lab 2 — CRL and OCSP: Implementing Revocation in a PKI with OpenSSL</title>
+      <link>http://localhost:1313/en/posts/lab2-crl-ocsp/</link>
+      <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/en/posts/lab2-crl-ocsp/</guid>
+      <description>How to implement CRL and OCSP in a complete PKI with OpenSSL. Certificate revocation, OCSP Responder, and Apache Reverse Proxy.</description>
+    </item>
+  </channel>
+</rss>

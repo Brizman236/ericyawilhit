@@ -1,53 +1,84 @@
 baseURL = "https://ericyawilhit.netlify.app"
-languageCode = "fr"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
 title = "Eric Yawilhit"
 theme = "PaperMod"
-
-[params]
-  author = "Eric Yawilhit"
-  description = "e conçois des architectures PKI pour sécuriser la confiance numérique en Afrique"
-  ShowReadingTime = true
-  ShowShareButtons = true
-  ShowPostNavLinks = true
-  images = ["images/Eric Yawilhit.png"]
-  ShowToc = true
-  ShowCodeCopyButtons = true
-  comments = true
-
-[params.profileMode]
-  enabled = true
-  title = "Eric Yawilhit"
-  subtitle = "Passionné d'infrastructure et de sécurité, je documente ici mes déploiements, architectures de labs et travaux sur la souveraineté numérique"
-  imageUrl = "/images/avatar.jpeg"
-  imageTitle = "Eric Yawilhit"
-
-[params.homeInfoParams]
-  Title = "Eric Yawilhit"
-  Content = "J'apprends, je construis, je documente — PKI pour l'Afrique."
-
-[menu]
-  [[menu.main]]
-    name = "Articles"
-    url = "/posts/"
-    weight = 2
-  [[menu.main]]
-    name = "À propos"
-    url = "/about/"
-    weight = 2
-  [[menu.main]]
-    name = "Tags"
-    url = "/tags/"
-    weight = 2
-
-[[params.socialIcons]]
-  name = "linkedin"
-  url = "https://www.linkedin.com/in/eric-yawilhit"
-
-[[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/Brizman236"
 
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+
+[languages]
+  [languages.fr]
+    languageName = "FR"
+    weight = 1
+    title = "Eric Yawilhit"
+    
+    [languages.fr.params.profileMode]
+      enabled = true
+      title = "Eric Yawilhit"
+      subtitle = "Passionné d'infrastructure et de sécurité, je documente ici mes déploiements, architectures de labs et travaux sur la souveraineté numérique"
+      imageUrl = "/images/avatar.jpeg"
+      imageTitle = "Eric Yawilhit"
+
+    [languages.fr.params.homeInfoParams]
+      Title = "Eric Yawilhit"
+      Content = "J'apprends, je construis, je documente — PKI pour l'Afrique."
+
+    [[languages.fr.menu.main]]
+      name = "Articles"
+      url = "/posts/"
+      weight = 2
+    [[languages.fr.menu.main]]
+      name = "À propos"
+      url = "/about/"
+      weight = 2
+    [[languages.fr.menu.main]]
+      name = "Tags"
+      url = "/tags/"
+      weight = 2
+
+    [[languages.fr.params.socialIcons]]
+      name = "linkedin"
+      url = "https://www.linkedin.com/in/eric-yawilhit"
+    [[languages.fr.params.socialIcons]]
+      name = "github"
+      url = "https://github.com/Brizman236"
+
+
+  [languages.en]
+    languageName = "EN"
+    weight = 2
+    title = "Eric Yawilhit"
+
+    [languages.en.params.profileMode]
+      enabled = true
+      title = "Eric Yawilhit"
+      subtitle = "Passionate about infrastructure and security, I document my deployments, lab architectures, and digital sovereignty projects here"
+      imageUrl = "/images/avatar.jpeg"
+      imageTitle = "Eric Yawilhit"
+
+    [languages.en.params.homeInfoParams]
+      Title = "Eric Yawilhit"
+      Content = "I learn, I build, I document — PKI for Africa."
+
+    [[languages.en.menu.main]]
+      name = "Posts"
+      url = "/posts/"
+      weight = 2
+    [[languages.en.menu.main]]
+      name = "About"
+      url = "/about/"
+      weight = 2
+    [[languages.en.menu.main]]
+      name = "Tags"
+      url = "/tags/"
+      weight = 2
+
+    [[languages.en.params.socialIcons]]
+      name = "linkedin"
+      url = "https://www.linkedin.com/in/eric-yawilhit"
+    [[languages.en.params.socialIcons]]
+      name = "github"
+      url = "https://github.com/Brizman236"
