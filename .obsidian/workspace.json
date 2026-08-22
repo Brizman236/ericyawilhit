@@ -8,55 +8,27 @@
         "type": "tabs",
         "children": [
           {
-            "id": "86bede7812fa7a7d",
+            "id": "b3650b7e9c0655d5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/about.en.md",
+                "file": "content/posts/nexgen-lab3-part1.en.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "about.en"
+              "title": "nexgen-lab3-part1.en"
             }
           },
           {
-            "id": "631e5cddada01446",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "content/posts/nexgen-lab-1.fr.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "nexgen-lab-1.fr"
-            }
-          },
-          {
-            "id": "bcde31645684328b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "content/posts/declaration-cotonou.en.md",
-                "mode": "source",
-                "source": true
-              },
-              "icon": "lucide-file",
-              "title": "declaration-cotonou.en"
-            }
-          },
-          {
-            "id": "636d6c28acf10bf6",
+            "id": "7799b87a62013c71",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "content/posts/lab3-pki-signature.fr.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
@@ -88,7 +60,7 @@
                 "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
-              "title": "Explorateur de fichiers"
+              "title": "Files"
             }
           },
           {
@@ -97,7 +69,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:Souveraineté Numérique",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -122,7 +94,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "6379ea46b5afe907",
@@ -218,51 +191,52 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Ouvrir le sélecteur rapide": false,
-      "graph:Ouvrir la vue graphique": false,
-      "canvas:Créer une nouvelle toile": false,
-      "daily-notes:Ouvrir la note quotidienne": false,
-      "templates:Insérer le modèle": false,
-      "command-palette:Ouvrir la palette de commandes": false,
-      "bases:Créer une nouvelle base": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
     }
   },
-  "active": "86bede7812fa7a7d",
+  "active": "b3650b7e9c0655d5",
   "lastOpenFiles": [
-    "public/tags/digital-sovereignty/page/1/index.html",
-    "public/tags/digital-sovereignty/page/1",
-    "public/tags/digital-sovereignty/page",
-    "public/tags/digital-sovereignty/index.xml",
-    "public/tags/digital-sovereignty/index.html",
-    "public/tags/digital-sovereignty",
-    "public/tags/africa/page/1/index.html",
-    "public/tags/africa/page/1",
-    "public/tags/africa/page",
-    "public/tags/africa/index.xml",
-    "public/tags/africa/index.html",
-    "content/about.fr.md",
+    "content/posts/nexgen-lab3-part1.fr.md",
+    "public/fr/tags/security-engineering/index.xml",
+    "public/fr/tags/audit/index.xml",
+    "public/fr/tags/active-directory/index.xml",
+    "public/fr/tags/security-engineering/page/1/index.html",
+    "public/fr/tags/security-engineering/page/1",
+    "public/fr/tags/security-engineering/page",
+    "public/fr/tags/security-engineering/index.html",
+    "public/fr/tags/security-engineering",
+    "public/fr/posts/nexgen-lab3-part1/index.html",
+    "public/fr/posts/nexgen-lab3-part1",
+    "public/images/lab3-part1.en.png",
+    "public/images/lab3-part1.fr.png",
+    "content/posts/nexgen-lab3-part1.en.md",
+    "content/posts/lab3-pki-signature.fr.md",
+    "static/images/lab3-part1.en.png",
+    "static/images/lab3-part1.fr.png",
+    "content/posts/declaration-cotonou.en.md",
     "content/about.en.md",
+    "public/images/Pasted image 20260802165523.png",
+    "public/images/Pasted image 20260802164946.png",
+    "public/images/Pasted image 20260802164045.png",
+    "public/images/Pasted image 20260727234803.png",
+    "public/images/Pasted image 20260727233338.png",
+    "public/images/Pasted image 20260727110859.png",
+    "content/posts/nexgen-lab-1.fr.md",
+    "content/about.fr.md",
     "content/posts/nexgen-lab-2.en.md",
     "content/posts/nexgen-lab-2.fr.md",
     "content/posts/nexgen-lab-1.en.md",
-    "content/posts/nexgen-lab-1.fr.md",
     "content/posts/lab3-pki-signature.en.md",
-    "content/posts/lab3-pki-signature.fr.md",
-    "content/posts/declaration-cotonou.en.md",
-    "public/images/cotonu-en.png",
-    "static/images/cotonu-en.png",
-    "static/images/lab2-cover.png",
     "content/posts/lab2-crl-ocsp.en.md",
     "content/posts/lab2-crl-ocsp.fr.md",
     "images/topologie-lab2-crl-ocsp.png.md",
-    "static/images/topologie-lab2-crl-ocsp.png",
     "content/posts/declaration-cotonou.fr.md",
-    "public/images/nexgen-2-topo.png",
-    "static/images/nexgen-2-topo.png",
-    "public/images/Pasted image 20260605232824.png",
-    "public/images/Pasted image 20260603222051.png",
-    "public/images/Pasted image 20260603221010.png",
-    "public/images/Pasted image 20260601000018.png",
     "content/posts/nexgen-lab.md",
     "www.linkedin.com/in/eric-yawilhit.md"
   ]

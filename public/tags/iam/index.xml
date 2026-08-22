@@ -2,24 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>IAM on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/tags/iam/</link>
+    <link>http://localhost:1313/tags/iam/</link>
     <description>Recent content in IAM on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/tags/iam/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 21 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/iam/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lab 3/5 (Part 1): The Emergency Active Directory Audit</title>
+      <link>http://localhost:1313/posts/nexgen-lab3-part1/</link>
+      <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nexgen-lab3-part1/</guid>
+      <description>Addressing the security risks of an SSO federating an unhardened directory, this technical guide details an emergency Active Directory audit. Through a hands-on lab using Wazuh, PowerShell, and GPOs, discover how to quantify identity vulnerabilities (Kerberoasting, missing tiering, insecure service accounts) before remediating the source directory.</description>
+    </item>
     <item>
       <title>Securing File Sharing: Implementing RBAC and JIT Provisioning with Keycloak and Nextcloud</title>
-      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab-2/</link>
+      <link>http://localhost:1313/posts/nexgen-lab-2/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab-2/</guid>
+      <guid>http://localhost:1313/posts/nexgen-lab-2/</guid>
       <description>Discover how to implement tight, automated role-based access control (RBAC). This hands-on guide walks through interconnecting Keycloak and Nextcloud via the Social Login app, passing the &amp;#39;groups&amp;#39; claim, and Just-In-Time (JIT) provisioning to dynamically partition team folders.</description>
     </item>
     <item>
       <title>Federating Enterprise Identity: Deploying a Sovereign SSO Architecture with FreeIPA and Keycloak</title>
-      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab-1/</link>
+      <link>http://localhost:1313/posts/nexgen-lab-1/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab-1/</guid>
+      <guid>http://localhost:1313/posts/nexgen-lab-1/</guid>
       <description>Faced with the risks of scattered identities and dormant accounts, this technical guide walks through building a robust IAM infrastructure. Through a hands-on lab interconnecting FreeIPA (LDAP/Kerberos) and Keycloak, discover how to centralize authentication and implement an SSO mechanism via OpenID Connect (OIDC) to secure critical applications like Gitea and Grafana.</description>
     </item>
   </channel>

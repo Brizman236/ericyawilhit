@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>RBAC on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/tags/rbac/</link>
+    <link>http://localhost:1313/tags/rbac/</link>
     <description>Recent content in RBAC on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/tags/rbac/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/rbac/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Securing File Sharing: Implementing RBAC and JIT Provisioning with Keycloak and Nextcloud</title>
-      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab-2/</link>
+      <link>http://localhost:1313/posts/nexgen-lab-2/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab-2/</guid>
+      <guid>http://localhost:1313/posts/nexgen-lab-2/</guid>
       <description>Discover how to implement tight, automated role-based access control (RBAC). This hands-on guide walks through interconnecting Keycloak and Nextcloud via the Social Login app, passing the &amp;#39;groups&amp;#39; claim, and Just-In-Time (JIT) provisioning to dynamically partition team folders.</description>
     </item>
   </channel>

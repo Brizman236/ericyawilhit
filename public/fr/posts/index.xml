@@ -2,45 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/fr/posts/</link>
+    <link>http://localhost:1313/fr/posts/</link>
     <description>Recent content in Posts on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/fr/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 21 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/fr/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lab 3/5 (Partie 1) : L&#39;Audit d&#39;Urgence Active Directory</title>
+      <link>http://localhost:1313/fr/posts/nexgen-lab3-part1/</link>
+      <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/posts/nexgen-lab3-part1/</guid>
+      <description>Face aux risques de compromission liés à un SSO fédérant un annuaire non durci, ce guide technique détaille l&amp;#39;audit d&amp;#39;urgence d&amp;#39;un domaine Active Directory. À travers un laboratoire pratique utilisant Wazuh, PowerShell et GPO, découvrez comment quantifier les failles d&amp;#39;identités (Kerberoasting, tiering absent, comptes de service vulnérables) avant d&amp;#39;engager la remédiation de l&amp;#39;annuaire source.</description>
+    </item>
     <item>
       <title>Sécuriser le Partage de Fichiers : Implémentation du RBAC et du Provisioning JIT avec Keycloak et Nextcloud</title>
-      <link>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-2/</link>
+      <link>http://localhost:1313/fr/posts/nexgen-lab-2/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-2/</guid>
+      <guid>http://localhost:1313/fr/posts/nexgen-lab-2/</guid>
       <description>Découvrez comment implémenter une gestion des accès basée sur les rôles (RBAC) étanche et automatisée. Ce guide pratique détaille l&amp;#39;interconnexion entre Keycloak et Nextcloud via l&amp;#39;application Social Login, la transmission de la claim &amp;#39;groups&amp;#39;, et le provisioning Just-In-Time (JIT) pour cloisonner dynamiquement les dossiers d&amp;#39;équipe.</description>
     </item>
     <item>
       <title>Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak</title>
-      <link>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-1/</link>
+      <link>http://localhost:1313/fr/posts/nexgen-lab-1/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-1/</guid>
+      <guid>http://localhost:1313/fr/posts/nexgen-lab-1/</guid>
       <description>Face aux risques d&amp;#39;éparpillement des identités et des comptes dormants, ce guide technique détaille la mise en place d&amp;#39;une infrastructure IAM robuste. À travers un laboratoire pratique interconnectant FreeIPA (LDAP/Kerberos) et Keycloak, découvrez comment centraliser l&amp;#39;authentification et implémenter un mécanisme SSO via OpenID Connect (OIDC) pour sécuriser des applications critiques comme Gitea et Grafana.</description>
     </item>
     <item>
       <title>Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko</title>
-      <link>https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/</link>
+      <link>http://localhost:1313/fr/posts/lab3-pki-signature/</link>
       <pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/</guid>
+      <guid>http://localhost:1313/fr/posts/lab3-pki-signature/</guid>
       <description>Face au fléau de la falsification des diplômes, ce guide technique détaille la mise en place d&amp;#39;une infrastructure de confiance (PKI) souveraine. À travers un laboratoire pratique utilisant SoftHSM2, OpenSSL et PyHanko, découvrez comment la signature numérique PAdES-LTV permet de garantir l&amp;#39;authenticité et l&amp;#39;intégrité des titres universitaires, vérifiables instantanément par les recruteurs via Adobe Acrobat</description>
     </item>
     <item>
       <title>Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL</title>
-      <link>https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/</link>
+      <link>http://localhost:1313/fr/posts/lab2-crl-ocsp/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/</guid>
+      <guid>http://localhost:1313/fr/posts/lab2-crl-ocsp/</guid>
       <description>Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.</description>
     </item>
     <item>
       <title>La Déclaration de Cotonou a oublié quelque chose...</title>
-      <link>https://ericyawilhit.netlify.app/fr/posts/declaration-cotonou/</link>
+      <link>http://localhost:1313/fr/posts/declaration-cotonou/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/fr/posts/declaration-cotonou/</guid>
+      <guid>http://localhost:1313/fr/posts/declaration-cotonou/</guid>
       <description>Les ministres africains ont signé la Déclaration de Cotonou avec des ambitions numériques immenses. Mais une infrastructure fondamentale a été oubliée : la PKI.</description>
     </item>
   </channel>

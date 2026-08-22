@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Wazuh on Eric Yawilhit</title>
+    <link>http://localhost:1313/tags/wazuh/</link>
+    <description>Recent content in Wazuh on Eric Yawilhit</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 21 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/wazuh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lab 3/5 (Part 1): The Emergency Active Directory Audit</title>
+      <link>http://localhost:1313/posts/nexgen-lab3-part1/</link>
+      <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nexgen-lab3-part1/</guid>
+      <description>&lt;h2 id=&#34;scenario-the-illusion-of-centralized-identity&#34;&gt;Scenario: The Illusion of Centralized Identity&lt;/h2&gt;
+&lt;p&gt;At NexGen Solution, our previous milestones established a sovereign Single Sign-On baseline (Lab 1: Keycloak, FreeIPA, Gitea, Grafana) and deployed JIT access control over Nextcloud (Lab 2). Centralizing authentication gave us confidence—until a routine security event shattered our assumptions.&lt;/p&gt;
+&lt;p&gt;A minor Wazuh SIEM alert flagged abnormal behavior on a background service account (&lt;code&gt;svc-nexgen-webapp&lt;/code&gt;). The investigation revealed a critical architectural flaw: &lt;strong&gt;Keycloak was faithfully federating identities that were compromised at the source.&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

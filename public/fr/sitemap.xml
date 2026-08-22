@@ -1,404 +1,455 @@
-
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://ericyawilhit.netlify.app/fr/categories/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/tags/active-directory/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/categories/"
+                href="http://localhost:1313/fr/tags/active-directory/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/categories/"
+                href="http://localhost:1313/tags/active-directory/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/categories/cybers%C3%A9curit%C3%A9/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/tags/audit/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/"
+                href="http://localhost:1313/fr/tags/audit/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/"
+                href="http://localhost:1313/tags/audit/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/iam/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/iam/"
+                href="http://localhost:1313/fr/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/iam/"
+                href="http://localhost:1313/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/categories/infrastructure/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/tags/iam/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/categories/infrastructure/"
+                href="http://localhost:1313/fr/tags/iam/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/categories/infrastructure/"
+                href="http://localhost:1313/tags/iam/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/just-in-time-provisioning/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/posts/nexgen-lab3-part1/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/just-in-time-provisioning/"
+                href="http://localhost:1313/fr/posts/nexgen-lab3-part1/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/just-in-time-provisioning/"
+                href="http://localhost:1313/posts/nexgen-lab3-part1/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/keycloak/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/posts/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/keycloak/"
+                href="http://localhost:1313/fr/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/keycloak/"
+                href="http://localhost:1313/posts/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/nextcloud/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/tags/security-engineering/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/nextcloud/"
+                href="http://localhost:1313/fr/tags/security-engineering/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/nextcloud/"
+                href="http://localhost:1313/tags/security-engineering/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/openid-connect/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/fr/tags/</loc>
+    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/openid-connect/"
+                href="http://localhost:1313/fr/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/openid-connect/"
+                href="http://localhost:1313/tags/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/posts/</loc>
+    <loc>http://localhost:1313/fr/categories/</loc>
     <lastmod>2026-06-05T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/posts/"
+                href="http://localhost:1313/fr/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/posts/"
+                href="http://localhost:1313/categories/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/rbac/</loc>
+    <loc>http://localhost:1313/fr/categories/cybers%C3%A9curit%C3%A9/</loc>
+    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/fr/categories/infrastructure/</loc>
     <lastmod>2026-06-05T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/rbac/"
+                href="http://localhost:1313/fr/categories/infrastructure/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/rbac/"
+                href="http://localhost:1313/categories/infrastructure/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-2/</loc>
+    <loc>http://localhost:1313/fr/tags/just-in-time-provisioning/</loc>
     <lastmod>2026-06-05T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-2/"
+                href="http://localhost:1313/fr/tags/just-in-time-provisioning/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/posts/nexgen-lab-2/"
+                href="http://localhost:1313/tags/just-in-time-provisioning/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/social-login/</loc>
+    <loc>http://localhost:1313/fr/tags/keycloak/</loc>
     <lastmod>2026-06-05T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/social-login/"
+                href="http://localhost:1313/fr/tags/keycloak/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/social-login/"
+                href="http://localhost:1313/tags/keycloak/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/</loc>
+    <loc>http://localhost:1313/fr/tags/nextcloud/</loc>
     <lastmod>2026-06-05T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/"
+                href="http://localhost:1313/fr/tags/nextcloud/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/"
+                href="http://localhost:1313/tags/nextcloud/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/devsecops/</loc>
+    <loc>http://localhost:1313/fr/tags/openid-connect/</loc>
+    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/openid-connect/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/openid-connect/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/rbac/</loc>
+    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/rbac/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/rbac/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/posts/nexgen-lab-2/</loc>
+    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/posts/nexgen-lab-2/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/posts/nexgen-lab-2/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/social-login/</loc>
+    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/social-login/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/social-login/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/devsecops/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/devsecops/"
+                href="http://localhost:1313/fr/tags/devsecops/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/devsecops/"
+                href="http://localhost:1313/tags/devsecops/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-1/</loc>
+    <loc>http://localhost:1313/fr/posts/nexgen-lab-1/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/posts/nexgen-lab-1/"
+                href="http://localhost:1313/fr/posts/nexgen-lab-1/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/posts/nexgen-lab-1/"
+                href="http://localhost:1313/posts/nexgen-lab-1/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/freeipa/</loc>
+    <loc>http://localhost:1313/fr/tags/freeipa/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/freeipa/"
+                href="http://localhost:1313/fr/tags/freeipa/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/freeipa/"
+                href="http://localhost:1313/tags/freeipa/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/hbac/</loc>
+    <loc>http://localhost:1313/fr/tags/hbac/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/hbac/"
+                href="http://localhost:1313/fr/tags/hbac/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/hbac/"
+                href="http://localhost:1313/tags/hbac/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/kerberos/</loc>
+    <loc>http://localhost:1313/fr/tags/kerberos/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/kerberos/"
+                href="http://localhost:1313/fr/tags/kerberos/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/kerberos/"
+                href="http://localhost:1313/tags/kerberos/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/ldap/</loc>
+    <loc>http://localhost:1313/fr/tags/ldap/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/ldap/"
+                href="http://localhost:1313/fr/tags/ldap/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/ldap/"
+                href="http://localhost:1313/tags/ldap/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/linux-security/</loc>
+    <loc>http://localhost:1313/fr/tags/linux-security/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/linux-security/"
+                href="http://localhost:1313/fr/tags/linux-security/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/linux-security/"
+                href="http://localhost:1313/tags/linux-security/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/sso/</loc>
+    <loc>http://localhost:1313/fr/tags/sso/</loc>
     <lastmod>2026-05-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/sso/"
+                href="http://localhost:1313/fr/tags/sso/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/sso/"
+                href="http://localhost:1313/tags/sso/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/</loc>
+    <loc>http://localhost:1313/fr/posts/lab3-pki-signature/</loc>
     <lastmod>2026-04-17T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/"
+                href="http://localhost:1313/fr/posts/lab3-pki-signature/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/posts/lab3-pki-signature/"
+                href="http://localhost:1313/posts/lab3-pki-signature/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/crl/</loc>
+    <loc>http://localhost:1313/fr/tags/crl/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/crl/"
+                href="http://localhost:1313/fr/tags/crl/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/crl/"
+                href="http://localhost:1313/tags/crl/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/lab/</loc>
+    <loc>http://localhost:1313/fr/tags/lab/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/lab/"
+                href="http://localhost:1313/fr/tags/lab/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/lab/"
+                href="http://localhost:1313/tags/lab/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/</loc>
+    <loc>http://localhost:1313/fr/posts/lab2-crl-ocsp/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/"
+                href="http://localhost:1313/fr/posts/lab2-crl-ocsp/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/"
+                href="http://localhost:1313/posts/lab2-crl-ocsp/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/ocsp/</loc>
+    <loc>http://localhost:1313/fr/tags/ocsp/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/ocsp/"
+                href="http://localhost:1313/fr/tags/ocsp/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/ocsp/"
+                href="http://localhost:1313/tags/ocsp/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/openssl/</loc>
+    <loc>http://localhost:1313/fr/tags/openssl/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/openssl/"
+                href="http://localhost:1313/fr/tags/openssl/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/openssl/"
+                href="http://localhost:1313/tags/openssl/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/pki/</loc>
+    <loc>http://localhost:1313/fr/tags/pki/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/tags/pki/"
+                href="http://localhost:1313/fr/tags/pki/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/tags/pki/"
+                href="http://localhost:1313/tags/pki/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/afrique/</loc>
+    <loc>http://localhost:1313/fr/tags/afrique/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/posts/declaration-cotonou/</loc>
+    <loc>http://localhost:1313/fr/posts/declaration-cotonou/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/posts/declaration-cotonou/"
+                href="http://localhost:1313/fr/posts/declaration-cotonou/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/posts/declaration-cotonou/"
+                href="http://localhost:1313/posts/declaration-cotonou/"
                 />
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/tags/souverainet%C3%A9-num%C3%A9rique/</loc>
+    <loc>http://localhost:1313/fr/tags/souverainet%C3%A9-num%C3%A9rique/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://ericyawilhit.netlify.app/fr/about/</loc>
+    <loc>http://localhost:1313/fr/about/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
-                href="https://ericyawilhit.netlify.app/fr/about/"
+                href="http://localhost:1313/fr/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://ericyawilhit.netlify.app/about/"
+                href="http://localhost:1313/about/"
                 />
   </url>
 </urlset>

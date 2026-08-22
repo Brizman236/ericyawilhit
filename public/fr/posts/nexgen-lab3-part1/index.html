@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Lab 3/5 (Partie 1) : L&#39;Audit d&#39;Urgence Active Directory | Eric Yawilhit</title>
+<meta name="keywords" content="Active Directory, Audit, IAM, Security Engineering">
+<meta name="description" content="Face aux risques de compromission liés à un SSO fédérant un annuaire non durci, ce guide technique détaille l&#39;audit d&#39;urgence d&#39;un domaine Active Directory. À travers un laboratoire pratique utilisant Wazuh, PowerShell et GPO, découvrez comment quantifier les failles d&#39;identités (Kerberoasting, tiering absent, comptes de service vulnérables) avant d&#39;engager la remédiation de l&#39;annuaire source.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/fr/posts/nexgen-lab3-part1/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="fr" href="http://localhost:1313/fr/posts/nexgen-lab3-part1/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/nexgen-lab3-part1/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/fr/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                    <ul class="lang-switch"><li>|</li>
+                        <li>
+                            <a href="http://localhost:1313/" title="EN"
+                                aria-label="EN">En</a>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/fr/posts/" title="Articles">
+                    <span>Articles</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/fr/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/fr/about/" title="À propos">
+                    <span>À propos</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Lab 3/5 (Partie 1) : L&#39;Audit d&#39;Urgence Active Directory
+    </h1>
+    <div class="post-description">
+      Face aux risques de compromission liés à un SSO fédérant un annuaire non durci, ce guide technique détaille l&#39;audit d&#39;urgence d&#39;un domaine Active Directory. À travers un laboratoire pratique utilisant Wazuh, PowerShell et GPO, découvrez comment quantifier les failles d&#39;identités (Kerberoasting, tiering absent, comptes de service vulnérables) avant d&#39;engager la remédiation de l&#39;annuaire source.
+    </div>
+    <div class="post-meta"><span title='2026-08-21 00:00:00 +0000 UTC'>21 août 2026</span>&nbsp;|&nbsp;<span>Traductions:</span>
+<ul class="i18n_list">
+    <li>
+        <a href="http://localhost:1313/posts/nexgen-lab3-part1/">En</a>
+    </li>
+</ul>
+
+</div>
+  </header> 
+<figure class="entry-cover">
+        <img loading="eager" src="http://localhost:1313/images/lab3-part1.fr.png" alt="Article Cover">
+        
+</figure><div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table des matières</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#contexte-nexgen-solution" aria-label="Contexte NexGen Solution">Contexte NexGen Solution</a></li>
+                <li>
+                    <a href="#les-trois-probl%c3%a9matiques-concr%c3%a8tes-%c3%a0-r%c3%a9soudre" aria-label="Les trois problématiques concrètes à résoudre">Les trois problématiques concrètes à résoudre</a></li>
+                <li>
+                    <a href="#environnement" aria-label="Environnement">Environnement</a><ul>
+                        
+                <li>
+                    <a href="#phase-1--laudit-durgence-post-incident" aria-label="Phase 1 — L&rsquo;audit d&rsquo;urgence post-incident">Phase 1 — L&rsquo;audit d&rsquo;urgence post-incident</a><ul>
+                        
+                <li>
+                    <a href="#1-les-comptes-%c3%a0-privili%c3%a8s" aria-label="1. Les comptes à priviliès">1. Les comptes à priviliès</a></li>
+                <li>
+                    <a href="#analyse-des-r%c3%a9sultats" aria-label="Analyse des résultats">Analyse des résultats</a></li>
+                <li>
+                    <a href="#2-les-comptes-de-services" aria-label="2. Les comptes de services">2. Les comptes de services</a><ul>
+                        
+                <li>
+                    <a href="#21-v%c3%a9rification-des-politiques-appliqu%c3%a9es" aria-label="2.1 Vérification des politiques appliquées">2.1 Vérification des politiques appliquées</a></li>
+                <li>
+                    <a href="#22-v%c3%a9rification-de-lexpiration-du-mot-de-passe-du-compte" aria-label="2.2 Vérification de l&rsquo;expiration du mot de passe du compte">2.2 Vérification de l&rsquo;expiration du mot de passe du compte</a></li>
+                <li>
+                    <a href="#synth%c3%a8se" aria-label="Synthèse">Synthèse</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3-structure-des-ous-et-objets-non-class%c3%a9s" aria-label="3. Structure des OUs et objets non classés">3. Structure des OUs et objets non classés</a><ul>
+                        
+                <li>
+                    <a href="#31-les-objets-figurant-dans-les-ous-par-d%c3%a9faut" aria-label="3.1 Les objets figurant dans les OUs par défaut">3.1 Les objets figurant dans les OUs par défaut</a></li>
+                <li>
+                    <a href="#32-la-structure-des-ous" aria-label="3.2 La structure des OUs">3.2 La structure des OUs</a></li></ul>
+                </li>
+                <li>
+                    <a href="#synth%c3%a8se-1" aria-label="Synthèse">Synthèse</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#prochaines-%c3%a9tapes--plan-de-rem%c3%a9diation" aria-label="Prochaines Étapes : Plan de Remédiation">Prochaines Étapes : Plan de Remédiation</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="contexte-nexgen-solution">Contexte NexGen Solution<a hidden class="anchor" aria-hidden="true" href="#contexte-nexgen-solution">#</a></h2>
+<p>Après le déploiement du SSO souverain avec FreeIPA et Keycloak (Lab 1), puis du RBAC et du provisioning JIT sur Nextcloud (Lab 2), NexGen Solution pensait avoir refermé son problème d&rsquo;identités éparpillées. La fédération fonctionnait, les accès aux applications étaient centralisés, les revues semblaient sous contrôle.</p>
+<p>Puis un audit de routine — motivé par une alerte mineure de Wazuh sur un compte de service au comportement inhabituel — a révélé quelque chose que personne n&rsquo;avait anticipé : <strong>le SSO fédérait fidèlement des identités qui n&rsquo;avaient jamais été nettoyées à la source.</strong> Le domaine Active Directory interne de NexGen, utilisé pour les postes de travail et serveurs applicatifs du siège, n&rsquo;avait jamais été intégré au périmètre des deux premiers labs. Des comptes admin sans justification connue, d&rsquo;anciens employés toujours activés, une politique de mot de passe unique appliquée aussi bien aux comptables qu&rsquo;aux administrateurs du domaine — tout ce que la fédération était censée corriger existait encore, intact, un cran plus bas.</p>
+<p>Pire : parce que Keycloak fait confiance à ce que l&rsquo;AD lui transmet, chaque faille locale non corrigée avait été fidèlement propagée vers toutes les applications fédérées. Le SSO n&rsquo;avait pas résolu le problème d&rsquo;origine — il l&rsquo;avait rendu invisible en le déplaçant derrière une façade qui semblait fonctionner.</p>
+<p>Ce lab documente la réponse à cet incident : l&rsquo;audit d&rsquo;urgence, puis la remédiation complète de l&rsquo;AD, avec l&rsquo;obligation de prouver — pas seulement d&rsquo;affirmer — que la source est désormais fiable avant de pouvoir à nouveau lui faire confiance.</p>
+<h2 id="les-trois-problématiques-concrètes-à-résoudre">Les trois problématiques concrètes à résoudre<a hidden class="anchor" aria-hidden="true" href="#les-trois-problématiques-concrètes-à-résoudre">#</a></h2>
+<p>Reprises directement du contexte NexGen posé au Lab 1 :</p>
+<ol>
+<li><strong>Éparpillement des identités et des privilèges</strong> → personne chez NexGen ne peut dire avec certitude qui a des droits d&rsquo;administrateur du domaine, ni pourquoi</li>
+<li><strong>Comptes dormants avec accès actifs</strong> → d&rsquo;anciens employés ou comptes de test oubliés, toujours activés, jamais révoqués</li>
+<li><strong>Faible gestion des mots de passe</strong> → politique de mot de passe unique pour tous les comptes, y compris les comptes à privilèges, sans rotation ni contrôle renforcé</li>
+</ol>
+<p>Chaque phase du lab répond à l&rsquo;une de ces problématiques avec une configuration concrète — pas un exercice théorique.</p>
+<hr>
+<h2 id="environnement">Environnement<a hidden class="anchor" aria-hidden="true" href="#environnement">#</a></h2>
+<ul>
+<li>1 DC Windows Server (NexGen-DC01) — celui déjà présent dans NexGen-1</li>
+<li>3 machines simulant : un poste utilisateur standard (service Finance ou RH de NexGen), un poste admin IT, un serveur applicatif interne</li>
+<li>PowerShell + module ActiveDirectory</li>
+<li>Objectif final : cet AD durci devient la source fiable qui sera fédérée à Keycloak dans un futur NexGen Lab</li>
+</ul>
+<hr>
+<h3 id="phase-1--laudit-durgence-post-incident">Phase 1 — L&rsquo;audit d&rsquo;urgence post-incident<a hidden class="anchor" aria-hidden="true" href="#phase-1--laudit-durgence-post-incident">#</a></h3>
+<h4 id="1-les-comptes-à-priviliès">1. Les comptes à priviliès<a hidden class="anchor" aria-hidden="true" href="#1-les-comptes-à-priviliès">#</a></h4>
+<p><strong>Objectif</strong> : Savoir qui peut agir sans limite sur le domaine et pourquoi.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># Membres des groupes les plus critiques</span>
+</span></span><span style="display:flex;"><span>Get-ADGroupMember -Identity <span style="color:#e6db74">&#34;Domain Admins&#34;</span> | Select-Object Name,
+</span></span><span style="display:flex;"><span>SamAccountName
+</span></span><span style="display:flex;"><span>Get-ADGroupMember -Identity <span style="color:#e6db74">&#34;Enterprise Admins&#34;</span> | Select-Object Name,
+</span></span><span style="display:flex;"><span>SamAccountName
+</span></span><span style="display:flex;"><span>Get-ADGroupMember -Identity <span style="color:#e6db74">&#34;Schema Admins&#34;</span> | Select-Object Name,
+</span></span><span style="display:flex;"><span>SamAccountName
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Administrateurs locaux sur chaque machine (à exécuter sur chaque poste, ou via Invoke-Command à distance)</span>
+</span></span><span style="display:flex;"><span>Get-LocalGroupMember -Group <span style="color:#e6db74">&#34;Administrators&#34;</span>
+</span></span></code></pre></div><table>
+	<thead>
+			<tr>
+					<th>Poste</th>
+					<th>Compte</th>
+					<th>Justification connue ?</th>
+					<th>Depuis quand ?</th>
+					<th>Toujours nécessaire ?</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>DC</td>
+					<td>Administrator</td>
+					<td>Oui. C&rsquo;est le compte Administrateur par défaut pour tout domaine Active Directory</td>
+					<td>Toujours</td>
+					<td>Oui et non</td>
+			</tr>
+			<tr>
+					<td>NXG-WKS-FIN01</td>
+					<td>Mr Robot (Local)</td>
+					<td>Oui, c&rsquo;est le compte utilisé pour la configuration initiale du système</td>
+					<td>L&rsquo;installation</td>
+					<td>Non</td>
+			</tr>
+			<tr>
+					<td>NXG-WKS-FIN01</td>
+					<td>Administrator (Local)</td>
+					<td>Oui, c&rsquo;est le compte Administrateur par défaut</td>
+					<td>L&rsquo;installation</td>
+					<td>Oui et non.</td>
+			</tr>
+			<tr>
+					<td>NXG-ADM-IT01</td>
+					<td>Administrator (Local)</td>
+					<td>Compte admin par défaut</td>
+					<td>L&rsquo;installation</td>
+					<td>Oui et non</td>
+			</tr>
+			<tr>
+					<td>NXG-ADM-IT01</td>
+					<td>Mr Robot (Local)</td>
+					<td>Compte utilisé pour la configuration initiale</td>
+					<td>L&rsquo;installation</td>
+					<td>Non</td>
+			</tr>
+			<tr>
+					<td>NXG-SRV-APP01</td>
+					<td>Administrator (Local)</td>
+					<td>Compte admin par défaut</td>
+					<td>L&rsquo;installation</td>
+					<td>Non</td>
+			</tr>
+	</tbody>
+</table>
+<h4 id="analyse-des-résultats">Analyse des résultats<a hidden class="anchor" aria-hidden="true" href="#analyse-des-résultats">#</a></h4>
+<ul>
+<li>
+<p>Sur le DC, nous remarquons qu&rsquo;il n&rsquo;y a qu&rsquo;un seul compte à privilège, ce n&rsquo;est autre que le compte administrateur par défaut, <strong>Administrator</strong>. Ce compte présente plusieurs risque pour l&rsquo;infrastructre AD :</p>
+<ul>
+<li>Tout d&rsquo;abord, le fait qu&rsquo;il en existe qu&rsquo;un seul obligerait tous les adminsitrateurs de l&rsquo;entreprise à le partager pour effectuer des tâches d&rsquo;administrations. De ce fait, il y aura aucune traçabilité pour savoir qui a fait quoi dans le domaine et même si c&rsquo;est un attaquant. Il faudrait avoir plusieurs comptes admin pour chaque administrateur du domaine.</li>
+<li>Ensuite, le nom étant universel, ce compte est beaucoup plus visé par les attaques par brutes forces, l&rsquo;attaquant ne perdant pas de temps à essayer de déviner le nom d&rsquo;un compte du domaine. Garder le nom tel quel augmente son risque de compromission ce qui peut entraîner la compromission de toute l&rsquo;entreprise. Il faudrait le renommer et le désactiver, ne l&rsquo;utiliser que temporairement pour des cas critiques comme la perte de tous les autres comptes admins.</li>
+</ul>
+</li>
+<li>
+<p>Sur les postes et le serveur applicatif :</p>
+<ul>
+<li>le compte <strong>Administrator</strong> par défaut est présent. Comme précédement, ce dernier présente aussi un risque : son nom est universel et peut être victime des attaques brute force. Une renommation et une désactivation sont nécessaires.</li>
+<li>On trouve le groupe <strong>Domain Admins</strong>. La présence de ce groupe nous dit qu&rsquo;un membre peut s&rsquo;y connecter et avoir tous les droits d&rsquo;administrateurs. Cela nous pose un problème de Tiering. C&rsquo;est-à-dire que, dans le cas où un Domain Admin se connecterait à ces machines, un attaquant ayant compromis le compte de l&rsquo;utilsateur (via du phishing par exemple, ce qui est quelque peu fréquent) peut élever ces privilèges et voler les Tickets Kerberos ou des Hash NTLM d&rsquo;un Domain Admin. Il aura ainsi les droits de domain Admin, de ce fait, toute l&rsquo;infrastructure de l&rsquo;entreprise se retrouvera compromise.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="2-les-comptes-de-services">2. Les comptes de services<a hidden class="anchor" aria-hidden="true" href="#2-les-comptes-de-services">#</a></h4>
+<p><strong>Objectif</strong> : Vérifier qu&rsquo;aucun compte de service n&rsquo;a plus de droits que nécessaires.</p>
+<p>Un compte de service :</p>
+<ul>
+<li>Doit avoir un mot de passe qui n&rsquo;expire jamais d</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># Les comptes de services ont un SPN enregistré</span>
+</span></span><span style="display:flex;"><span>Get-ADUser -Filter {servicePrincipalName <span style="color:#f92672">-like</span> <span style="color:#e6db74">&#34;*&#34;</span>} -Properties ServicePrincipalName | Select-Object Name, servicePrincipalName
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Pasted%20image%2020260724163120.png"></p>
+<p>Nous avons un compte de service qui est <code>svc-nexgen-webapp</code> avec le SPN <code>HTTP/NXG-SRV-APP01</code>. Des analyses sont nécessaires pour déterminer si :</p>
+<ul>
+<li>Le compte n&rsquo;a pas de logon interactif : un compte de service est un compte utilisé par un programme de manière automatisée afin d&rsquo;effectuer des tâches. De ce fait, il n&rsquo;y a pas besoin à ce qu&rsquo;un utilisateur standard se connecte en l&rsquo;utilisant. En vue de respecter le principe du moindre privilège, le compte ne doit pas posséder cette fonctionnalité</li>
+<li>Le compte doit disposer d&rsquo;un mot de passe qui ne s&rsquo;expire jamais quoique cette configuration expose certaines vulnérabilités. Comme dit précédement, ce compte est utilisé de manière automatisée, de ce fait si le mot de passe est expiré, le service étant non humain ne saurait comment modifier son mot de passe. Cependant cela comporte un risque, si un attaquant arrive à voler les idpropreentifiants de ce compte sans que cela ne se sache, il pourra usurper indéfiniement l&rsquo;identité de ce service, le mot de passe ne s&rsquo;expirant jamais. La solution idéale sera un compte <strong>gMSA</strong> (Le concept sera développé ultérieurement)</li>
+<li>Le compte ne doit disposer que des privilèges nécessaires à sa tâche</li>
+<li>Le compte doit disposer d&rsquo;un mot de passe fort afin d&rsquo;éviter le craquage pour du Kerberoasting</li>
+</ul>
+<h5 id="21-vérification-des-politiques-appliquées">2.1 Vérification des politiques appliquées<a hidden class="anchor" aria-hidden="true" href="#21-vérification-des-politiques-appliquées">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># Depuis NXG-SRV-APP01</span>
+</span></span><span style="display:flex;"><span>gpresult /h C:\rapport-gpo-nxg-srv-app01.html
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Pasted%20image%2020260727104152.png"></p>
+<p><img loading="lazy" src="/images/Pasted%20image%2020260727104759.png"></p>
+<table>
+	<thead>
+			<tr>
+					<th>Constat</th>
+					<th>Risque business</th>
+					<th>Remédiation prévue</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Aucune GPO de restriction sur <code>NXG-SRV-APP01</code> ; seule la Default Domain Policy s&rsquo;applique</td>
+					<td>Le compte de service peut aujourd&rsquo;hui ouvrir une session interactive comme n&rsquo;importe quel compte humain, ce qui élargit sa surface d&rsquo;exploitation si son mot de passe est compromis</td>
+					<td>Créer et lier une GPO dédiée avec <code>Deny log on locally</code> / <code>Log on as a service</code></td>
+			</tr>
+			<tr>
+					<td>Une faible politique de mot de passe avec 7 caractères minimum</td>
+					<td>Le compte de service peut être compromis car son mot de passe est qlq peu craquable</td>
+					<td>Renforcer la politique de mot de passe allant jusqu&rsquo;à 14 caractères minimum et configuration du gMSA</td>
+			</tr>
+	</tbody>
+</table>
+<h5 id="22-vérification-de-lexpiration-du-mot-de-passe-du-compte">2.2 Vérification de l&rsquo;expiration du mot de passe du compte<a hidden class="anchor" aria-hidden="true" href="#22-vérification-de-lexpiration-du-mot-de-passe-du-compte">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-ADUser -Identity <span style="color:#e6db74">&#34;svc-nexgen-webapp&#34;</span> | Select-Objet PasswordNeverExpires
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Pasted%20image%2020260727105644.png"></p>
+<p>Le mot de passe ne s&rsquo;expirera jamais. Avant de continuer, il est nécessaire de vérifier si ce compte est un gMSA ou non. Pour ce faire, la commande ci-dessous est à exécuter :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-ADServiceAccount -Identity <span style="color:#e6db74">&#34;svc-nexgen-webapp&#34;</span>
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Pasted%20image%2020260727110859.png"></p>
+<p>Le compte <code>svc-nexgen-webapp</code> n&rsquo;en est pas un.</p>
+<hr>
+<h5 id="synthèse">Synthèse<a hidden class="anchor" aria-hidden="true" href="#synthèse">#</a></h5>
+<table>
+	<thead>
+			<tr>
+					<th>#</th>
+					<th>Constat</th>
+					<th>Risque business</th>
+					<th>Remédiation prévue</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1</td>
+					<td>Le compte <code>svc-nexgen-webapp</code> possède un SPN (<code>HTTP/NXG-SRV-APP01</code>)</td>
+					<td>Expose le compte au Kerberoasting — tout utilisateur authentifié du domaine peut demander un ticket et tenter de casser le mot de passe hors ligne</td>
+					<td>Renforcer le mot de passe + migration gMSA (élimine le risque, mot de passe de 240 caractères)</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>Aucune GPO de restriction sur <code>NXG-SRV-APP01</code> ; seule la Default Domain Policy s&rsquo;applique</td>
+					<td>Le compte de service peut ouvrir une session interactive comme un compte humain, élargissant sa surface d&rsquo;exploitation si compromis</td>
+					<td>Créer et lier une GPO dédiée avec <code>Deny log on locally</code> / <code>Log on as a service</code></td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>Politique de mot de passe du domaine à 7 caractères minimum, appliquée sans distinction au compte de service</td>
+					<td>Mot de passe faible plus facilement cassable, notamment via Kerberoasting (lien direct avec le constat n°1)</td>
+					<td>Renforcer à 14 caractères minimum, idéalement via FGPP différenciée pour les comptes de service</td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td><code>PasswordNeverExpires = $true</code> confirmé sur le compte</td>
+					<td>Un mot de passe compromis reste valide indéfiniment, sans rotation possible sans intervention humaine</td>
+					<td>Migration vers gMSA (rotation automatique tous les 30 jours)</td>
+			</tr>
+			<tr>
+					<td>5</td>
+					<td>Le compte n&rsquo;est <strong>pas</strong> un gMSA (confirmé via <code>Get-ADServiceAccount</code>) — c&rsquo;est un objet <code>user</code> classique créé via <code>New-ADUser</code></td>
+					<td>Cumule tous les risques ci-dessus (2, 3, 4) puisqu&rsquo;aucune des protections natives d&rsquo;un gMSA ne s&rsquo;applique</td>
+					<td>Migration complète vers un vrai gMSA via <code>New-ADServiceAccount</code></td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h4 id="3-structure-des-ous-et-objets-non-classés">3. Structure des OUs et objets non classés<a hidden class="anchor" aria-hidden="true" href="#3-structure-des-ous-et-objets-non-classés">#</a></h4>
+<p>Les objectifs de cette 3e phase sont de :</p>
+<ul>
+<li>Vérifier si des objets figurent dans les OUs par défaut</li>
+<li>Vérifier la structure actuelle des OUs dans le domaine</li>
+</ul>
+<h5 id="31-les-objets-figurant-dans-les-ous-par-défaut">3.1 Les objets figurant dans les OUs par défaut<a hidden class="anchor" aria-hidden="true" href="#31-les-objets-figurant-dans-les-ous-par-défaut">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># Objets restés dans les conteneurs par défaut (non gérés par GPO)</span>
+</span></span><span style="display:flex;"><span>Get-ADUser -Filter * -SearchBase <span style="color:#e6db74">&#34;CN=Users,DC=nexgen,DC=lab&#34;</span> |
+</span></span><span style="display:flex;"><span>Select-Object Name, DistinguishedName
+</span></span><span style="display:flex;"><span>Get-ADComputer -Filter * -SearchBase <span style="color:#e6db74">&#34;CN=Computers,DC=nexgen,DC=lab&#34;</span> | Select-Object Name, DistinguishedName
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Lab%204%20IAM/Pasted%20image%2020260727234803.png"></p>
+<p>On peut constater que :</p>
+<ul>
+<li>Dans l&rsquo;OU <strong>Users</strong>, on y trouve que des comptes par défaut du domaine, sensé y être d&rsquo;ailleurs. Pas de souci de ce côté.</li>
+<li>Les machines du domaines sont toutes présentent dans l&rsquo;OU par défaut <strong>Computers</strong>. De ce fait, il est impossible de les gérer par des GPOs.</li>
+</ul>
+<p><strong>Problème démontré  :</strong> Précédement nous avons eu à présenter le risque de la présence du groupe <strong>Domain Admins</strong> sur les postes utilisateurs. En effet, la présence de ce groupe signifie qu&rsquo;un administrateur du domaine (utilisateur ayant tous les droits sur l&rsquo;ensemble du domaine) peut se connecter et se faire voler ses tickets Kerberos. La remédiation de ce risque serait d&rsquo;appliquer une politique à l&rsquo;ensemble des postes utilisateurs afin d&rsquo;interdire cette connexion. Cependant cela n&rsquo;est pas possible parce que ces postes sont dans l&rsquo;OU <strong>Computers</strong>.</p>
+<p><strong>Décision et Justification :</strong> Il est nécessaire de déplacer les 3 machines depuis le conteneur par défaut <code>CN=Computers</code> vers une OU dédiée permettant l&rsquo;application de GPO. Ce déplacement est un prérequis technique indispensable — sans lui, aucune politique de sécurité ne peut être appliquée aux postes du domaine, quelle que soit la qualité de cette politique.</p>
+<h5 id="32-la-structure-des-ous">3.2 La structure des OUs<a hidden class="anchor" aria-hidden="true" href="#32-la-structure-des-ous">#</a></h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e"># Récupérer tous les OUs du domaine</span>
+</span></span><span style="display:flex;"><span>Get-ADOrganizationalUnit -Filter * | Select-Object Name, DistinguishedName
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Pasted%20image%2020260802164045.png"></p>
+<p>De part cette structure, nous remarquons la présence d&rsquo;une OU parente <code>NexGen-Infrastructes</code> représentant, comme son nom l&rsquo;indique l&rsquo;unité d&rsquo;organisation de tous les objects composant l&rsquo;infrastructure de <strong>Nex Gen</strong>. De plus, nous y trouvons d&rsquo;autres OUs représentant chaque département de <strong>Nex Gen</strong>.</p>
+<p>Nous allons ensuite consulter quels objets sont repertoriés dans ces OUs :</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>Get-ADObject -SearchBase <span style="color:#e6db74">&#34;OU=NexGen-Infrastructures,DC=nexgen,DC=lab&#34;</span> -Filter <span style="color:#e6db74">&#39;ObjectClass -ne &#34;organizationalUnit&#34;&#39;</span>
+</span></span></code></pre></div><p><img loading="lazy" src="/images/Pasted%20image%2020260802165523.png"></p>
+<p>En consultant l&rsquo;inventaire des objets figurant dans <code>NexGen-Infrastructures</code>, nous remarquons la présence des groupes et des utilisateurs dans chaque OU/Département, chaque département ayant son groupe d&rsquo;utilisateur. Il y a aucune séparation entre les différentes classes d&rsquo;objets.</p>
+<p><strong>Problèmes démontrés</strong> : Cette abscence de séparation soulève deux problèmes d&rsquo;ordre majeurs.</p>
+<ol>
+<li>Un problème de <strong>lisibilité</strong> et de <strong>gestion</strong> : Nex Gen en tant qu&rsquo;entreprise florissante embauchera de plus en plus d&rsquo;employé dans chaque département. Ces employés, dans l&rsquo;état actuel des choses, seront rangés dans leur OU respectif, mélangés avec les Groupes. Quand il s&rsquo;agirait d&rsquo;attribuer des droits ou de gérer des objets selon leur type ou classe, il sera difficile pour l&rsquo;administrateur de distinguer et d&rsquo;indentifier les groupes parmi les nombreux utilisateurs. D&rsquo;où le problème de <strong>lisibilité</strong> et de <strong>gestion</strong>.</li>
+<li>Un problème de <strong>rigidité structurelle</strong> : si l&rsquo;on reste dans le même contexte précédemment énoncé, les employés embauchés par Nex Gen auront une certaine disparité de rôles dans leur département respectif. Cependant, dans l&rsquo;état actuel il n&rsquo;existe qu&rsquo;un seul groupe englobant tous les membres d&rsquo;un même département</li>
+<li>Un manque de <strong>granularité</strong> : Les groupes actuelles sont un mélange de deux choses dans un seul objet : la fonction d&rsquo;un utilisateur (son rôle dans l&rsquo;entreprise) et l&rsquo;accès à une ressource précise, sans jamais les séparer. Imaginons que le département R&amp;D ait besoin d&rsquo;accéder au serveur application du département IT pour un projet de courte durée. Deux options s&rsquo;offrent à nous :
+<ul>
+<li>Attribuer directement les droits d&rsquo;accès au groupe R&amp;D : Avec cette option, les droits d&rsquo;accès devront être attribués à chaque département ou particulier comme un auditeur ayant besoin d&rsquo;accéder à ce serveur (allourdissement du travail). Lorsqu&rsquo;il s&rsquo;agira de retirer les utilisateurs n&rsquo;ayant plus besoin de ces accès, l&rsquo;administrateur devra inspecter chaque groupe pour vérifier s&rsquo;il a les droits ou non.</li>
+<li>Ajouter R&amp;D dans le groupe des IT : cela leur donnerait, en plus des droits d&rsquo;accès au serveur applicatif, d&rsquo;autres droits supplémentaires propres au département IT. Ce qui est une violation du principe de moindre privilège.
+Comme on peut le constater, ces deux options soulèvent encore d&rsquo;autres problématiques.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Décision et Justification</strong> :</p>
+<ol>
+<li>Afin de remédier au problème de <strong>lisibilité</strong> et de <strong>gestion</strong>, nous allons, dans chaque OU ou département, séparer les objets selon leur type. C&rsquo;est-à-dire créer des sous-OUs <strong>Users/Groups/Computers</strong> .</li>
+<li>Quant aux deux derniers problèmes, nous allons créer deux types de groupes : des groupes de <strong>rôle</strong> (représentant la fonction de l&rsquo;utilisateur dans l&rsquo;entreprise) et des groupes de <strong>ressources</strong> (représentant les accès à des ressources). Avec cette structure, pour pouvoir donner des accès à une ressource comme le serveur applicatif, il suffit juste d&rsquo;ajouter soit l&rsquo;utilisateur ou un groupe d&rsquo;utilisateur ayant le même rôle (un groupe de rôle, ex. <code>gg-IT-User</code>) au groupe de ressource (ex. <code>gg-Res-SrvApp</code>). L&rsquo;ajout et la révocation des accès se feront au même endroit.</li>
+</ol>
+<hr>
+<h4 id="synthèse-1">Synthèse<a hidden class="anchor" aria-hidden="true" href="#synthèse-1">#</a></h4>
+<table>
+	<thead>
+			<tr>
+					<th>#</th>
+					<th>Constat</th>
+					<th>Risque business</th>
+					<th>Remédiation</th>
+					<th>Lien avec les autres findings</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Groupe A — Absence de criticité (Tiering)</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>1</td>
+					<td><code>Domain Admins</code> présent dans les admins locaux de <code>NXG-WKS-FIN01</code></td>
+					<td>Chemin d&rsquo;attaque complet possible : phishing → vol de ticket Kerberos → compromission du domaine</td>
+					<td>Modèle Tier 0/1/2 avec <code>Deny log on locally</code></td>
+					<td>Rendu possible par l&rsquo;absence de structure permettant d&rsquo;isoler les niveaux de criticité (#2)</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>Aucune OU par criticité ; structure organisée uniquement par département</td>
+					<td>Aucune barrière structurelle n&rsquo;empêche un compte à haut privilège de se connecter n&rsquo;importe où</td>
+					<td>Créer <code>NexGen-Tier0/1/2</code></td>
+					<td>Cause directe du finding #1</td>
+			</tr>
+			<tr>
+					<td><strong>Groupe B — Objets mal rangés (blocage technique)</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>Les 3 machines sont dans <code>CN=Computers</code> (conteneur par défaut)</td>
+					<td>Aucune GPO ne peut leur être appliquée, y compris la remédiation du finding #1</td>
+					<td>Déplacer vers une OU réelle</td>
+					<td>Bloque directement la remédiation du finding #1</td>
+			</tr>
+			<tr>
+					<td><strong>Groupe C — Structure des groupes</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td>Mélange Users/Groups dans chaque OU département</td>
+					<td>Lisibilité et délégation compromises à mesure que NexGen grandit</td>
+					<td>Sous-OUs Users/Groups/Computers par département</td>
+					<td>Indépendant du Tiering — un problème d&rsquo;organisation, pas de criticité</td>
+			</tr>
+			<tr>
+					<td>5</td>
+					<td>Groupes plats (<code>gg-IT-Users</code>) mélangeant rôle et ressource</td>
+					<td>Chaque changement d&rsquo;accès devient coûteux ; violation du moindre privilège en cas de besoin d&rsquo;accès croisé</td>
+					<td>Groupes de rôle séparés des groupes de ressource</td>
+					<td>Complète le finding #4 — même cause (structure jamais pensée pour la croissance)</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="prochaines-étapes--plan-de-remédiation">Prochaines Étapes : Plan de Remédiation<a hidden class="anchor" aria-hidden="true" href="#prochaines-étapes--plan-de-remédiation">#</a></h2>
+<p>Après avoir démontré l&rsquo;insécurité de notre annuaire source, l&rsquo;étape suivante consiste à le durcir. Dans <strong>Lab 3 - Partie 2</strong>, nous déploierons le modèle de <strong>Tiering Active Directory</strong>, la séparation des OUs par criticité et l&rsquo;isolation des comptes à privilèges.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/fr/tags/active-directory/">Active Directory</a></li>
+      <li><a href="http://localhost:1313/fr/tags/audit/">Audit</a></li>
+      <li><a href="http://localhost:1313/fr/tags/iam/">IAM</a></li>
+      <li><a href="http://localhost:1313/fr/tags/security-engineering/">Security Engineering</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/fr/posts/nexgen-lab-2/">
+    <span class="title">Suivant »</span>
+    <br>
+    <span>Sécuriser le Partage de Fichiers : Implémentation du RBAC et du Provisioning JIT avec Keycloak et Nextcloud</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/fr/">Eric Yawilhit</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -15,6 +15,11 @@ theme = "PaperMod"
     weight = 1
     title = "Eric Yawilhit"
     
+    [languages.fr.params]
+      showtoc = true
+      tocopen = false
+      ShowPostNavLinks = true
+    
     [languages.fr.params.profileMode]
       enabled = true
       title = "Eric Yawilhit"
@@ -51,6 +56,8 @@ theme = "PaperMod"
     languageName = "EN"
     weight = 2
     title = "Eric Yawilhit"
+    showtoc = true
+    tocopen = true
 
     [languages.en.params.profileMode]
       enabled = true

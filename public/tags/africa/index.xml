@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Africa on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/tags/africa/</link>
+    <link>http://localhost:1313/tags/africa/</link>
     <description>Recent content in Africa on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Tue, 17 Mar 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/tags/africa/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/africa/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Cotonou Declaration Left Something Out...</title>
-      <link>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</link>
+      <link>http://localhost:1313/posts/declaration-cotonou/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</guid>
+      <guid>http://localhost:1313/posts/declaration-cotonou/</guid>
       <description>African ministers signed the Cotonou Declaration with immense digital ambitions. But a fundamental infrastructure was forgotten: the PKI.</description>
     </item>
   </channel>
