@@ -6,13 +6,20 @@
     <description>Recent content in Categories on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 05 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 24 Aug 2026 23:24:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Cybersecurity</title>
       <link>http://localhost:1313/categories/cybersecurity/</link>
-      <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/cybersecurity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Homelab</title>
+      <link>http://localhost:1313/categories/homelab/</link>
+      <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/homelab/</guid>
       <description></description>
     </item>
     <item>

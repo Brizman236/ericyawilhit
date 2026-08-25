@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Windows Server on Eric Yawilhit</title>
+    <link>http://localhost:1313/fr/tags/windows-server/</link>
+    <description>Recent content in Windows Server on Eric Yawilhit</description>
+    <generator>Hugo</generator>
+    <language>fr</language>
+    <lastBuildDate>Mon, 24 Aug 2026 23:24:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/fr/tags/windows-server/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sécurisation d&#39;Active Directory : Enterprise Access Model &amp; Segmentation Administrative (Partie 2)</title>
+      <link>http://localhost:1313/fr/posts/nexgen-lab3-part2/</link>
+      <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/posts/nexgen-lab3-part2/</guid>
+      <description>Mise en œuvre du modèle d&amp;rsquo;accès d&amp;rsquo;entreprise de Microsoft dans Active Directory via la restructuration des OU, la délégation des privilèges administratifs et l&amp;rsquo;application des GPO de refus d&amp;rsquo;ouverture de session.</description>
+    </item>
+  </channel>
+</rss>
