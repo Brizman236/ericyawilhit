@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/posts/nexgen-lab3-part2.en.md",
+                "file": "content/posts/nexgen-lab3-part2.fr.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "nexgen-lab3-part2.en"
+              "title": "nexgen-lab3-part2.fr"
             }
           },
           {
@@ -230,6 +230,11 @@
   },
   "active": "198d3a679604c34e",
   "lastOpenFiles": [
+    "public/assets/css/stylesheet.62ce00e29ce8efff984878b1804fde4d9c910928c9377c5d13cb0c5541a26c30.css",
+    "public/assets/css/stylesheet.642dae2512f1f9ebcc9d4272463722264e552bf8952c79506ca6af1bbdcdcf8a.css",
+    "public/assets/css/stylesheet.cbd192130e96a4e82db062b94842f5f7bf0bec147637a8ca2a41edd928eaecc9.css",
+    "content/posts/nexgen-lab3-part2.en.md",
+    "public/assets/css/stylesheet.6d5165d86296ba0c4e69fdda0f4ea624f3395b3d1ccb530add8fabdd18cf1bd4.css",
     "content/posts/nexgen-lab3-part2.fr.md",
     "content/posts/nexgen-lab-2.fr.md",
     "public/images/nexgen-lab3-part2.fr.png",
@@ -238,15 +243,11 @@
     "public/images/nexgen-lab3-part2.en.png",
     "static/images/nexgen-lab3-part2.en.png",
     "static/images/Unconfirmed 304500.crdownload",
-    "content/posts/nexgen-lab3-part2.en.md",
     "public/fr/categories/homelab/index.xml",
     "public/fr/tags/cybersécurité/index.xml",
     "public/fr/tags/gpo/index.xml",
     "public/fr/tags/windows-server/page/1/index.html",
     "public/fr/tags/windows-server/page/1",
-    "public/fr/tags/windows-server/page",
-    "public/fr/tags/windows-server/index.xml",
-    "public/fr/tags/windows-server/index.html",
     "public/images/Pasted image 20260824223753.png",
     "public/images/Pasted image 20260824171057.png",
     "public/images/Pasted image 20260824170242.png",

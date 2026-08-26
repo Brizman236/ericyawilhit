@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/fr/tags/active-directory/</loc>
-    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
@@ -13,6 +13,129 @@
                 rel="alternate"
                 hreflang="en"
                 href="http://localhost:1313/tags/active-directory/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/categories/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/categories/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/categories/cybers%C3%A9curit%C3%A9/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/cybers%C3%A9curit%C3%A9/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/fr/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/gpo/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/gpo/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/gpo/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/categories/homelab/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/categories/homelab/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/categories/homelab/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/iam/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/iam/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/iam/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/posts/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/posts/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/posts/nexgen-lab3-part2/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/posts/nexgen-lab3-part2/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/posts/nexgen-lab3-part2/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/fr/tags/windows-server/</loc>
+    <lastmod>2026-08-24T23:24:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="fr"
+                href="http://localhost:1313/fr/tags/windows-server/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/tags/windows-server/"
                 />
   </url><url>
     <loc>http://localhost:1313/fr/tags/audit/</loc>
@@ -28,32 +151,6 @@
                 href="http://localhost:1313/tags/audit/"
                 />
   </url><url>
-    <loc>http://localhost:1313/fr/</loc>
-    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/fr/tags/iam/</loc>
-    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/tags/iam/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/iam/"
-                />
-  </url><url>
     <loc>http://localhost:1313/fr/posts/nexgen-lab3-part1/</loc>
     <lastmod>2026-08-21T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -65,19 +162,6 @@
                 rel="alternate"
                 hreflang="en"
                 href="http://localhost:1313/posts/nexgen-lab3-part1/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/fr/posts/</loc>
-    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/posts/"
                 />
   </url><url>
     <loc>http://localhost:1313/fr/tags/security-engineering/</loc>
@@ -92,35 +176,6 @@
                 hreflang="en"
                 href="http://localhost:1313/tags/security-engineering/"
                 />
-  </url><url>
-    <loc>http://localhost:1313/fr/tags/</loc>
-    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/tags/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/fr/categories/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="fr"
-                href="http://localhost:1313/fr/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/categories/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/fr/categories/cybers%C3%A9curit%C3%A9/</loc>
-    <lastmod>2026-06-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/fr/categories/infrastructure/</loc>
     <lastmod>2026-06-05T00:00:00+00:00</lastmod>

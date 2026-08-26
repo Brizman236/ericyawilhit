@@ -159,7 +159,7 @@ Nos comptes administratifs étant créés, nous appliquons des restrictions pour
 
 ## Vérification
 
-Avant d'appliquer les stratégies, un compte administrateur de Tier 1 (`adm-eyawil-t1`) peut s'authentifier et se connecter avec succès sur l'ordinateur de Tier 1 `NXG-WKS-FIN01` :
+Avant d'appliquer les stratégies, un compte administrateur de Tier 1 (`adm-eyawil-t1`) peut s'authentifier et se connecter avec succès sur l'ordinateur de Tier 2 `NXG-WKS-FIN01` :
 
 <video width="100%" controls>
   <source src="/videos/before-denygpo.mp4" type="video/mp4">

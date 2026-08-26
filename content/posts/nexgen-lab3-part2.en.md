@@ -159,7 +159,7 @@ With administrative accounts created, we enforce restrictions to prevent Tier Ad
 
 ## Verification
 
-Before applying the policies, a Tier 1 administrator account (`adm-eyawil-t1`) can successfully authenticate and log on to Tier 1 computer `NXG-WKS-FIN01`:
+Before applying the policies, a Tier 1 administrator account (`adm-eyawil-t1`) can successfully authenticate and log on to Tier 2 computer `NXG-WKS-FIN01`:
 
 <video width="100%" controls>
   <source src="/videos/before-denygpo.mp4" type="video/mp4">
