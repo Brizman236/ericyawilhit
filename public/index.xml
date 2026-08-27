@@ -2,66 +2,66 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Eric Yawilhit</title>
-    <link>http://localhost:1313/</link>
+    <link>https://ericyawilhit.netlify.app/</link>
     <description>Recent content on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Mon, 24 Aug 2026 23:24:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ericyawilhit.netlify.app/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hardening Active Directory: Enterprise Access Model &amp; Administrative Tiering (Part 2)</title>
-      <link>http://localhost:1313/posts/nexgen-lab3-part2/</link>
+      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/nexgen-lab3-part2/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/</guid>
       <description>Implementing Microsoft&amp;rsquo;s Enterprise Access Model in Active Directory through OU restructuring, administrative privilege delegation, and Deny Logon GPO enforcement.</description>
     </item>
     <item>
       <title>Lab 3/5 (Part 1): The Emergency Active Directory Audit</title>
-      <link>http://localhost:1313/posts/nexgen-lab3-part1/</link>
+      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/</link>
       <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/nexgen-lab3-part1/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/</guid>
       <description>Addressing the security risks of an SSO federating an unhardened directory, this technical guide details an emergency Active Directory audit. Through a hands-on lab using Wazuh, PowerShell, and GPOs, discover how to quantify identity vulnerabilities (Kerberoasting, missing tiering, insecure service accounts) before remediating the source directory.</description>
     </item>
     <item>
       <title>Securing File Sharing: Implementing RBAC and JIT Provisioning with Keycloak and Nextcloud</title>
-      <link>http://localhost:1313/posts/nexgen-lab-2/</link>
+      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab-2/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/nexgen-lab-2/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab-2/</guid>
       <description>Discover how to implement tight, automated role-based access control (RBAC). This hands-on guide walks through interconnecting Keycloak and Nextcloud via the Social Login app, passing the &amp;#39;groups&amp;#39; claim, and Just-In-Time (JIT) provisioning to dynamically partition team folders.</description>
     </item>
     <item>
       <title>Federating Enterprise Identity: Deploying a Sovereign SSO Architecture with FreeIPA and Keycloak</title>
-      <link>http://localhost:1313/posts/nexgen-lab-1/</link>
+      <link>https://ericyawilhit.netlify.app/posts/nexgen-lab-1/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/nexgen-lab-1/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/nexgen-lab-1/</guid>
       <description>Faced with the risks of scattered identities and dormant accounts, this technical guide walks through building a robust IAM infrastructure. Through a hands-on lab interconnecting FreeIPA (LDAP/Kerberos) and Keycloak, discover how to centralize authentication and implement an SSO mechanism via OpenID Connect (OIDC) to secure critical applications like Gitea and Grafana.</description>
     </item>
     <item>
       <title>Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko</title>
-      <link>http://localhost:1313/posts/lab3-pki-signature/</link>
+      <link>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</link>
       <pubDate>Fri, 17 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/lab3-pki-signature/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/lab3-pki-signature/</guid>
       <description>Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.</description>
     </item>
     <item>
       <title>Lab 2 — CRL and OCSP: Implementing Revocation in a PKI with OpenSSL</title>
-      <link>http://localhost:1313/posts/lab2-crl-ocsp/</link>
+      <link>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/lab2-crl-ocsp/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/</guid>
       <description>How to implement CRL and OCSP in a complete PKI with OpenSSL. Certificate revocation, OCSP Responder, and Apache Reverse Proxy.</description>
     </item>
     <item>
       <title>The Cotonou Declaration Left Something Out...</title>
-      <link>http://localhost:1313/posts/declaration-cotonou/</link>
+      <link>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/declaration-cotonou/</guid>
+      <guid>https://ericyawilhit.netlify.app/posts/declaration-cotonou/</guid>
       <description>African ministers signed the Cotonou Declaration with immense digital ambitions. But a fundamental infrastructure was forgotten: the PKI.</description>
     </item>
     <item>
       <title>About</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://ericyawilhit.netlify.app/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://ericyawilhit.netlify.app/about/</guid>
       <description>&lt;p&gt;African digital sovereignty is a summit I&amp;rsquo;m setting out to climb. As a second-year undergraduate student, I&amp;rsquo;m not yet an expert, but I&amp;rsquo;m a passionate practitioner building, day by day, the building blocks of my future expertise.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;My playground: the Labs.&lt;/strong&gt; Convinced that theory alone isn&amp;rsquo;t enough, I&amp;rsquo;ve expanded my learning from &lt;strong&gt;PKI&lt;/strong&gt; (certificate management) to &lt;strong&gt;IAM&lt;/strong&gt; (Identity &amp;amp; Access Management). I document my progress by designing virtual architectures where I simulate real-world environments: directory centralization, SSO, MFA, and securing the identity lifecycle.&lt;/p&gt;</description>
     </item>

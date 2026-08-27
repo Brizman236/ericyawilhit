@@ -2,199 +2,199 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Eric Yawilhit</title>
-    <link>http://localhost:1313/fr/tags/</link>
+    <link>https://ericyawilhit.netlify.app/fr/tags/</link>
     <description>Recent content in Tags on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>fr</language>
     <lastBuildDate>Mon, 24 Aug 2026 23:24:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/fr/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://ericyawilhit.netlify.app/fr/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Active Directory</title>
-      <link>http://localhost:1313/fr/tags/active-directory/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/active-directory/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/active-directory/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/active-directory/</guid>
       <description></description>
     </item>
     <item>
       <title>Cybersécurité</title>
-      <link>http://localhost:1313/fr/tags/cybers%C3%A9curit%C3%A9/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/cybers%C3%A9curit%C3%A9/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/cybers%C3%A9curit%C3%A9/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/cybers%C3%A9curit%C3%A9/</guid>
       <description></description>
     </item>
     <item>
       <title>GPO</title>
-      <link>http://localhost:1313/fr/tags/gpo/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/gpo/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/gpo/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/gpo/</guid>
       <description></description>
     </item>
     <item>
       <title>IAM</title>
-      <link>http://localhost:1313/fr/tags/iam/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/iam/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/iam/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/iam/</guid>
       <description></description>
     </item>
     <item>
       <title>Windows Server</title>
-      <link>http://localhost:1313/fr/tags/windows-server/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/windows-server/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/windows-server/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/windows-server/</guid>
       <description></description>
     </item>
     <item>
       <title>Audit</title>
-      <link>http://localhost:1313/fr/tags/audit/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/audit/</link>
       <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/audit/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/audit/</guid>
       <description></description>
     </item>
     <item>
       <title>Security Engineering</title>
-      <link>http://localhost:1313/fr/tags/security-engineering/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/security-engineering/</link>
       <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/security-engineering/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/security-engineering/</guid>
       <description></description>
     </item>
     <item>
       <title>Just-in-Time Provisioning</title>
-      <link>http://localhost:1313/fr/tags/just-in-time-provisioning/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/just-in-time-provisioning/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/just-in-time-provisioning/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/just-in-time-provisioning/</guid>
       <description></description>
     </item>
     <item>
       <title>Keycloak</title>
-      <link>http://localhost:1313/fr/tags/keycloak/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/keycloak/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/keycloak/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/keycloak/</guid>
       <description></description>
     </item>
     <item>
       <title>Nextcloud</title>
-      <link>http://localhost:1313/fr/tags/nextcloud/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/nextcloud/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/nextcloud/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/nextcloud/</guid>
       <description></description>
     </item>
     <item>
       <title>OpenID Connect</title>
-      <link>http://localhost:1313/fr/tags/openid-connect/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/openid-connect/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/openid-connect/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/openid-connect/</guid>
       <description></description>
     </item>
     <item>
       <title>RBAC</title>
-      <link>http://localhost:1313/fr/tags/rbac/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/rbac/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/rbac/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/rbac/</guid>
       <description></description>
     </item>
     <item>
       <title>Social Login</title>
-      <link>http://localhost:1313/fr/tags/social-login/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/social-login/</link>
       <pubDate>Fri, 05 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/social-login/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/social-login/</guid>
       <description></description>
     </item>
     <item>
       <title>DevSecOps</title>
-      <link>http://localhost:1313/fr/tags/devsecops/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/devsecops/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/devsecops/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/devsecops/</guid>
       <description></description>
     </item>
     <item>
       <title>FreeIPA</title>
-      <link>http://localhost:1313/fr/tags/freeipa/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/freeipa/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/freeipa/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/freeipa/</guid>
       <description></description>
     </item>
     <item>
       <title>HBAC</title>
-      <link>http://localhost:1313/fr/tags/hbac/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/hbac/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/hbac/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/hbac/</guid>
       <description></description>
     </item>
     <item>
       <title>Kerberos</title>
-      <link>http://localhost:1313/fr/tags/kerberos/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/kerberos/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/kerberos/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/kerberos/</guid>
       <description></description>
     </item>
     <item>
       <title>LDAP</title>
-      <link>http://localhost:1313/fr/tags/ldap/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/ldap/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/ldap/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/ldap/</guid>
       <description></description>
     </item>
     <item>
       <title>Linux Security</title>
-      <link>http://localhost:1313/fr/tags/linux-security/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/linux-security/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/linux-security/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/linux-security/</guid>
       <description></description>
     </item>
     <item>
       <title>SSO</title>
-      <link>http://localhost:1313/fr/tags/sso/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/sso/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/sso/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/sso/</guid>
       <description></description>
     </item>
     <item>
       <title>CRL</title>
-      <link>http://localhost:1313/fr/tags/crl/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/crl/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/crl/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/crl/</guid>
       <description></description>
     </item>
     <item>
       <title>Lab</title>
-      <link>http://localhost:1313/fr/tags/lab/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/lab/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/lab/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/lab/</guid>
       <description></description>
     </item>
     <item>
       <title>OCSP</title>
-      <link>http://localhost:1313/fr/tags/ocsp/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/ocsp/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/ocsp/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/ocsp/</guid>
       <description></description>
     </item>
     <item>
       <title>OpenSSL</title>
-      <link>http://localhost:1313/fr/tags/openssl/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/openssl/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/openssl/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/openssl/</guid>
       <description></description>
     </item>
     <item>
       <title>PKI</title>
-      <link>http://localhost:1313/fr/tags/pki/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/pki/</link>
       <pubDate>Thu, 19 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/pki/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/pki/</guid>
       <description></description>
     </item>
     <item>
       <title>Afrique</title>
-      <link>http://localhost:1313/fr/tags/afrique/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/afrique/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/afrique/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/afrique/</guid>
       <description></description>
     </item>
     <item>
       <title>Souveraineté-Numérique</title>
-      <link>http://localhost:1313/fr/tags/souverainet%C3%A9-num%C3%A9rique/</link>
+      <link>https://ericyawilhit.netlify.app/fr/tags/souverainet%C3%A9-num%C3%A9rique/</link>
       <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/souverainet%C3%A9-num%C3%A9rique/</guid>
+      <guid>https://ericyawilhit.netlify.app/fr/tags/souverainet%C3%A9-num%C3%A9rique/</guid>
       <description></description>
     </item>
   </channel>

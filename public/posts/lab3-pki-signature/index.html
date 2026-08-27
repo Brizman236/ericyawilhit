@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko | Eric Yawilhit</title>
 <meta name="keywords" content="">
 <meta name="description" content="Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/lab3-pki-signature/">
+<link rel="canonical" href="https://ericyawilhit.netlify.app/posts/lab3-pki-signature/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://ericyawilhit.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ericyawilhit.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ericyawilhit.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ericyawilhit.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ericyawilhit.netlify.app/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="fr" href="http://localhost:1313/fr/posts/lab3-pki-signature/">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lab3-pki-signature/">
+<link rel="alternate" hreflang="fr" href="https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/">
+<link rel="alternate" hreflang="en" href="https://ericyawilhit.netlify.app/posts/lab3-pki-signature/">
 <noscript>
     <style>
         #theme-toggle,
@@ -73,13 +73,77 @@
 
 </script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="google-site-verification" content="neuxaaEVX2P7_DKJN7BwBiT5koKTDoRNI22sktsLktM" />
+<meta property="og:url" content="https://ericyawilhit.netlify.app/posts/lab3-pki-signature/">
+  <meta property="og:site_name" content="Eric Yawilhit">
+  <meta property="og:title" content="Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko">
+  <meta property="og:description" content="Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-17T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-17T00:00:00+00:00">
+    <meta property="og:image" content="https://ericyawilhit.netlify.app/images/lab3-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ericyawilhit.netlify.app/images/lab3-cover.jpg">
+  <meta name="twitter:title" content="Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko">
+  <meta name="twitter:description" content="Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.">
 
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://ericyawilhit.netlify.app/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko",
+      "item": "https://ericyawilhit.netlify.app/posts/lab3-pki-signature/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko",
+  "name": "Implementing a PKI with SoftHSM2 and PAdES: Securing the Issuance of University Diplomas with PyHanko",
+  "description": "Faced with the widespread issue of diploma forgery, this technical guide details the implementation of a sovereign trust infrastructure. Through a practical laboratory using SoftHSM2, OpenSSL, and PyHanko, discover how PAdES-LTV digital signatures can guarantee the authenticity and integrity of university degrees, instantly verifiable by recruiters through Adobe Acrobat.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Context \u0026 Objectives In the university sector and on the African job market, widespread diploma forgery is a major concern. This is largely due to the lack of reliable infrastructure capable of verifying the validity of diplomas issued by African universities and schools.\nWith PKI, such a verification infrastructure can be implemented using digital signatures.\nHow can a digital signature prevent diploma forgery? How can we determine whether a digitally signed diploma is valid?\nDiploma forgery occurs when a graduate applies for a job or an academic program. In this scenario, we have two main actors involved: the university that issued the diploma and the recruiter who receives it.\nHow can the recruiter trust the diploma presented by the student? How can they verify its validity?\nTo achieve this, the recruiter needs a trusted third party recognized as a trust authority. This entity (the MESRI — Ministry of Higher Education, Research and Innovation in Senegal) will not sign the diplomas directly. Its role will be to certify the identity of the university, which guarantees:\nthat the signature placed on the diploma actually comes from the university in question and not from a malicious third party; the integrity of the document, since the signature would become invalid if the document were modified; non-repudiation: the university cannot deny having signed/issued the diploma. The recruiter will not need to contact the university for verification. The university’s certificate is embedded in the PDF, allowing Adobe Acrobat to extract it and automatically perform the verification, then build the chain of trust back to the MESRI.\nWe know that certificates all have an expiration date. Therefore, it would not be possible to verify the validity of a diploma if the signer’s certificate has expired, or if the private key used to sign the document has been compromised.\nHow can the validity of a diploma be preserved in these two situations? At what point in time should the signature be considered valid?\nThe digital signature does not need to be valid at the time of verification, but rather at the time of issuance. This is what PAdES-LTV solves, which we will explore later.\nTo implement this trust infrastructure, we will adopt the following hierarchy:\na Root CA representing the MESRI; a SubCA representing the University (in our case, UCAD); the person authorized to sign diplomas within the university; in our case, the Rector. In this lab, we will implement:\na PKI with SoftHSM2; a signing certificate for the Rector; PDF signing with PyHanko (PAdES); verification with Adobe Acrobat Reader. Learning Objectives\nUnderstand PKCS#11 with SoftHSM2; Implement PAdES; Explore a concrete use case — digital sovereignty. Topology Network Configuration Machine Role OS HSM IP FQDN mesri-ca Root CA Ubuntu Server SoftHSM2 192.168.122.20 rootca1.cyber.lab ucad-ca Intermediate CA Ubuntu Server SoftHSM2 192.168.122.40 subca1.cyber.lab recteur PDF Signer Fedora SoftHSM2 DHCP — dns DNS Ubuntu Server — 192.168.122.10 dns.cyber.lab client Adobe Reader Windows 10 — DHCP — crl-server Revocation Ubuntu Server SoftHSM2 192.168.122.30 crl.cyber.lab PHASE 1: Tool Installation In this lab, we need:\nOpenSSL CA SoftHSM2: it simulates a secure hardware module by storing private keys in an encrypted database on disk. It stores private keys outside the standard filesystem. GnuTLS: a cryptographic tool suite, notably providing p11tool for interacting with PKCS#11 tokens. It is used to list, inspect, and verify private keys stored in SoftHSM2. libengine-pkcs11-openssl: a PKCS#11 plugin for OpenSSL. It allows OpenSSL to delegate cryptographic operations to a PKCS#11 token such as SoftHSM2. PyHanko: a Python library specialized in PDF signing. It supports PAdES, LTV, and timestamps. OpenSC: a suite of tools for smart cards and PKCS#11 tokens. It provides pkcs11-tool for interacting with SoftHSM2. It will be used to generate key pairs inside SoftHSM. python-pkcs11: a Python library allowing applications to use PKCS#11. To install them, run the following commands:\nOn the Root CA and SubCA:\napt update \u0026\u0026 apt install -y openssl softhsm2 gnutls-bin libengine-pkcs11-openssl opensc On the Revocation Server:\napt update \u0026\u0026 apt install -y apache2 On Fedora:\nsudo dnf update -y sudo dnf install -y softhsm opensc gnutls-utils python3-pip libengine-pkcs11-openssl pip install 'pyHanko[pkcs11,image-support,opentype,qr]' pip install pyhanko-cli python-pkcs11 PHASE 2: MESRI PKI (Root CA) Phase 2.1 — Initialize SoftHSM2 on the Root CA We are going to initialize a token in the Root CA’s SoftHSM2.\nA token is a logical instance of the HSM that can contain cryptographic objects (private keys, public keys, certificates, secret data). In our case, it will contain the Root CA’s private key.\nIt has:\nA label/name;\nA user PIN: used to manipulate the objects stored inside it;\nAn SO PIN: used by the administrator.\nLet’s initialize our token:\nsofthsm2-util --init-token --slot 0 --label \"mesri-root\" --pin 1234 --so-pin 2468 The slot (the physical or logical location where a token is inserted) has been reset to:\n1893920401 Phase 2.2 — Generate the Root CA Private Key in SoftHSM2 We will use the pkcs11-tool utility while specifying the PKCS#11 library of SoftHSM:\n/usr/lib/softhsm/libsofthsm2.so pkcs11-tool is a generic tool and does not know which HSM is being used, which is why we must explicitly specify it.\npkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so \\ --login --pin 1234 \\ --keypairgen \\ --key-type rsa:4096 \\ --label \"mesri-root-key\" \\ --token-label \"mesri-root\" Let’s verify the contents of the token to make sure the key pair is present:\npkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so \\ --login --pin 1234 \\ --list-objects \\ --token-label \"mesri-root\" Phase 2.3 — Creating the Root CA Certificate First, we will create the Root CA directory structure:\nmkdir -p /root/pki/root/{certs,crl,csr,newcerts} touch /root/pki/root/index.txt echo 01 \u003e /root/pki/root/serial echo 01 \u003e /root/pki/root/crlnumber Then create the /root/pki/root/root.cnf configuration file:\n[ ca ] default_ca = CA_default # Main entry point — tells OpenSSL which section # to use as the default configuration openssl_conf = openssl_init [ openssl_init ] engines = engine_section [ engine_section ] pkcs11 = pkcs11_section [ pkcs11_section ] engine_id = pkcs11 MODULE_PATH = /usr/lib64/pkcs11/opensc-pkcs11.so init = 0 [ CA_default ] # Working directories dir = /root/pki/root # Root CA PKI root directory certs = $dir/certs # Stores issued certificates crl_dir = $dir/crl # Stores generated CRLs new_certs_dir = $dir/newcerts # Stores a copy of every signed certificate # named after its serial number database = $dir/index.txt # Registry of all issued certificates # Format: Status | Expiry | Serial | DN serial = $dir/serial # File containing the next serial number # Automatically incremented after each signature crlnumber = $dir/crlnumber # Number of the next generated CRL private_key = $dir/private/root.key # We will not put anything here — the key is stored in SoftHSM2 # A PKCS#11 URI will be used instead certificate = $dir/certs/root.crt # Self-signed Root CA certificate crl = $dir/crl/root.crl # Current Root CA CRL default_md = sha256 # Hashing algorithm — SHA256 is the current standard default_days = 3650 # Validity period of issued certificates — 10 years default_crl_days = 30 # CRL validity period — 30 days policy = policy_strict # CSR validation policy [ policy_strict ] # Required fields and their constraints # match = must exactly match the Root CA # supplied = must be provided in the CSR # optional = may be absent countryName = supplied stateOrProvinceName = supplied organizationName = supplied commonName = supplied [ req ] default_bits = 4096 # Default key size — 4096 bits for Root CA prompt = no # Do not interactively request DN fields default_md = sha256 distinguished_name = dn [ dn ] # Root CA Distinguished Name C = SN # Senegal ST = Senegal O = MESRI # Ministry of Higher Education CN = MESRI Root CA # Name that will appear in certificates [ v3_ca ] # Extensions applied to the Root CA certificate basicConstraints = critical, CA:true # This entity IS a CA # critical = the client must understand this extension keyUsage = critical, keyCertSign, cRLSign # keyCertSign = can sign certificates # cRLSign = can sign CRLs subjectKeyIdentifier = hash # Public key fingerprint # Used to identify the key in the chain authorityKeyIdentifier = keyid:always, issuer # Reference to the key that signed this certificate # For the Root CA = references itself [ v3_intermediate_ca ] # Extensions applied to the Intermediate CA certificate basicConstraints = critical, CA:true, pathlen:0 # CA:true = this is a CA # pathlen:0 = cannot create another SubCA below it keyUsage = critical, keyCertSign, cRLSign subjectKeyIdentifier = hash authorityKeyIdentifier = keyid:always, issuer crlDistributionPoints = URI:http://crl.cyber.lab/crl/root.crl authorityInfoAccess = OCSP;URI:http://crl.cyber.lab/ocsp/root # The client looks for the Root CA CRL here [ ocsp ] # Extensions for the Root CA OCSP Responder certificate basicConstraints = CA:FALSE keyUsage = critical, digitalSignature extendedKeyUsage = OCSPSigning # Explicitly authorizes this certificate to sign # OCSP responses subjectKeyIdentifier = hash noCheck = ignored # RFC 6960 — tells the client not to check # the revocation status of THIS OCSP certificate # prevents an infinite validation loop To generate the Root CA certificate, we first need to retrieve the PKCS#11 URI of the key by listing the objects in the mesri-root token using GnuTLS’s p11tool:\np11tool --list-all --login \"pkcs11:token=mesri-root\" --provider /usr/lib/softhsm/libsofthsm2.so Example output:\npkcs11:model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=cdb4e58ef0e2ee91;token=mesri-root;object=mesri-root-key;type=private Then use it to create the certificate:\nopenssl req -new -x509 \\ -engine pkcs11 \\ -keyform engine \\ -key \"pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234\" \\ -config /root/pki/root/root.cnf \\ -extensions v3_ca \\ -days 7300 \\ -sha256 \\ -out /root/pki/root/certs/root.crt Phase 2.4 — Generate the Initial Root CA CRL openssl ca -config /root/pki/root/root.cnf \\ -gencrl \\ -keyfile \"pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234\" \\ -keyform engine \\ -engine pkcs11 \\ -out /root/pki/root/crl/root.crl We have finished creating the Root CA. Let’s now move on to the SubCA, representing the university — UCAD in our case.\nPHASE 3 — UCAD SubCA The SubCA configuration will be almost identical to the Root CA configuration. The main difference is that the SubCA certificate must be signed by the Root CA.\nFirst, let’s create the directory structure and configuration file:\nmkdir -p /root/pki/intermediate/{certs,crl,csr,newcerts} touch /root/pki/intermediate/index.txt echo 01 \u003e /root/pki/intermediate/serial echo 01 \u003e /root/pki/intermediate/crlnumber nano /root/pki/intermediate/intermediate.conf [ ca ] default_ca = CA_default [ CA_default ] dir = /root/pki/intermediate certs = $dir/certs crl_dir = $dir/crl new_certs_dir = $dir/newcerts database = $dir/index.txt serial = $dir/serial crlnumber = $dir/crlnumber certificate = $dir/certs/intermediate.crt crl = $dir/crl/intermediate.crl default_md = sha256 default_days = 3650 default_crl_days = 30 policy = policy_strict [ policy_strict ] countryName = match stateOrProvinceName = match organizationName = match commonName = supplied [ req ] default_bits = 4096 prompt = no default_md = sha256 distinguished_name = dn [ dn ] C = SN ST = Senegal O = UCAD CN = UCAD Intermediate CA [ recteur ] keyUsage = digitalSignature, nonRepudiation extKeyUsage = emailProtection basicConstraints = CA:FALSE crlDistributionPoints = URI:http://crl.cyber.lab/crl/intermediate.crl authorityInfoAccess = OCSP;URI:http://crl.cyber.lab/ocsp/intermediate [ ocsp ] basicConstraints = CA:FALSE keyUsage = critical, digitalSignature extendedKeyUsage = OCSPSigning subjectKeyIdentifier = hash noCheck = ignored Phase 3.1 — Initialize SoftHSM2 on the SubCA We will create a token named ucad-intermediate:\nsofthsm2-util --init-token --slot 0 --label \"ucad-subca\" --pin 1234 --so-pin 5678 Generate the SubCA private key in SoftHSM2\npkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so \\ --login --pin 1234 \\ --keypairgen \\ --key-type rsa:4096 \\ --label \"ucad-subca-key\" \\ --token-label \"ucad-subca\" Phase 3.2 — Generate the SubCA CSR and Issue Its Certificate openssl req -new \\ -engine pkcs11 \\ -keyform engine \\ -key \"pkcs11:token=ucad-subca;object=ucad-subca-key;type=private;pin-value=1234\" \\ -config /root/pki/intermediate/intermediate.cnf \\ -out /root/pki/intermediate/csr/intermediate.csr Issue the SubCA Certificate After copying the CSR to the Root CA, we will use openssl ca to issue the SubCA certificate:\nopenssl ca -config /root/pki/root/root.cnf \\ -extensions v3_intermediate_ca \\ -days 3650 -notext -md sha256 \\ -engine pkcs11 \\ -keyform engine \\ -keyfile \"pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234\" \\ -in ~/ucad-subca.csr \\ -out ~/intermediate.crt # Copy the MESRI and UCAD certificates to the SubCA scp intermediate.crt root@subca1.cyber.lab:~/ PHASE 4 — The Revocation Server It will be used in our lab to expose revocation endpoints (CRLs and OCSP Responders) through HTTP using Apache.\nIn production, a dedicated server is typically used to host OCSP Responders, keeping the Root CA isolated.\nIn our lab, we will start the OCSP Responders on the Root CA and SubCA and use a reverse proxy on the revocation server to keep them isolated.\nThe CRLs will be generated and deployed to the server using scp.\nPHASE 4.1 — Issue the OCSP Responder Certificates We have two OCSP Responders, one on the Root CA and another on the SubCA.\nFirst, we will generate their private keys in the SoftHSM2 instances:\n# On the Root CA pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so \\ --login --pin 1234 \\ --keypairgen \\ --key-type rsa:4096 \\ --label \"mesri-ocsp-key\" \\ --token-label \"mesri-root\" # On the SubCA pkcs11-tool --module /usr/lib/softhsm/libsofthsm2.so \\ --login --pin 1234 \\ --keypairgen \\ --key-type rsa:4096 \\ --label \"ucad-ocsp-key\" \\ --token-label \"ucad-subca\" Then generate the CSRs and issue the certificates:\n# On the Root CA openssl req -new \\ -engine pkcs11 \\ -keyform engine \\ -key \"pkcs11:token=mesri-root;object=mesri-ocsp-key;type=private;pin-value=1234\" \\ -subj \"/C=SN/ST=Senegal/O=MESRI/CN=MESRI OCSP Responder\" \\ -out /root/pki/root/csr/ocsp-root.csr openssl ca -config /root/pki/root/root.cnf \\ -extensions ocsp \\ -days 365 -notext -md sha256 \\ -engine pkcs11 \\ -keyform engine \\ -keyfile \"pkcs11:token=mesri-root;object=mesri-root-key;type=private;pin-value=1234\" \\ -in /root/pki/root/csr/ocsp-root.csr \\ -out /root/pki/root/certs/ocsp-root.crt # On the SubCA openssl req -new \\ -engine pkcs11 \\ -keyform engine \\ -key \"pkcs11:token=ucad-subca;object=ucad-ocsp-key;type=private;pin-value=1234\" \\ -subj \"/C=SN/ST=Senegal/O=UCAD/CN=UCAD OCSP Responder\" \\ -out /root/pki/intermediate/csr/ocsp-ucad.csr openssl ca -config /root/pki/intermediate/intermediate.cnf \\ -extensions ocsp \\ -days 365 -notext -md sha256 \\ -engine pkcs11 \\ -keyform engine \\ -keyfile \"pkcs11:token=ucad-subca;object=ucad-subca-key;type=private;pin-value=1234\" \\ -in /root/pki/intermediate/csr/ocsp-ucad.csr \\ -out /root/pki/intermediate/certs/ocsp-ucad.crt PHASE 4.2 — Apache Configuration We will create and configure a VirtualHost that will expose our endpoints.\nCreate the directories on the server:\nmkdir -p /var/www/revoke/crl mkdir -p /var/www/revoke/ocsp/{root,intermediate} VirtualHost configuration file: /etc/apache2/sites-available/revoke.conf\n",
+  "wordCount" : "3434",
+  "inLanguage": "en",
+  "image":"https://ericyawilhit.netlify.app/images/lab3-cover.jpg","datePublished": "2026-04-17T00:00:00Z",
+  "dateModified": "2026-04-17T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ericyawilhit.netlify.app/posts/lab3-pki-signature/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eric Yawilhit",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ericyawilhit.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <a href="https://ericyawilhit.netlify.app/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -103,7 +167,7 @@
                 </button>
                     <ul class="lang-switch"><li>|</li>
                         <li>
-                            <a href="http://localhost:1313/fr/" title="FR"
+                            <a href="https://ericyawilhit.netlify.app/fr/" title="FR"
                                 aria-label="FR">Fr</a>
                         </li>
                     </ul>
@@ -111,17 +175,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/about/" title="About">
+                <a href="https://ericyawilhit.netlify.app/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://ericyawilhit.netlify.app/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://ericyawilhit.netlify.app/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
@@ -142,14 +206,14 @@
     <div class="post-meta"><span title='2026-04-17 00:00:00 +0000 UTC'>April 17, 2026</span>&nbsp;|&nbsp;<span>Translations:</span>
 <ul class="i18n_list">
     <li>
-        <a href="http://localhost:1313/fr/posts/lab3-pki-signature/">Fr</a>
+        <a href="https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/">Fr</a>
     </li>
 </ul>
 
 </div>
   </header> 
 <figure class="entry-cover">
-        <img loading="eager" src="http://localhost:1313/images/lab3-cover.jpg" alt="Digital signature of university diplomas">
+        <img loading="eager" src="https://ericyawilhit.netlify.app/images/lab3-cover.jpg" alt="Digital signature of university diplomas">
         
 </figure>
   <div class="post-content"><h2 id="context--objectives">Context &amp; Objectives<a hidden class="anchor" aria-hidden="true" href="#context--objectives">#</a></h2>
@@ -1010,7 +1074,7 @@
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">Eric Yawilhit</a></span> · 
+        <span>&copy; 2026 <a href="https://ericyawilhit.netlify.app/">Eric Yawilhit</a></span> · 
 
     <span>
         Powered by

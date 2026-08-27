@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL | Eric Yawilhit</title>
 <meta name="keywords" content="PKI, OpenSSL, CRL, OCSP, Lab">
 <meta name="description" content="Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/fr/posts/lab2-crl-ocsp/">
+<link rel="canonical" href="https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="icon" href="https://ericyawilhit.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://ericyawilhit.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://ericyawilhit.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://ericyawilhit.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://ericyawilhit.netlify.app/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="fr" href="http://localhost:1313/fr/posts/lab2-crl-ocsp/">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/lab2-crl-ocsp/">
+<link rel="alternate" hreflang="fr" href="https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/">
+<link rel="alternate" hreflang="en" href="https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/">
 <noscript>
     <style>
         #theme-toggle,
@@ -73,13 +73,82 @@
 
 </script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="google-site-verification" content="neuxaaEVX2P7_DKJN7BwBiT5koKTDoRNI22sktsLktM" />
+<meta property="og:url" content="https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/">
+  <meta property="og:site_name" content="Eric Yawilhit">
+  <meta property="og:title" content="Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL">
+  <meta property="og:description" content="Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.">
+  <meta property="og:locale" content="fr">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-19T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-19T00:00:00+00:00">
+    <meta property="article:tag" content="PKI">
+    <meta property="article:tag" content="OpenSSL">
+    <meta property="article:tag" content="CRL">
+    <meta property="article:tag" content="OCSP">
+    <meta property="article:tag" content="Lab">
+    <meta property="og:image" content="https://ericyawilhit.netlify.app/images/lab2-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ericyawilhit.netlify.app/images/lab2-cover.png">
+  <meta name="twitter:title" content="Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL">
+  <meta name="twitter:description" content="Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.">
 
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://ericyawilhit.netlify.app/fr/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL",
+      "item": "https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL",
+  "name": "Lab 2 — CRL et OCSP : Implémenter la révocation dans une PKI avec OpenSSL",
+  "description": "Comment implémenter CRL et OCSP dans une PKI complète avec OpenSSL. Révocation de certificats, OCSP Responder et Reverse Proxy Apache.",
+  "keywords": [
+    "PKI", "OpenSSL", "CRL", "OCSP", "Lab"
+  ],
+  "articleBody": "Contexte \u0026 Objectifs Dans le Lab 1, j’ai configuré une architecture PKI complète comportant une Root CA, un Intermediate CA et un Seveur WEB utilisant du HTTPS. La chaîne de confiance a été validée avec succès depuis un client Windows.\nCependant cette infrastructure présente une lacune critique : absence d’un mécanisme de révocation de certificat. Dans l’état actuel du Lab, si la clé privée du serveur WEB vient à être compromise avant la date d’expiration, le client fera toujours confiance au certificat si celui-ci n’a pas encore atteint sa date d’expiration. Cela conduira à une attaque de Man In The Middle. Non seulement le risque se présente du côté de la clé privée du serveur WEB, mais aussi du côté de celle de l’Intermediate CA. De ce fait un mécanisme de révocation doit être implémenté pour réduire le risque.\nCe second lab vient combler cette lacune en introduisant les deux mécanismes standards de révocation des certificats :\nCRL (Certificate Revocation List) — une liste noire publiée périodiquement par une CA, listant les certificats révoqués OCSP (Online Certificate Status Protocol) — un service de vérification en temps réel permettant de connaître instantanément le statut d’un certificat L’implémentation de ces mécanismes nécessite également une refonte de l’architecture PKI existante. En effet, le Lab 1 utilisait la commande openssl x509 pour signer les certificats — une approche manuelle qui ne tient aucun registre des certificats émis. La révocation exige l’utilisation de openssl ca, qui maintient un fichier index.txt servant de base de données des certificats et permettant leur révocation.\nCe lab a donc pour objectifs de :\nReconstruire la PKI avec openssl ca pour disposer d’un registre complet Configurer le CDP (CRL Distribution Point) dans les certificats Déployer et tester la CRL Déployer et tester l’OCSP Responder Valider la révocation en temps réel depuis le client Windows Topologie Configuration Réseau Machines Hostname IP Nom de domaine Root CA RootCA 192.168.122.20 rootca1.cyber.lab Intermediate CA SubCA 192.168.122.40 subca1.cyber.lab Serveur Web web 192.168.122.30 www.cyber.lab crl.cyber.lab Client Windows - DHCP - PHASE 1 : Reconstruction de la PKI Phase 1.1 : Création du Root CA # Structure des dossiers mkdir -p ~/pki/root/{private,certs,crl,csr,newcerts} # Protéger le dossier de la clé privée chmod 700 ~/pki/root/private # Registre des certificats émis touch ~/pki/root/index.txt # Numéro de série — commence à 01 echo 01 \u003e ~/pki/root/serial # Numéro de CRL echo 01 \u003e ~/pki/root/crlnumber # Création du fichier de configuration nano pki/root/root.cnf [ ca ] default_ca = CA_default [ CA_default ] dir = /root/pki/root certs = $dir/certs crl_dir = $dir/crl new_certs_dir = $dir/newcerts database = $dir/index.txt serial = $dir/serial crlnumber = $dir/crlnumber private_key = $dir/private/root.key certificate = $dir/certs/root.crt crl = $dir/crl/root.crl default_md = sha256 default_days = 3650 default_crl_days = 30 policy = policy_strict [ policy_strict ] countryName = match stateOrProvinceName = match organizationName = match commonName = supplied [ req ] default_bits = 4096 prompt = no default_md = sha256 distinguished_name = dn [ dn ] C = SN ST = Senegal O = Cyber Lab CN = Lab Root CA [ v3_root_ca ] basicConstraints = critical, CA:true keyUsage = critical, keyCertSign, cRLSign subjectKeyIdentifier = hash authorityKeyIdentifier = keyid:always, issuer [ v3_intermediate_ca ] basicConstraints = critical, CA:true, pathlen:0 keyUsage = critical, keyCertSign, cRLSign subjectKeyIdentifier = hash crlDistributionPoints = URI:http://crl.cyber.lab/crl/root.crl authorityInfoAccess = OCSP;URI:http://crl.cyber.lab/ocsp/root [ ocsp ] basicConstraints = CA:FALSE keyUsage = critical, digitalSignature extendedKeyUsage = OCSPSigning subjectKeyIdentifier = hash Le fichier .cnf d’une CA est sa politique d’émission, il définit tous les types de certificats qu’elle est autorisée à produire. Dans notre cas ici, le fichier .cnf définit les extensions pour les certificats du RootCA (v3_root_ca) et du SubCA (v3_intermediate_ca).\ncrlDistributionPoints spécifie l’endpoint duquel l’on peut récupérer le CRL de même que le authorityInfoAccess pour le OSCP le keyUsage cRLSign spécifie que la clé privée de cette autorité peut signer des CRL Avec le fichier de configuration nous allons maintenant générer la Root CA :\n# Clé privée PEM pass : JG/IpvS3gxqzKg5J openssl genrsa -aes256 -out ~/pki/root/private/root.key 4096 chmod 400 ~/pki/root/private/root.key # Certificat auto-signé openssl req -config ~/pki/root/root.cnf \\ -key ~/pki/root/private/root.key \\ -new -x509 -days 7300 -sha256 \\ -extensions v3_root_ca \\ -out ~/pki/root/certs/root.crt Phase 1.2 : Création de l’Intermediate CA # Structure de dossier mkdir -p ~/pki/intermediate/{private,certs,crl,csr,newcerts} chmod 700 ~/pki/intermediate/private touch ~/pki/intermediate/index.txt echo 01 \u003e ~/pki/intermediate/serial echo 01 \u003e ~/pki/intermediate/crlnumber # Création du fichier de configuration nano ~/pki/intermediate/intermediate.cnf [ ca ] default_ca = CA_default [ CA_default ] dir = /root/pki/intermediate certs = $dir/certs crl_dir = $dir/crl new_certs_dir = $dir/newcerts database = $dir/index.txt serial = $dir/serial crlnumber = $dir/crlnumber private_key = $dir/private/intermediate.key certificate = $dir/certs/intermediate.crt crl = $dir/crl/intermediate.crl default_md = sha256 default_days = 365 default_crl_days = 7 policy = policy_loose [ policy_loose ] countryName = optional stateOrProvinceName = optional organizationName = optional commonName = supplied [ req ] default_bits = 4096 prompt = no default_md = sha256 distinguished_name = dn [ dn ] C = SN ST = Senegal L = Dakar O = Cyber Lab CN = Lab Intermediate CA [ server_cert ] basicConstraints = CA:FALSE keyUsage = critical, digitalSignature, keyEncipherment extendedKeyUsage = serverAuth subjectKeyIdentifier = hash crlDistributionPoints = URI:http://crl.cyber.lab/crl/intermediate.crl authorityInfoAccess = OCSP;URI:http://crl.cyber.lab/ocsp/intermediate subjectAltName = DNS:www.cyber.lab [ ocsp ] basicConstraints = CA:FALSE keyUsage = critical, digitalSignature extendedKeyUsage = OCSPSigning subjectKeyIdentifier = hash Nous allons maintenant générer la clé privée et le CSR de l’Intermediate CA puis la transférer vers le RootCA :\n# Clé privée Pass PEM : +ptIxeoDsc+kVzer openssl genrsa -aes256 -out ~/pki/intermediate/private/intermediate.key 4096 chmod 400 ~/pki/intermediate/private/intermediate.key # Générer le CSR openssl req -config ~/pki/intermediate/intermediate.cnf -new -sha256 -key ~/pki/intermediate/private/intermediate.key -out ~/pki/intermediate/csr/intermediate.csr # Copier le CSR vers le rootCA scp ~/pki/intermediate/csr/intermediate.csr root@rootca1.cyber.lab:~/ Maintenant depuis le Root CA nous allons créer et signer le certificat de l’Intermediate et le lui renvoyer :\n# Création du certificat openssl ca -config ~/pki/root/root.cnf \\ -extensions v3_intermediate_ca \\ -days 3650 -notext -md sha256 \\ -in ~/intermediate.csr \\ -out ~/intermediate.crt # Envoie du certificat à l'intermediate scp ~/intermediate.crt root@subca1.cyber.lab:~/pki/intermediate/certs Phase 1.3 : Réémission du certificat du serveur WEB Précédemment nous avions généré la clé privée du serveur web dans /etc/ssl/lab/private et les CSR dans /etc/ssl/lab/webserver.csr. Maintenant nous allons transférer ce CSR sur le SubCA et émettre le certificat du serveur web :\nscp /etc/ssl/lab/webserver.csr root@subca1.cyber.lab:~/ # Sur le SubCA openssl ca -config ~/pki/intermediate/intermediate.cnf \\ -extensions server_cert \\ -days 365 -notext -md sha256 \\ -in ~/webserver.csr \\ -out ~/webserver.crt # Création de la chaîne de confiance cat ~/pki/intermediate/certs/intermediate.crt webserver.crt \u003e ca-chain # Transfert du certificat et de la chaîne de confiance sur le Serveur WEB scp webserver.crt root@www.cyber.lab:/etc/ssl/lab/certs/ scp ca-chain.crt root@www.cyber.lab:/etc/ssl/lab/certs/ PHASE 2 : CRL \u0026 OCSP Durant les précédentes configurations, nous avions émis les certificats avec leur CRL Distribution Points (CDP) et l’endpoint du OCSP Responder, chaque certificat est émis avec le CDP contenant le CRL de son signataire. Dans cette phase nous allons créer et configurer le serveur WEB à ce qu’il héberge les CRL et l’OCSP Responder, générer le CRL du SubCA configurer le OCSP Responder et faire un test de révocation.\nConfiguration du serveur web Les CRLs seront hébergées sur le nom de domaine crl.cyber.lab, enregistrons donc ce nom sur le serveur DNS :\nMaintenant nous allons créer un VirtualHost qui va héberger le site des CRLs et l’OSCP :\n# Sur le serveur WEB mkdir -p /var/www/crl/crl mkdir -p /var/www/crl/ocsp/root mkdir -p /var/www/crl/ocsp/intermediate # Création du VirtualHost nano /etc/apache2/sites-available/crl.conf ServerName crl.cyber.lab DocumentRoot /var/www/crl Options Indexes AllowOverride None Require all granted # Activation du Site a2ensite crl.conf systemctl reload apache2 Génération du CRL sur le SubCA openssl ca -config ~/pki/intermediate/intermediate.cnf \\ -gencrl \\ -out ~/pki/intermediate/crl/intermediate.crl # Puis lisons cette crl avec openssl crl -in ~/pki/intermediate/crl/intermediate.crl -text La CRL est générée et signée avec la clé du SubCA pour prouver sa validité. Aucun certificat n’est encore révoqué comme nous pouvons le voir 👇\nConfiguration du OCSP Responder L’OCSP Responder a pour rôle d’assurer la vérification en temps réel du statut d’un certificat. Ce dernier signe ses réponses pour empêcher une attaque de Man In The Middle.\nLorsque le client part sur le site web, il vérifie la validité de toute la chaîne de confiance en commençant par l’Intermediate et ensuite le certificat du serveur WEB.\nNous allons configurer deux OCSP Responders, un hébergé sur le RootCA chargé de répondre à la vérification du SubCA et un autre hébergé sur le SubCA pour le certificat Serveur.\nNB : En production, les OCSP Responder sont délégués à un serveur dédié\nOSCP Responder sur SubCA\n# Clé privée openssl genrsa -out ~/pki/intermediate/private/ocsp.key 4096 chmod 400 ~/pki/intermediate/private/ocsp.key # CSR openssl req -new \\ -key ~/pki/intermediate/private/ocsp.key \\ -out ~/pki/intermediate/csr/ocsp.csr \\ -subj \"/C=SN/ST=Senegal/O=Cyber Lab/CN=OCSP Responder\" # Emission du certificat openssl ca -config ~/pki/intermediate/intermediate.cnf \\ -extensions ocsp \\ -days 365 -notext -md sha256 \\ -in ~/pki/intermediate/csr/ocsp.csr \\ -out ~/pki/intermediate/certs/ocsp.crt OCSP Responder sur Root CA\n# Clé privée openssl genrsa -out ~/pki/root/private/ocsp.key 4096 chmod 400 ~/pki/root/private/ocsp.key # CSR openssl req -new -key ~/pki/root/private/ocsp.key -out ~/pki/root/csr/ocsp.csr -subj \"/C=SN/ST=Senegal/O=Cyber Lab/CN=OCSP Responder RootCA\" # Emission du certificat openssl ca -config ~/pki/root/root.cnf \\ -extensions ocsp \\ -days 365 -notext -md sha256 \\ -in ~/pki/root/csr/ocsp.csr \\ -out ~/pki/root/certs/ocsp.crt L’OCSP responder est un service qui tournera en permanence à travers un port d’écoute. Cependant nous avons spécifié l’endpoint sur le serveur WEB, la question qui se pose c’est comment la requête du client qui se fera en direction du serveur web pourra atteindre le SubCA ?\nPour cela nous allons utiliser un Reverse Proxy qui redirigera la requête vers le SubCA et le Root CA les gardant isolés.\nLançons tout d’abord les OCSP Responder :\n# Sur le RootCA openssl ocsp \\ -port 2560 \\ -text \\ -index ~/pki/root/index.txt \\ -CA ~/pki/root/certs/root.crt \\ -rkey ~/pki/root/private/ocsp.key \\ -rsigner ~/pki/root/certs/ocsp.crt \\ -out ~/ocsp.log \u0026 # Sur le SubCA openssl ocsp \\ -port 2560 \\ -text \\ -index ~/pki/intermediate/index.txt \\ -CA ~/pki/intermediate/certs/intermediate.crt \\ -rkey ~/pki/intermediate/private/ocsp.key \\ -rsigner ~/pki/intermediate/certs/ocsp.crt \\ -out ~/ocsp.log \u0026 Ensuite configurons le Reverse Proxy sur le Web Server :\n# Activation des modules nécessaires a2enmod proxy proxy_http systemctl restart apache2 # Modification de crl.cnf nano /etc/apache2/sites-available/crl.conf ServerName crl.cyber.lab DocumentRoot /var/www/crl Options Indexes AllowOverride None Require all granted # Reverse Proxy OCSP Root ProxyPass /ocsp/root http://rootca1.cyber.lab:2560 ProxyPassReverse /ocsp/root http://rootca1.cyber.lab:2560 # OCSP Intermediate ProxyPass /ocsp/intermediate http://subca1.cyber.lab:2560 ProxyPassReverse /ocsp/intermediate http://subca1.cyber.lab:2560 Quand une requête se fera en direction de /ocsp/intermediate elle sera rediriger vers http://subca1.cyber.lab:2560, ensuite quand le SubCA va répondre, le Proxy remplacera l’URL contenu dans le Header par le sien crl.cyber.lab. Le même principe s’applique à une requête sur l’endpoint /ocsp/root. Redémarrons le service apache2.\nTestons le OCSP Responder depuis le RootCA :\nopenssl ocsp -issuer ~/intermediate.crt -cert ~/webserver.crt -url http://crl.cyber.lab/ocsp/intermediate -CAfile ~/pki/root/certs/root.crt openssl ocsp -issuer ~/pki/root/certs/root.crt -cert ~/intermediate.crt -url http://crl.cyber.lab/ocsp/root -CAfile ~/pki/root/certs/root.crt Test de révocation Nous allons maintenant révoquer le certificat du serveur WEB depuis le SubCA et regénérer le CRL :\nopenssl ca -config ~/pki/intermediate/intermediate.cnf -revoke ~/pki/intermediate/newcerts/01.pem # Génération du CRL openssl ca -config ~/pki/intermediate/intermediate.cnf \\ -gencrl \\ -out ~/pki/intermediate/crl/intermediate.crl # Copie du CRL sur le Serveur WEB scp ~/pki/intermediate/crl/intermediate.crl root@www.cyber.lab:/var/www/crl/crl En refaisant la requête OCSP depuis le RootCA, nous obtenons une réponse disant que le Certificat a été révoqué :\nSur le navigateur du client, la révocation n’est pas détecté. Pourquoi ? Pour en comprendre la raison, définissons d’abord la différence entre une PKI publique et une PKI privée.\nPKI publique \u0026 PKI privée Une PKI publique dispose d’une CA mondialement connu comme DigiCert ou Let’s Encrypt et incluse dans les Trusts Store (Google, Mozilla, etc). Le Root CA est pré-installé sur l’OS et dans le navigateur.\nUne PKI privée, quant à elle, est celle disposant d’une CA généré par une organisation pour ses activités propres. Le Root CA ici n’est pas inclus dans les Trusts Store.\nDans les navigateurs, principalement dans Google Chrome, il est installé une base de données de CRLs collectées par Google distribuées à chaque mise à jour de Google Chrome. On appelle cette base de données un CRLSet. La révocation est donc vérifiée en local par le navigateur sans faire des requêtes sur le réseau.\nC’est pourquoi le navigateur de notre client n’a pas détecté la révocation.\n",
+  "wordCount" : "1995",
+  "inLanguage": "fr",
+  "image":"https://ericyawilhit.netlify.app/images/lab2-cover.png","datePublished": "2026-03-19T00:00:00Z",
+  "dateModified": "2026-03-19T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://ericyawilhit.netlify.app/fr/posts/lab2-crl-ocsp/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Eric Yawilhit",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ericyawilhit.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/fr/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <a href="https://ericyawilhit.netlify.app/fr/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -103,7 +172,7 @@
                 </button>
                     <ul class="lang-switch"><li>|</li>
                         <li>
-                            <a href="http://localhost:1313/" title="EN"
+                            <a href="https://ericyawilhit.netlify.app/" title="EN"
                                 aria-label="EN">En</a>
                         </li>
                     </ul>
@@ -111,17 +180,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/fr/posts/" title="Articles">
+                <a href="https://ericyawilhit.netlify.app/fr/posts/" title="Articles">
                     <span>Articles</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/fr/tags/" title="Tags">
+                <a href="https://ericyawilhit.netlify.app/fr/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/fr/about/" title="À propos">
+                <a href="https://ericyawilhit.netlify.app/fr/about/" title="À propos">
                     <span>À propos</span>
                 </a>
             </li>
@@ -142,14 +211,14 @@
     <div class="post-meta"><span title='2026-03-19 00:00:00 +0000 UTC'>19 mars 2026</span>&nbsp;|&nbsp;<span>Traductions:</span>
 <ul class="i18n_list">
     <li>
-        <a href="http://localhost:1313/posts/lab2-crl-ocsp/">En</a>
+        <a href="https://ericyawilhit.netlify.app/posts/lab2-crl-ocsp/">En</a>
     </li>
 </ul>
 
 </div>
   </header> 
 <figure class="entry-cover">
-        <img loading="eager" src="http://localhost:1313/images/lab2-cover.png" alt="Lab 2 — CRL et OCSP">
+        <img loading="eager" src="https://ericyawilhit.netlify.app/images/lab2-cover.png" alt="Lab 2 — CRL et OCSP">
         
 </figure><div class="toc">
     <details >
@@ -608,19 +677,19 @@ Pour en comprendre la raison, définissons d&rsquo;abord la différence entre un
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/fr/tags/pki/">PKI</a></li>
-      <li><a href="http://localhost:1313/fr/tags/openssl/">OpenSSL</a></li>
-      <li><a href="http://localhost:1313/fr/tags/crl/">CRL</a></li>
-      <li><a href="http://localhost:1313/fr/tags/ocsp/">OCSP</a></li>
-      <li><a href="http://localhost:1313/fr/tags/lab/">Lab</a></li>
+      <li><a href="https://ericyawilhit.netlify.app/fr/tags/pki/">PKI</a></li>
+      <li><a href="https://ericyawilhit.netlify.app/fr/tags/openssl/">OpenSSL</a></li>
+      <li><a href="https://ericyawilhit.netlify.app/fr/tags/crl/">CRL</a></li>
+      <li><a href="https://ericyawilhit.netlify.app/fr/tags/ocsp/">OCSP</a></li>
+      <li><a href="https://ericyawilhit.netlify.app/fr/tags/lab/">Lab</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1313/fr/posts/lab3-pki-signature/">
+  <a class="prev" href="https://ericyawilhit.netlify.app/fr/posts/lab3-pki-signature/">
     <span class="title">« Précédent</span>
     <br>
     <span>Implémenter une PKI avec SoftHSM2 et PAdES : Sécuriser la délivrance des diplômes universitaires avec PyHanko</span>
   </a>
-  <a class="next" href="http://localhost:1313/fr/posts/declaration-cotonou/">
+  <a class="next" href="https://ericyawilhit.netlify.app/fr/posts/declaration-cotonou/">
     <span class="title">Suivant »</span>
     <br>
     <span>La Déclaration de Cotonou a oublié quelque chose...</span>
@@ -632,7 +701,7 @@ Pour en comprendre la raison, définissons d&rsquo;abord la différence entre un
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/fr/">Eric Yawilhit</a></span> · 
+        <span>&copy; 2026 <a href="https://ericyawilhit.netlify.app/fr/">Eric Yawilhit</a></span> · 
 
     <span>
         Powered by
