@@ -1,8 +1,9 @@
-baseURL = "https://ericyawilhit.netlify.app"
+baseURL = "https://ericyawilhit.netlify.app/"
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 title = "Eric Yawilhit"
 theme = "PaperMod"
+enableRobotsTXT = true
 
 [markup]
   [markup.goldmark]
