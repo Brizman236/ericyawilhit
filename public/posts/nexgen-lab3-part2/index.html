@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Hardening Active Directory: Enterprise Access Model &amp; Administrative Tiering (Part 2) | Eric Yawilhit</title>
 <meta name="keywords" content="Active Directory, IAM, Cybersecurity, GPO, Windows Server">
 <meta name="description" content="Implementing Microsoft&rsquo;s Enterprise Access Model in Active Directory through OU restructuring, administrative privilege delegation, and Deny Logon GPO enforcement.">
 <meta name="author" content="">
-<link rel="canonical" href="https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/">
+<link rel="canonical" href="http://localhost:1313/posts/nexgen-lab3-part2/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://ericyawilhit.netlify.app/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ericyawilhit.netlify.app/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ericyawilhit.netlify.app/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ericyawilhit.netlify.app/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ericyawilhit.netlify.app/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-96x96.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="fr" href="https://ericyawilhit.netlify.app/fr/posts/nexgen-lab3-part2/">
-<link rel="alternate" hreflang="en" href="https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/">
+<link rel="alternate" hreflang="fr" href="http://localhost:1313/fr/posts/nexgen-lab3-part2/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/nexgen-lab3-part2/">
 <noscript>
     <style>
         #theme-toggle,
@@ -73,82 +73,19 @@
 
 </script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="google-site-verification" content="neuxaaEVX2P7_DKJN7BwBiT5koKTDoRNI22sktsLktM" />
-<meta property="og:url" content="https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/">
-  <meta property="og:site_name" content="Eric Yawilhit">
-  <meta property="og:title" content="Hardening Active Directory: Enterprise Access Model & Administrative Tiering (Part 2)">
-  <meta property="og:description" content="Implementing Microsoft’s Enterprise Access Model in Active Directory through OU restructuring, administrative privilege delegation, and Deny Logon GPO enforcement.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-08-24T23:24:00+00:00">
-    <meta property="article:modified_time" content="2026-08-24T23:24:00+00:00">
-    <meta property="article:tag" content="Active Directory">
-    <meta property="article:tag" content="IAM">
-    <meta property="article:tag" content="Cybersecurity">
-    <meta property="article:tag" content="GPO">
-    <meta property="article:tag" content="Windows Server">
-    <meta property="og:image" content="https://ericyawilhit.netlify.app/images/nexgen-lab3-part2.en.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://ericyawilhit.netlify.app/images/nexgen-lab3-part2.en.png">
-  <meta name="twitter:title" content="Hardening Active Directory: Enterprise Access Model & Administrative Tiering (Part 2)">
-  <meta name="twitter:description" content="Implementing Microsoft’s Enterprise Access Model in Active Directory through OU restructuring, administrative privilege delegation, and Deny Logon GPO enforcement.">
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Eric Yawilhit" />
+<link rel="manifest" href="/site.webmanifest" />
 
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://ericyawilhit.netlify.app/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Hardening Active Directory: Enterprise Access Model \u0026 Administrative Tiering (Part 2)",
-      "item": "https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Hardening Active Directory: Enterprise Access Model \u0026 Administrative Tiering (Part 2)",
-  "name": "Hardening Active Directory: Enterprise Access Model \u0026 Administrative Tiering (Part 2)",
-  "description": "Implementing Microsoft\u0026rsquo;s Enterprise Access Model in Active Directory through OU restructuring, administrative privilege delegation, and Deny Logon GPO enforcement.",
-  "keywords": [
-    "Active Directory", "IAM", "Cybersecurity", "GPO", "Windows Server"
-  ],
-  "articleBody": "Introduction In Part 1, we audited the domain and discovered several critical vulnerabilities: Domain Admin credentials present on a standard workstation, non-gMSA service accounts, a flat OU structure, and hosts residing in the default Computers container.\nIn this lab, we will address these vulnerabilities by implementing Microsoft’s Enterprise Access Model. The goal is to isolate administrative privileges, systems, and credentials into distinct security boundaries based on risk and criticality. The core principle is simple: never expose high-privilege account credentials on lower-risk or standard computers, ensuring that if a standard endpoint is compromised, attackers cannot harvest high-privilege credentials from memory.\nThe implementation follows 4 main steps:\nStep 1: OU Restructuring From a security perspective, an Organizational Unit’s (OU) primary role is not to reflect the corporate organizational chart, but to model security boundaries. Grouping objects of equal criticality into dedicated OUs allows us to apply tailored Group Policy Objects (GPOs) and delegation rules.\nBelow is the structure we will implement:\nDC=nexgen,DC=lab ├── OU=NexGen-Tier0 │ ├── OU=Admin-Accounts │ ├── OU=Admin-Groups │ ├── OU=Service-Accounts │ └── OU=Computers (Domain Controllers) ├── OU=NexGen-Tier1 │ ├── OU=Admin-Accounts │ ├── OU=Admin-Groups │ ├── OU=Service-Accounts │ └── OU=Computers (NXG-SRV-APP01) └── OU=NexGen-Tier2 ├── OU=Admin-Accounts ├── OU=Admin-Groups ├── OU=Computers (NXG-WKS-FIN01, NXG-ADM-IT01) └── OU=Standard-Users └── OU=NexGen-Infrastructures ├── OU=IT │ ├── OU=Users │ ├── OU=Groups └── ... (HR, Finance, R\u0026D, Sales) Administrative Rules Tier Isolation: Each Tier will have dedicated administrative accounts assigned strictly to manage its scope.\nAccount Separation: Administrators will maintain separate accounts: a standard account for daily tasks (e.g., email, web browsing) and dedicated administrative accounts for each Tier they manage.\nUser Categorization: All standard user accounts will be allocated under Standard-Users organized by department. Within each department, objects are classified by object type (user accounts in Users, security groups in Groups).\nThe script for this step can be found here.\nStep 2: Privilege Separation \u0026 Delegation A major vulnerability in default Active Directory installations is reliance on a single, full-privilege Domain Admin or built-in Administrator account. Because this account is heavily targeted in cyberattacks, compromising it results in complete domain takeover.\nTo reduce the attack surface, we restrict the daily use of Domain Admin accounts through three key controls:\nCreating Dedicated Tier Accounts: Provisioning explicit admin accounts for each Tier (e.g., adm-user-t0, adm-user-t1, adm-user-t2).\nCreating Tier Security Groups: Establishing administrative groups (GG-T0-Admins, GG-T1-Admins, and GG-T2-Admins).\nDelegating Administrative Permissions: Assigning granular rights directly to Tier groups without adding them to built-in high-privilege groups like Domain Admins or Enterprise Admins, adhering to the Principle of Least Privilege (PoLP).\nPermission Delegation Breakdown Tier 0 (Identity \u0026 Control Plane): Tier 0 administrators manage Domain Controllers, PKI, and Identity Providers. Because these components control identity across the entire domain, Tier 0 admins require full control over domain objects and reside in the Domain Admins group.\nTier 1 (Servers \u0026 Applications): Server administrators need to deploy databases, web applications (e.g., Gitea, Nextcloud), and line-of-business servers without requiring domain-wide authority. They are delegated rights only to create/manage Computer objects in OU=NexGen-Tier1, manage Group Managed Service Accounts (gMSAs), and control Tier 1 local administrator groups.\nTier 2 (Endpoints \u0026 Helpdesk): Helpdesk personnel support end-users and troubleshoot endpoints. They are granted permissions solely to reset end-user passwords, unlock user accounts, and join workstations to OU=NexGen-Tier2.\nThe script for this step can be found here.\nStep 3: Deny Logon GPO Enforcement With administrative accounts created, we enforce restrictions to prevent Tier Administrators from authenticating to unauthorized Computer Tiers, blocking lateral movement and credential harvesting.\nGPO Configuration Open Group Policy Management (gpmc.msc).\nUnder Group Policy Objects, create 3 GPOs: Tier0-DenyLogon, Tier1-DenyLogon, and Tier2-DenyLogon.\nFor each policy, configure the following User Rights Assignments under:\nComputer Configuration \u003e Policies \u003e Windows Settings \u003e Security Settings \u003e Local Policies \u003e User Rights Assignment:\nDeny log on locally (SeDenyInteractiveLogonRight)\nDeny log on through Remote Desktop Services (SeDenyRemoteInteractiveLogonRight)\nDeny log on as a batch job (SeDenyBatchLogonRight)\nDeny log on as a service (SeDenyServiceLogonRight)\nPopulate each policy with the security groups from other tiers. For example, inside Tier0-DenyLogon, add GG-T1-Admins and GG-T2-Admins to the deny lists.\nLink each GPO to its target OU (e.g., link Tier0-DenyLogon to OU=NexGen-Tier0 and the built-in Domain Controllers OU).\nVerification Before applying the policies, a Tier 1 administrator account (adm-eyawil-t1) can successfully authenticate and log on to Tier 2 computer NXG-WKS-FIN01:\nVotre navigateur ne supporte pas la lecture de cette vidéo. After linking the Tier0-DenyLogon GPO and running gpupdate /force, logon attempts by adm-eyawil-t1 to the Domain Controller are explicitly denied:\nVotre navigateur ne supporte pas la lecture de cette vidéo. Next Steps \u0026 Future Enhancements While OU restructuring and Deny Logon GPOs drastically reduce credential exposure, securing Active Directory is an iterative process. In Part 3, we will build upon this tiering foundation with the following enterprise controls:\nDeploying Group Managed Service Accounts (gMSAs):\nMigrate vulnerable interactive service accounts to gMSAs to enforce automatic password rotation and restrict execution strictly to designated host SPNs. Implementing Windows LAPS:\nDeploy LAPS across all Tier 1 servers and Tier 2 workstations to randomize local Administrator passwords, eliminating lateral movement via shared local credentials. Setting Up Authentication Policy Silos:\nConfigure Active Directory Authentication Policies and Silos to restrict Kerberos ticket issuance, ensuring Tier 0 accounts cannot authenticate to lower-tier service principal names (SPNs) even if network controls fail. ",
-  "wordCount" : "875",
-  "inLanguage": "en",
-  "image":"https://ericyawilhit.netlify.app/images/nexgen-lab3-part2.en.png","datePublished": "2026-08-24T23:24:00Z",
-  "dateModified": "2026-08-24T23:24:00Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://ericyawilhit.netlify.app/posts/nexgen-lab3-part2/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Eric Yawilhit",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://ericyawilhit.netlify.app/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://ericyawilhit.netlify.app/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -172,7 +109,7 @@
                 </button>
                     <ul class="lang-switch"><li>|</li>
                         <li>
-                            <a href="https://ericyawilhit.netlify.app/fr/" title="FR"
+                            <a href="http://localhost:1313/fr/" title="FR"
                                 aria-label="FR">Fr</a>
                         </li>
                     </ul>
@@ -180,17 +117,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://ericyawilhit.netlify.app/about/" title="About">
+                <a href="http://localhost:1313/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="https://ericyawilhit.netlify.app/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://ericyawilhit.netlify.app/tags/" title="Tags">
+                <a href="http://localhost:1313/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
@@ -208,14 +145,14 @@
     <div class="post-meta"><span title='2026-08-24 23:24:00 +0000 UTC'>August 24, 2026</span>&nbsp;|&nbsp;<span>Translations:</span>
 <ul class="i18n_list">
     <li>
-        <a href="https://ericyawilhit.netlify.app/fr/posts/nexgen-lab3-part2/">Fr</a>
+        <a href="http://localhost:1313/fr/posts/nexgen-lab3-part2/">Fr</a>
     </li>
 </ul>
 
 </div>
   </header> 
 <figure class="entry-cover">
-        <img loading="eager" src="https://ericyawilhit.netlify.app/images/nexgen-lab3-part2.en.png" alt="">
+        <img loading="eager" src="http://localhost:1313/images/nexgen-lab3-part2.en.png" alt="">
         
 </figure><div class="toc">
     <details >
@@ -398,18 +335,18 @@
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://ericyawilhit.netlify.app/tags/active-directory/">Active Directory</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/iam/">IAM</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/cybersecurity/">Cybersecurity</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/gpo/">GPO</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/windows-server/">Windows Server</a></li>
+      <li><a href="http://localhost:1313/tags/active-directory/">Active Directory</a></li>
+      <li><a href="http://localhost:1313/tags/iam/">IAM</a></li>
+      <li><a href="http://localhost:1313/tags/cybersecurity/">Cybersecurity</a></li>
+      <li><a href="http://localhost:1313/tags/gpo/">GPO</a></li>
+      <li><a href="http://localhost:1313/tags/windows-server/">Windows Server</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="https://ericyawilhit.netlify.app/">Eric Yawilhit</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Eric Yawilhit</a></span> · 
 
     <span>
         Powered by

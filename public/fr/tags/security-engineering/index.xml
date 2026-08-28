@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Security Engineering on Eric Yawilhit</title>
-    <link>https://ericyawilhit.netlify.app/fr/tags/security-engineering/</link>
+    <link>http://localhost:1313/fr/tags/security-engineering/</link>
     <description>Recent content in Security Engineering on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>fr</language>
     <lastBuildDate>Fri, 21 Aug 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://ericyawilhit.netlify.app/fr/tags/security-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/fr/tags/security-engineering/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Lab 3/5 (Partie 1) : L&#39;Audit d&#39;Urgence Active Directory</title>
-      <link>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab3-part1/</link>
+      <link>http://localhost:1313/fr/posts/nexgen-lab3-part1/</link>
       <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>https://ericyawilhit.netlify.app/fr/posts/nexgen-lab3-part1/</guid>
+      <guid>http://localhost:1313/fr/posts/nexgen-lab3-part1/</guid>
       <description>Face aux risques de compromission liés à un SSO fédérant un annuaire non durci, ce guide technique détaille l&amp;#39;audit d&amp;#39;urgence d&amp;#39;un domaine Active Directory. À travers un laboratoire pratique utilisant Wazuh, PowerShell et GPO, découvrez comment quantifier les failles d&amp;#39;identités (Kerberoasting, tiering absent, comptes de service vulnérables) avant d&amp;#39;engager la remédiation de l&amp;#39;annuaire source.</description>
     </item>
   </channel>

@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Lab 3/5 (Part 1): The Emergency Active Directory Audit | Eric Yawilhit</title>
 <meta name="keywords" content="Active Directory, Audit, IAM, Security Engineering">
 <meta name="description" content="Addressing the security risks of an SSO federating an unhardened directory, this technical guide details an emergency Active Directory audit. Through a hands-on lab using Wazuh, PowerShell, and GPOs, discover how to quantify identity vulnerabilities (Kerberoasting, missing tiering, insecure service accounts) before remediating the source directory.">
 <meta name="author" content="">
-<link rel="canonical" href="https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/">
+<link rel="canonical" href="http://localhost:1313/posts/nexgen-lab3-part1/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.323401791b34705b55ba608c3b986e0e3b8e61fb30c550f5cb63242ca9b073c9.css" integrity="sha256-MjQBeRs0cFtVumCMO5huDjuOYfswxVD1y2MkLKmwc8k=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://ericyawilhit.netlify.app/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ericyawilhit.netlify.app/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://ericyawilhit.netlify.app/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://ericyawilhit.netlify.app/apple-touch-icon.png">
-<link rel="mask-icon" href="https://ericyawilhit.netlify.app/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-96x96.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="fr" href="https://ericyawilhit.netlify.app/fr/posts/nexgen-lab3-part1/">
-<link rel="alternate" hreflang="en" href="https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/">
+<link rel="alternate" hreflang="fr" href="http://localhost:1313/fr/posts/nexgen-lab3-part1/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/nexgen-lab3-part1/">
 <noscript>
     <style>
         #theme-toggle,
@@ -73,81 +73,19 @@
 
 </script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="google-site-verification" content="neuxaaEVX2P7_DKJN7BwBiT5koKTDoRNI22sktsLktM" />
-<meta property="og:url" content="https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/">
-  <meta property="og:site_name" content="Eric Yawilhit">
-  <meta property="og:title" content="Lab 3/5 (Part 1): The Emergency Active Directory Audit">
-  <meta property="og:description" content="Addressing the security risks of an SSO federating an unhardened directory, this technical guide details an emergency Active Directory audit. Through a hands-on lab using Wazuh, PowerShell, and GPOs, discover how to quantify identity vulnerabilities (Kerberoasting, missing tiering, insecure service accounts) before remediating the source directory.">
-  <meta property="og:locale" content="en">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-08-21T00:00:00+00:00">
-    <meta property="article:modified_time" content="2026-08-21T00:00:00+00:00">
-    <meta property="article:tag" content="Active Directory">
-    <meta property="article:tag" content="Audit">
-    <meta property="article:tag" content="IAM">
-    <meta property="article:tag" content="Security Engineering">
-    <meta property="og:image" content="https://ericyawilhit.netlify.app/images/lab3-part1.en.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://ericyawilhit.netlify.app/images/lab3-part1.en.png">
-  <meta name="twitter:title" content="Lab 3/5 (Part 1): The Emergency Active Directory Audit">
-  <meta name="twitter:description" content="Addressing the security risks of an SSO federating an unhardened directory, this technical guide details an emergency Active Directory audit. Through a hands-on lab using Wazuh, PowerShell, and GPOs, discover how to quantify identity vulnerabilities (Kerberoasting, missing tiering, insecure service accounts) before remediating the source directory.">
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Eric Yawilhit" />
+<link rel="manifest" href="/site.webmanifest" />
 
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://ericyawilhit.netlify.app/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Lab 3/5 (Part 1): The Emergency Active Directory Audit",
-      "item": "https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Lab 3/5 (Part 1): The Emergency Active Directory Audit",
-  "name": "Lab 3\/5 (Part 1): The Emergency Active Directory Audit",
-  "description": "Addressing the security risks of an SSO federating an unhardened directory, this technical guide details an emergency Active Directory audit. Through a hands-on lab using Wazuh, PowerShell, and GPOs, discover how to quantify identity vulnerabilities (Kerberoasting, missing tiering, insecure service accounts) before remediating the source directory.",
-  "keywords": [
-    "Active Directory", "Audit", "IAM", "Security Engineering"
-  ],
-  "articleBody": "Scenario: The Illusion of Centralized Identity At NexGen Solution, our previous milestones established a sovereign Single Sign-On baseline (Lab 1: Keycloak, FreeIPA, Gitea, Grafana) and deployed JIT access control over Nextcloud (Lab 2). Centralizing authentication gave us confidence—until a routine security event shattered our assumptions.\nA minor Wazuh SIEM alert flagged abnormal behavior on a background service account (svc-nexgen-webapp). The investigation revealed a critical architectural flaw: Keycloak was faithfully federating identities that were compromised at the source.\nOur internal Active Directory (nexgen.lab) domain—powering corporate workstations and application servers—had never been hardened. Untracked admin accounts, active stale users, and a default 7-character password policy applied universally to accountants and Domain Admins alike. Keycloak trusted whatever AD provided, effectively hiding on-premises security debt behind a sleek SSO façade.\nThis writeup documents Phase 1: The Emergency Audit, quantifying our attack surface before engineering a fix.\nEnvironment Baseline Domain Controller: NexGen-DC01 (nexgen.lab) Target Systems: NXG-WKS-FIN01 (Standard User Workstation - Finance/HR) NXG-ADM-IT01 (IT Admin Workstation) NXG-SRV-APP01 (Internal Application Server) Auditing Tools: PowerShell (ActiveDirectory module), gpresult, Local Group inspection. Audit Execution \u0026 Critical Findings Finding 1: Privileged Account Exposure \u0026 Missing Tiering Running discovery on high-privilege groups showed that administrative power was centralized under a single default account, while local machine groups exposed domain credentials to lateral movement.\n# Checking critical domain groups Get-ADGroupMember -Identity \"Domain Admins\" | Select-Object Name, SamAccountName Get-ADGroupMember -Identity \"Enterprise Admins\" | Select-Object Name, SamAccountName Get-ADGroupMember -Identity \"Schema Admins\" | Select-Object Name, SamAccountName # Checking local Administrators group across hosts Get-LocalGroupMember -Group \"Administrators\" Shared Domain Administrator: Only the default Administrator account existed for domain management. Multiple IT staff sharing one account eliminates accountability and audit trails.\nPrivilege Creep on Workstations: The Domain Admins group was present in the local Administrators group on standard workstations like NXG-WKS-FIN01.\nThe Risk: If an attacker compromises a user on NXG-WKS-FIN01 (e.g., via phishing), and a Domain Admin logs in to troubleshoot, the attacker can harvest Kerberos tickets or NTLM hashes from memory—gaining full Domain Dominance.\nFinding 2: Service Account Vulnerabilities (svc-nexgen-webapp) Auditing Service Principal Names (SPNs) highlighted severe exposure on our web application service account.\n# Discovering accounts with registered SPNs Get-ADUser -Filter {servicePrincipalName -like \"*\"} -Properties ServicePrincipalName | Select-Object Name, servicePrincipalName 2.1 Applied Group Policies Audit # Executed from NXG-SRV-APP01 gpresult /h C:\\rapport-gpo-nxg-srv-app01.html Kerberoasting Exposure: svc-nexgen-webapp holds SPN HTTP/NXG-SRV-APP01. Any authenticated user can request a Kerberos TGS ticket for this service and attempt offline password cracking.\nWeak Password Policy: The domain password policy enforced a minimum of only 7 characters.\n2.2 Password Expiration \u0026 gMSA Verification # Verifying Password Expiration Get-ADUser -Identity \"svc-nexgen-webapp\" | Select-Object PasswordNeverExpires # Verifying gMSA Status Get-ADServiceAccount -Identity \"svc-nexgen-webapp\" Static Credentials \u0026 Interactive Logon: PasswordNeverExpires was confirmed as $true. No password rotation existed and no GPOs restricted interactive logons (Deny log on locally).\ngMSA Check: Confirmed svc-nexgen-webapp is a standard user object created via New-ADUser, not a native Group Managed Service Account.\nFinding 3: Structural Debt \u0026 Default Container Misplacement 3.1 Unmanaged Objects in Default Containers # Auditing default containers Get-ADUser -Filter * -SearchBase \"CN=Users,DC=nexgen,DC=lab\" | Select-Object Name, DistinguishedName Get-ADComputer -Filter * -SearchBase \"CN=Computers,DC=nexgen,DC=lab\" | Select-Object Name, DistinguishedName Unmanaged Hosts: All target machines resided in CN=Computers. Default container objects cannot have GPOs directly linked to them, rendering security policies unenforceable. 3.2 Organizational Unit Hierarchy \u0026 Object Mixing # Inspecting AD OU Structure Get-ADOrganizationalUnit -Filter * | Select-Object Name, DistinguishedName # Inspecting Object Inventory under NexGen-Infrastructures Get-ADObject -SearchBase \"OU=NexGen-Infrastructures,DC=nexgen,DC=lab\" -Filter 'ObjectClass -ne \"organizationalUnit\"' Flat OUs \u0026 Unseparated Objects: Departmental OUs stored Users and Groups together in a single directory without structural separation, making granular delegation and AGDLP group nesting impossible. Baseline Audit Summary Risk ID Discovery Finding Business \u0026 Technical Impact Target Remediation SEC-01 Domain Admins in workstation local admin groups Lateral movement \u0026 ticket harvesting leads to immediate domain takeover Implement Tier 0/1/2 Administrative Model \u0026 User Rights Assignment GPOs SEC-02 svc-nexgen-webapp has SPN + 7-char password Exposed to offline Kerberoasting and brute-force attacks Migrate to gMSA (240-char auto-rotated password) + Deny Interactive Logon GPO SEC-03 Hosts reside in default CN=Computers container Group Policy Enforcement is blocked across all endpoints Relocate hosts to dedicated Tiered OUs (Tier1, Tier2)[ SEC-04 Flat OU layout \u0026 mixed Role/Resource groups Poor visibility, privilege sprawl, and complex access management Restructure OUs into sub-containers (Users, Groups) \u0026 enforce AGDLP Next Steps: Roadmap to Remediation Proving that our identity source is insecure was step one. In Lab 3 - Part 2, we will begin full structural remediation by deploying administrative Tiering, isolating credentials, and moving hosts into managed OU boundaries.\n",
-  "wordCount" : "752",
-  "inLanguage": "en",
-  "image":"https://ericyawilhit.netlify.app/images/lab3-part1.en.png","datePublished": "2026-08-21T00:00:00Z",
-  "dateModified": "2026-08-21T00:00:00Z",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://ericyawilhit.netlify.app/posts/nexgen-lab3-part1/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Eric Yawilhit",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://ericyawilhit.netlify.app/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://ericyawilhit.netlify.app/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Eric Yawilhit (Alt + H)">Eric Yawilhit</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -171,7 +109,7 @@
                 </button>
                     <ul class="lang-switch"><li>|</li>
                         <li>
-                            <a href="https://ericyawilhit.netlify.app/fr/" title="FR"
+                            <a href="http://localhost:1313/fr/" title="FR"
                                 aria-label="FR">Fr</a>
                         </li>
                     </ul>
@@ -179,17 +117,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://ericyawilhit.netlify.app/about/" title="About">
+                <a href="http://localhost:1313/about/" title="About">
                     <span>About</span>
                 </a>
             </li>
             <li>
-                <a href="https://ericyawilhit.netlify.app/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://ericyawilhit.netlify.app/tags/" title="Tags">
+                <a href="http://localhost:1313/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
@@ -210,14 +148,14 @@
     <div class="post-meta"><span title='2026-08-21 00:00:00 +0000 UTC'>August 21, 2026</span>&nbsp;|&nbsp;<span>Translations:</span>
 <ul class="i18n_list">
     <li>
-        <a href="https://ericyawilhit.netlify.app/fr/posts/nexgen-lab3-part1/">Fr</a>
+        <a href="http://localhost:1313/fr/posts/nexgen-lab3-part1/">Fr</a>
     </li>
 </ul>
 
 </div>
   </header> 
 <figure class="entry-cover">
-        <img loading="eager" src="https://ericyawilhit.netlify.app/images/lab3-part1.en.png" alt="Article Cover">
+        <img loading="eager" src="http://localhost:1313/images/lab3-part1.en.png" alt="Article Cover">
         
 </figure>
   <div class="post-content"><h2 id="scenario-the-illusion-of-centralized-identity">Scenario: The Illusion of Centralized Identity<a hidden class="anchor" aria-hidden="true" href="#scenario-the-illusion-of-centralized-identity">#</a></h2>
@@ -357,17 +295,17 @@
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://ericyawilhit.netlify.app/tags/active-directory/">Active Directory</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/audit/">Audit</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/iam/">IAM</a></li>
-      <li><a href="https://ericyawilhit.netlify.app/tags/security-engineering/">Security Engineering</a></li>
+      <li><a href="http://localhost:1313/tags/active-directory/">Active Directory</a></li>
+      <li><a href="http://localhost:1313/tags/audit/">Audit</a></li>
+      <li><a href="http://localhost:1313/tags/iam/">IAM</a></li>
+      <li><a href="http://localhost:1313/tags/security-engineering/">Security Engineering</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="https://ericyawilhit.netlify.app/">Eric Yawilhit</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Eric Yawilhit</a></span> · 
 
     <span>
         Powered by

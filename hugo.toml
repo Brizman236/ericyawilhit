@@ -5,6 +5,11 @@ title = "Eric Yawilhit"
 theme = "PaperMod"
 enableRobotsTXT = true
 
+[params.assets]
+  favicon = "/favicon.ico"
+  favicon16x16 = "/favicon-96x96.png"
+  favicon32x32 = "/favicon-96x96.png"
+  apple_touch_icon = "/apple-touch-icon.png"
 
 [markup]
   [markup.goldmark]
@@ -65,7 +70,7 @@ enableRobotsTXT = true
       enabled = true
       title = "Eric Yawilhit"
       subtitle = "Passionate about infrastructure and security, I document my deployments, lab architectures, and digital sovereignty projects here"
-      imageUrl = "/images/avatar.jpeg"
+      imageUrl = "/images/avatar-1.webp"
       imageTitle = "Eric Yawilhit"
 
     [languages.en.params.homeInfoParams]
