@@ -5,6 +5,8 @@ title = "Eric Yawilhit"
 theme = "PaperMod"
 enableRobotsTXT = true
 
+[params]
+  description = "Passionate about infrastructure and security, I document my deployments, lab architectures, and digital sovereignty projects here"
 [params.assets]
   favicon = "/favicon.ico"
   favicon16x16 = "/favicon-96x96.png"

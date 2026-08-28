@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap');
+
+      .font-mono {
+        font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+      }
+      .font-sans-title {
+        font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
+        font-weight: 800;
+      }
+      .font-sans-subtitle {
+        font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
+        font-weight: 600;
+      }
+      .font-sans-body {
+        font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
+        font-weight: 400;
+      }
+    </style>
+
+    <!-- Background Gradients -->
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117" />
+      <stop offset="100%" stop-color="#161b22" />
+    </linearGradient>
+    <radialGradient id="blue-glow" cx="80%" cy="20%" r="65%">
+      <stop offset="0%" stop-color="#388bfd" stop-opacity="0.20" />
+      <stop offset="100%" stop-color="#0d1117" stop-opacity="0" />
+    </radialGradient>
+    
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#30363d" stroke-width="0.8" opacity="0.35" />
+    </pattern>
+  </defs>
+
+  <!-- Background Layers -->
+  <rect width="1200" height="630" fill="url(#bg-gradient)" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+  <rect width="1200" height="630" fill="url(#blue-glow)" />
+
+  <!-- Outer Frame -->
+  <rect x="30" y="30" width="1140" height="570" rx="16" fill="none" stroke="#30363d" stroke-width="2" />
+
+  <!-- Window Controls & Domain Header -->
+  <g transform="translate(70, 75)">
+    <circle cx="0" cy="0" r="7" fill="#ff5f56" />
+    <circle cx="22" cy="0" r="7" fill="#ffbd2e" />
+    <circle cx="44" cy="0" r="7" fill="#27c93f" />
+    <text x="70" y="5" class="font-mono" font-size="16" fill="#8b949e">~/ericyawilhit.netlify.app</text>
+  </g>
+
+  <!-- Main Text Block -->
+  <text x="70" y="235" class="font-sans-title" font-size="64" fill="#ffffff" letter-spacing="-1">
+    Eric Yawilhit
+  </text>
+
+  <text x="70" y="295" class="font-sans-subtitle" font-size="32" fill="#58a6ff">
+    Cybersecurity &amp; Systems Architecture
+  </text>
+
+  <text x="70" y="355" class="font-sans-body" font-size="22" fill="#8b949e">
+    Lab writeups, identity management, PKI, and cloud infrastructure notes.
+  </text>
+
+  <!-- Topic Pills -->
+  <g transform="translate(70, 455)">
+    <!-- Pill 1 -->
+    <rect x="0" y="0" width="90" height="38" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="45" y="24" text-anchor="middle" class="font-sans-subtitle" font-size="15" fill="#c9d1d9">IAM</text>
+
+    <!-- Pill 2 -->
+    <rect x="105" y="0" width="85" height="38" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="147" y="24" text-anchor="middle" class="font-sans-subtitle" font-size="15" fill="#c9d1d9">PKI</text>
+
+    <!-- Pill 3 -->
+    <rect x="205" y="0" width="130" height="38" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="270" y="24" text-anchor="middle" class="font-sans-subtitle" font-size="15" fill="#c9d1d9">Zero Trust</text>
+
+    <!-- Pill 4 -->
+    <rect x="350" y="0" width="160" height="38" rx="8" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+    <text x="430" y="24" text-anchor="middle" class="font-sans-subtitle" font-size="15" fill="#c9d1d9">Cloud Security</text>
+  </g>
+
+  <!-- Right-Side Security Emblem -->
+  <g transform="translate(850, 185)">
+    <rect x="0" y="0" width="240" height="260" rx="16" fill="#161b22" stroke="#30363d" stroke-width="1.5" />
+    <path d="M 120 45 L 190 75 V 135 C 190 185 120 215 120 215 C 120 215 50 185 50 135 V 75 Z" fill="none" stroke="#58a6ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="120" cy="120" r="12" fill="#58a6ff" />
+    <path d="M 120 132 V 160" stroke="#58a6ff" stroke-width="4" stroke-linecap="round" />
+  </g>
+</svg>
