@@ -6,20 +6,48 @@
     <description>Recent content in Tags on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Mon, 24 Aug 2026 23:24:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/fr/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Active Directory</title>
       <link>http://localhost:1313/fr/tags/active-directory/</link>
-      <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/fr/tags/active-directory/</guid>
       <description></description>
     </item>
     <item>
       <title>Cybersécurité</title>
       <link>http://localhost:1313/fr/tags/cybers%C3%A9curit%C3%A9/</link>
-      <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/fr/tags/cybers%C3%A9curit%C3%A9/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GMSA</title>
+      <link>http://localhost:1313/fr/tags/gmsa/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/tags/gmsa/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>IAM</title>
+      <link>http://localhost:1313/fr/tags/iam/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/tags/iam/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kerberos</title>
+      <link>http://localhost:1313/fr/tags/kerberos/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/tags/kerberos/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Windows LAPS</title>
+      <link>http://localhost:1313/fr/tags/windows-laps/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/tags/windows-laps/</guid>
       <description></description>
     </item>
     <item>
@@ -27,13 +55,6 @@
       <link>http://localhost:1313/fr/tags/gpo/</link>
       <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
       <guid>http://localhost:1313/fr/tags/gpo/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>IAM</title>
-      <link>http://localhost:1313/fr/tags/iam/</link>
-      <pubDate>Mon, 24 Aug 2026 23:24:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/iam/</guid>
       <description></description>
     </item>
     <item>
@@ -118,13 +139,6 @@
       <link>http://localhost:1313/fr/tags/hbac/</link>
       <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/fr/tags/hbac/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kerberos</title>
-      <link>http://localhost:1313/fr/tags/kerberos/</link>
-      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/fr/tags/kerberos/</guid>
       <description></description>
     </item>
     <item>

@@ -6,8 +6,15 @@
     <description>Recent content in Kerberos on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>fr</language>
-    <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/fr/tags/kerberos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sécurisation d&#39;Active Directory : Protection des identités, des identifiants et de l&#39;authentification (Partie 3)</title>
+      <link>http://localhost:1313/fr/posts/nexgen-lab3-part3/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/fr/posts/nexgen-lab3-part3/</guid>
+      <description>Mise en œuvre pratique du durcissement d&amp;rsquo;Active Directory sous l&amp;rsquo;angle IAM, avec la migration vers les gMSA, Windows LAPS et le durcissement des politiques d&amp;rsquo;authentification.</description>
+    </item>
     <item>
       <title>Fédérer l&#39;Identité d&#39;Entreprise : Déploiement d&#39;une Architecture SSO Souveraine avec FreeIPA et Keycloak</title>
       <link>http://localhost:1313/fr/posts/nexgen-lab-1/</link>

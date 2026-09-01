@@ -196,9 +196,3 @@ While OU restructuring and Deny Logon GPOs drastically reduce credential exposur
       
     - Deploy LAPS across all Tier 1 servers and Tier 2 workstations to randomize local `Administrator` passwords, eliminating lateral movement via shared local credentials.
         
-          
-        
-3. **Setting Up Authentication Policy Silos:**
-    
-      
-    - Configure Active Directory Authentication Policies and Silos to restrict Kerberos ticket issuance, ensuring Tier 0 accounts cannot authenticate to lower-tier service principal names (SPNs) even if network controls fail.

@@ -342,18 +342,6 @@
 <li>Déployer LAPS sur tous les serveurs de Tier 1 et postes de travail de Tier 2 pour automatiser la rotation des mots de passe <code>Administrateur</code> locaux, éliminant ainsi le déplacement latéral via des identifiants locaux partagés.</li>
 </ul>
 </li>
-<li>
-<p><strong>Configuration des silos de stratégies d&rsquo;authentification :</strong></p>
-<ul>
-<li>Configurer les silos et stratégies d&rsquo;authentification Active Directory pour restreindre l&rsquo;émission de tickets Kerberos, garantissant ainsi que les comptes de Tier 0 ne puissent pas s&rsquo;authentifier auprès des SPN de tiers inférieurs même en cas de défaillance des contrôles réseau.</li>
-</ul>
-</li>
-<li>
-<p><strong>Télémétrie SIEM &amp; Ingestion de détections (Wazuh) :</strong></p>
-<ul>
-<li>Intégrer la journalisation d&rsquo;audit pour surveiller les tentatives de connexion à travers les tiers. Configurer des alertes pour les échecs d&rsquo;authentification (ID d&rsquo;événement 4625) et les escalades explicites de privilèges au sein des groupes de sécurité administratifs.</li>
-</ul>
-</li>
 </ol>
 
 
@@ -368,6 +356,11 @@
       <li><a href="http://localhost:1313/fr/tags/windows-server/">Windows Server</a></li>
     </ul>
 <nav class="paginav">
+  <a class="prev" href="http://localhost:1313/fr/posts/nexgen-lab3-part3/">
+    <span class="title">« Précédent</span>
+    <br>
+    <span>Sécurisation d&#39;Active Directory : Protection des identités, des identifiants et de l&#39;authentification (Partie 3)</span>
+  </a>
   <a class="next" href="http://localhost:1313/fr/posts/nexgen-lab3-part1/">
     <span class="title">Suivant »</span>
     <br>

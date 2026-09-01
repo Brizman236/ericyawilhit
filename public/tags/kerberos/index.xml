@@ -6,8 +6,15 @@
     <description>Recent content in Kerberos on Eric Yawilhit</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 28 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/kerberos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Active Directory Hardening: Identity, Credential &amp; Authentication Protection (Part 3)</title>
+      <link>http://localhost:1313/posts/nexgen-lab3-part3/</link>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nexgen-lab3-part3/</guid>
+      <description>A practical implementation of Active Directory hardening from an IAM perspective, covering administrative tiering, gMSA migration, Windows LAPS, and authentication policy hardening.</description>
+    </item>
     <item>
       <title>Federating Enterprise Identity: Deploying a Sovereign SSO Architecture with FreeIPA and Keycloak</title>
       <link>http://localhost:1313/posts/nexgen-lab-1/</link>

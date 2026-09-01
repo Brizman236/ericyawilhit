@@ -193,17 +193,3 @@ Bien que la restructuration des OU et les GPO de refus de connexion réduisent c
     
       
     - Déployer LAPS sur tous les serveurs de Tier 1 et postes de travail de Tier 2 pour automatiser la rotation des mots de passe `Administrateur` locaux, éliminant ainsi le déplacement latéral via des identifiants locaux partagés.
-        
-          
-        
-3. **Configuration des silos de stratégies d'authentification :**
-    
-      
-    - Configurer les silos et stratégies d'authentification Active Directory pour restreindre l'émission de tickets Kerberos, garantissant ainsi que les comptes de Tier 0 ne puissent pas s'authentifier auprès des SPN de tiers inférieurs même en cas de défaillance des contrôles réseau.
-        
-          
-        
-4. **Télémétrie SIEM & Ingestion de détections (Wazuh) :**
-    
-      
-    - Intégrer la journalisation d'audit pour surveiller les tentatives de connexion à travers les tiers. Configurer des alertes pour les échecs d'authentification (ID d'événement 4625) et les escalades explicites de privilèges au sein des groupes de sécurité administratifs.
