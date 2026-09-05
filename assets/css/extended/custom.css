@@ -1,5 +1,5 @@
 body, article {
-    font-family: 'Inter', sans-serif;
+    font-family: 'TT Hoves Pro Trial', sans-serif;
 }
 
 @font-face {
@@ -8,32 +8,230 @@ body, article {
 }
 
 code, pre {
-    font-family: 'Google Sans Code', monospace;
-    font-size: 19px;
+    font-family: "Fragment Mono", monospace;
+    font-size: 20px;
 }
 
+.post-content strong {
+    font-weight: 600;
+}
+
+.post-content {
+    font-size: 18px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
 /* Conteneur du bloc */
-pre {
-    background: #0d1117; /* fond dark élégant */
-    color: #e6edf3;
-    padding: 16px;
-    border-radius: 12px;
+/* =========================================================
+   NexGen Blog — Modern Code Blocks
+   Hugo + PaperMod
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   CODE BLOCK
+   --------------------------------------------------------- */
+
+.post-content .highlight {
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+
+    border: 1px solid #263241;
+
+    background: #0d1117;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+
+/* Le <pre> généré par Chroma/PaperMod */
+
+.post-content .highlight pre {
+    margin: 0 !important;
+    padding: 18px 20px !important;
+
+    background: #0d1117 !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+
+    box-shadow: none !important;
+
     overflow-x: auto;
-    border: 1px solid #222b3a;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    line-height: 1.5;
+
+    line-height: 1.65;
 }
 
-/* Code inline */
-code {
-    background: rgba(110,118,129,0.15);
-    padding: 2px 6px;
-    border-radius: 6px;
+
+/* ---------------------------------------------------------
+   CODE INSIDE PRE
+   --------------------------------------------------------- */
+
+.post-content .highlight pre code {
+    display: block;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    color: #d6deeb;
+
+    font-size: 0.86rem;
+    line-height: 1.65;
 }
 
-/* Supprime double fond dans pre > code */
-pre code {
+
+/* ---------------------------------------------------------
+   INLINE CODE
+   --------------------------------------------------------- */
+
+.post-content :not(pre) > code {
+    padding: 0.15em 0.4em;
+
+    border-radius: 5px;
+
+    background: rgba(35, 153, 255, 0.10);
+
+    border: 1px solid rgba(35, 153, 255, 0.16);
+
+    color: #4dafff;
+    font-size: 0.88em;
+}
+
+
+/* ---------------------------------------------------------
+   CODE SCROLLBAR
+   --------------------------------------------------------- */
+
+.post-content .highlight pre::-webkit-scrollbar {
+    height: 7px;
+}
+
+.post-content .highlight pre::-webkit-scrollbar-track {
     background: transparent;
-    padding: 0;
-    color: inherit;
+}
+
+.post-content .highlight pre::-webkit-scrollbar-thumb {
+    background: #2a3543;
+    border-radius: 10px;
+}
+
+.post-content .highlight pre::-webkit-scrollbar-thumb:hover {
+    background: #3b5067;
+}
+
+
+/* Firefox */
+
+.post-content .highlight pre {
+    scrollbar-width: thin;
+    scrollbar-color: #2a3543 transparent;
+}
+
+
+/* ---------------------------------------------------------
+   HOVER EFFECT
+   --------------------------------------------------------- */
+
+.post-content .highlight {
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.post-content .highlight:hover {
+    border-color: #34475c;
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.24);
+}
+
+
+/* ---------------------------------------------------------
+   SYNTAX HIGHLIGHTING
+   --------------------------------------------------------- */
+
+/* Keywords */
+
+.post-content .highlight .k,
+.post-content .highlight .kd,
+.post-content .highlight .kn,
+.post-content .highlight .kp,
+.post-content .highlight .kr {
+    color: #79b8ff;
+}
+
+
+/* Strings */
+
+.post-content .highlight .s,
+.post-content .highlight .s1,
+.post-content .highlight .s2,
+.post-content .highlight .sa,
+.post-content .highlight .sb {
+    color: #a5d6ff;
+}
+
+
+/* Comments */
+
+.post-content .highlight .c,
+.post-content .highlight .c1,
+.post-content .highlight .cm {
+    color: #6e7681;
+    font-style: italic;
+}
+
+
+/* Functions */
+
+.post-content .highlight .nf {
+    color: #d2a8ff;
+}
+
+
+/* Numbers */
+
+.post-content .highlight .m,
+.post-content .highlight .mi,
+.post-content .highlight .mf {
+    color: #f2cc60;
+}
+
+
+/* Variables / names */
+
+.post-content .highlight .n,
+.post-content .highlight .nx {
+    color: #d6deeb;
+}
+
+
+/* Operators */
+
+.post-content .highlight .o {
+    color: #79c0ff;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+    .post-content .highlight pre {
+        padding: 15px 16px !important;
+    }
+
+    .post-content .highlight pre code {
+        font-size: 0.8rem;
+    }
 }
